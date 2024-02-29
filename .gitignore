@@ -1,0 +1,11 @@
+# Node Files
+node_modules
+
+# Remix Files
+/.cache
+/build
+/public/build
+.env
+
+# Net-Doc
+prisma/data/*.db*

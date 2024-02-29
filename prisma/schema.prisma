@@ -1,0 +1,104 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./data/dev.db"
+}
+
+model Asset {
+  id          String       @id @default(uuid())
+  name        String
+  icon        String
+  slug        String
+  singular    String
+  plural      String
+  nameFieldId String
+  assetFields AssetField[]
+  entries     Entry[]
+}
+
+model Field {
+  id          String       @id @default(uuid())
+  name        String
+  icon        String
+  description String
+  type        String
+  meta        String
+  assetFields AssetField[]
+  values      Value[]
+}
+
+model AssetField {
+  id         String @id @default(uuid())
+  order      Int
+  helperText String @default("")
+
+  asset   Asset  @relation(fields: [assetId], references: [id], onDelete: Cascade)
+  assetId String
+  field   Field  @relation(fields: [fieldId], references: [id], onDelete: Cascade)
+  fieldId String
+}
+
+model Entry {
+  id      String  @id @default(uuid())
+  asset   Asset   @relation(fields: [assetId], references: [id], onDelete: Cascade)
+  assetId String
+  values  Value[]
+  deleted Boolean @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+}
+
+model Value {
+  id             String         @id @default(uuid())
+  value          String
+  entry          Entry          @relation(fields: [entryId], references: [id], onDelete: Cascade)
+  entryId        String
+  field          Field          @relation(fields: [fieldId], references: [id], onDelete: Cascade)
+  fieldId        String
+  history        ValueHistory[]
+  lastEditedBy   User           @relation(fields: [lastEditedById], references: [id])
+  lastEditedById String
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @default(now()) @updatedAt
+}
+
+model ValueHistory {
+  id           String   @id @default(uuid())
+  valueAtPoint String
+  createdAt    DateTime @default(now())
+  value        Value    @relation(fields: [valueId], references: [id], onDelete: Cascade)
+  valueId      String
+  changeNote   String
+  editedBy     User     @relation(fields: [editedById], references: [id])
+  editedById   String
+}
+
+model User {
+  id             String         @id @default(uuid())
+  name           String
+  email          String
+  passwordHash   String
+  role           String
+  sessions       Session[]
+  valueEdits     Value[]
+  pastValueEdits ValueHistory[]
+}
+
+model Session {
+  id        String   @id @default(uuid())
+  ip        String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+}
