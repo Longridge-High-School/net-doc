@@ -4,7 +4,6 @@ import {
   json,
   redirect
 } from '@remix-run/node'
-import {useLoaderData} from '@remix-run/react'
 import {invariant} from '@arcath/utils'
 
 import {ensureUser} from '~/lib/utils/ensure-user'

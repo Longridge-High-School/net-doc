@@ -26,7 +26,7 @@ export const loader = async ({request, params}: LoaderFunctionArgs) => {
 }
 
 export const action = async ({request, params}: ActionFunctionArgs) => {
-  const currentUser = await ensureUser(request, 'user-manager:edit', {
+  await ensureUser(request, 'user-manager:edit', {
     userId: params.user
   })
 
