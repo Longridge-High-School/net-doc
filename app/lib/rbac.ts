@@ -29,8 +29,10 @@ export const {can} = canCant<'guest' | 'user' | 'manager' | 'admin'>({
       'entry:*',
       'asset-manager:*',
       'field-manager:*',
+      'user-manager:*',
       'dashboard',
-      'search'
+      'search',
+      'logout'
     ]
   }
 }) as {

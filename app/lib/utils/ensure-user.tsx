@@ -19,7 +19,7 @@ export const ensureUser = async (
 
   const cookieSession = await prisma.session.findFirst({
     where: {id: cookie},
-    include: {user: true}
+    include: {user: {select: {id: true, name: true, role: true}}}
   })
 
   if (!cookieSession) {
@@ -39,5 +39,5 @@ export const ensureUser = async (
     })
   }
 
-  return cookieSession.user
+  return {...cookieSession.user, sessionId: cookieSession.id}
 }

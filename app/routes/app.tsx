@@ -21,6 +21,8 @@ export const loader = async ({request}: LoaderFunctionArgs) => {
   return json({user, assets})
 }
 
+export type AppLoader = {user: {name: string; id: string}}
+
 const Dashboard = () => {
   const {assets} = useLoaderData<typeof loader>()
 
@@ -45,8 +47,13 @@ const Dashboard = () => {
         </div>
         <h2 className="text-xl ml-4">System</h2>
         <div className="pl-8 mb-2 flex flex-col gap-2 mt-2">
-          <a href="/app/asset-manager">Asset Manager</a>
-          <a href="/app/field-manager">Field Manager</a>
+          <a href="/app/asset-manager">📦 Asset Manager</a>
+          <a href="/app/field-manager">🚜 Field Manager</a>
+          <a href="/app/user-manager">👤 User Manager</a>
+        </div>
+        <h2 className="text-xl ml-4">User</h2>
+        <div className="pl-8 mb-2 flex flex-col gap-2 mt-2">
+          <a href="/app/logout">👋 Logout</a>
         </div>
       </nav>
       <div className="pt-8">
