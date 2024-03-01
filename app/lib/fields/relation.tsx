@@ -59,6 +59,7 @@ const EditComponent: Field<string>['editComponent'] = ({
             return (
               <button
                 key={entryId}
+                type="button"
                 onClick={() => {
                   setNewValue([...newValue, entryId])
                   setText('')
