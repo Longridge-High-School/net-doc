@@ -34,6 +34,7 @@ const Dashboard = () => {
         <div className="pl-8 mb-2 flex flex-col gap-2 mt-2">
           <a href="/app">📜 Dashboard</a>
           <a href="/app/search">🔎 Search</a>
+          <a href="/app/documents">📰 Documents</a>
         </div>
         <h2 className="text-xl ml-4">Assets</h2>
         <div className="pl-8 mb-2 flex flex-col gap-2 mt-2">

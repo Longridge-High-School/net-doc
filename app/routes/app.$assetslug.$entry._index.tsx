@@ -26,11 +26,15 @@ export const loader = async ({request, params}: LoaderFunctionArgs) => {
   INNER JOIN Asset ON Entry.assetId = Asset.id
   WHERE Entry.id IN (SELECT entryId FROM Value WHERE value LIKE ${`%${entry.id}%`}) AND deleted = false`
 
-  return json({user, entry, relations})
+  const documents = await prisma.document.findMany({
+    where: {body: {contains: params.entry}}
+  })
+
+  return json({user, entry, relations, documents})
 }
 
 const AssetEntry = () => {
-  const {entry, relations} = useLoaderData<typeof loader>()
+  const {entry, relations, documents} = useLoaderData<typeof loader>()
 
   const name = entry.values.reduce((n, v) => {
     if (n !== '') return n
@@ -82,6 +86,22 @@ const AssetEntry = () => {
                     className="bg-gray-300 p-2 rounded"
                   >
                     {icon} {value}
+                  </a>
+                )
+              })}
+        </div>
+        <h4>Linked Documents</h4>
+        <div className="flex gap-2">
+          {documents.length === 0
+            ? 'No Linked Entries'
+            : documents.map(({id, title}) => {
+                return (
+                  <a
+                    key={id}
+                    href={`/app/documents/${id}`}
+                    className="bg-gray-300 p-2 rounded"
+                  >
+                    {title}
                   </a>
                 )
               })}

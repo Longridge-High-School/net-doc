@@ -84,14 +84,15 @@ model ValueHistory {
 }
 
 model User {
-  id             String         @id @default(uuid())
-  name           String
-  email          String
-  passwordHash   String
-  role           String
-  sessions       Session[]
-  valueEdits     Value[]
-  pastValueEdits ValueHistory[]
+  id              String            @id @default(uuid())
+  name            String
+  email           String
+  passwordHash    String
+  role            String
+  sessions        Session[]
+  valueEdits      Value[]
+  pastValueEdits  ValueHistory[]
+  documentChanges DocumentHistory[]
 }
 
 model Session {
@@ -101,4 +102,29 @@ model Session {
   updatedAt DateTime @updatedAt
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    String
+}
+
+model Document {
+  id    String @id @default(uuid())
+  body  String
+  title String
+
+  history DocumentHistory[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model DocumentHistory {
+  id            String @id @default(uuid())
+  previousTitle String
+  previousBody  String
+
+  editedBy   User     @relation(fields: [editedById], references: [id])
+  editedById String
+  document   Document @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  documentId String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
