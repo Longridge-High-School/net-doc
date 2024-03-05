@@ -44,6 +44,11 @@ export const action = async ({request, params}: ActionFunctionArgs) => {
     include: {assetFields: {include: {field: true}, orderBy: {order: 'asc'}}}
   })
 
+  await prisma.entry.update({
+    where: {id: params.entry!},
+    data: {assetId: asset.id}
+  })
+
   await asyncForEach(asset.assetFields, async ({fieldId, field, id}) => {
     const value = await FIELDS[field.type].valueSetter(formData, id)
 
