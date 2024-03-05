@@ -11,6 +11,15 @@ export const loader = async ({request, params}: LoaderFunctionArgs) => {
 
   const prisma = getPrisma()
 
+  const userTotp = await prisma.user.findFirstOrThrow({
+    where: {id: user.id},
+    select: {id: true, totpSecret: true}
+  })
+
+  if (userTotp.totpSecret === '') {
+    return json({password: "Can't fetch password without 2FA on your account"})
+  }
+
   const password = await prisma.password.findFirstOrThrow({
     where: {id: params.password}
   })
