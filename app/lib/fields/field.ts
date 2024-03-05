@@ -1,3 +1,4 @@
+import {dateField} from './date'
 import {markdownField} from './markdown'
 import {relationField} from './relation'
 import {selectField} from './select'
@@ -34,9 +35,16 @@ export type Field<ValueType> = {
   metaSave: (data: FormData) => string
 }
 
-export const FIELD_TYPES = ['text', 'select', 'relation', 'markdown'] as const
+export const FIELD_TYPES = [
+  'text',
+  'select',
+  'relation',
+  'markdown',
+  'date'
+] as const
 
 export const FIELDS: {[type: string]: Field<string>} = {
+  date: dateField,
   markdown: markdownField,
   relation: relationField,
   select: selectField,

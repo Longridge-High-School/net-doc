@@ -72,6 +72,7 @@ const FieldManagerAdd = () => {
               setType(e.target.value)
             }}
           >
+            <option value="date">Date</option>
             <option value="markdown">Markdown</option>
             <option value="relation">Relation</option>
             <option value="select">Select</option>
