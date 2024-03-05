@@ -7,6 +7,7 @@ import {getPrisma} from '~/lib/prisma.server'
 import {AButton} from '~/lib/components/button'
 import {buildMDXBundle} from '~/lib/mdx.server'
 import {MDXComponent} from '~/lib/mdx'
+import {useQuery} from '@tanstack/react-query'
 
 export const loader = async ({request, params}: LoaderFunctionArgs) => {
   const user = await ensureUser(request, 'password:view', {
@@ -29,6 +30,19 @@ const AssetManagerAsset = () => {
   const {password, code} = useLoaderData<typeof loader>()
   const [passwordOpen, setPasswordOpen] = useState(false)
 
+  const {data, refetch, isPending} = useQuery({
+    enabled: false,
+    queryKey: ['password', 'show', password.id],
+    refetchOnWindowFocus: false,
+    queryFn: async () => {
+      const response = await fetch(`/api/password/${password.id}/get`)
+
+      const json = await response.json()
+
+      return json.password
+    }
+  })
+
   return (
     <div>
       <h4 className="text-xl">{password.title}</h4>
@@ -44,16 +58,20 @@ const AssetManagerAsset = () => {
         <b>Password</b>
         <br />
         {passwordOpen ? (
-          'OPEN'
+          <span>{isPending ? '⌛' : data}</span>
         ) : (
           <button
             onClick={() => {
               setPasswordOpen(true)
+              refetch()
             }}
           >
-            🔐
+            🔒
           </button>
         )}
+      </p>
+      <p>
+        <b>Notes</b>
       </p>
       <MDXComponent code={code} />
     </div>

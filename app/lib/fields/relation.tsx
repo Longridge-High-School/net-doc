@@ -74,7 +74,19 @@ const EditComponent: Field<string>['editComponent'] = ({
         {newValue.map((entryId: string) => {
           return (
             <span key={entryId} className="bg-gray-300 p-2 rounded">
-              {entries[entryId].value}
+              {entries[entryId].value}{' '}
+              <button
+                type="button"
+                onClick={() => {
+                  const filtered = newValue.filter((fId: string) => {
+                    return fId !== entryId
+                  })
+
+                  setNewValue([...filtered])
+                }}
+              >
+                ❌
+              </button>
             </span>
           )
         })}

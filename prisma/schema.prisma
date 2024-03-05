@@ -48,11 +48,12 @@ model AssetField {
 }
 
 model Entry {
-  id      String  @id @default(uuid())
-  asset   Asset   @relation(fields: [assetId], references: [id], onDelete: Cascade)
-  assetId String
-  values  Value[]
-  deleted Boolean @default(false)
+  id        String          @id @default(uuid())
+  asset     Asset           @relation(fields: [assetId], references: [id], onDelete: Cascade)
+  assetId   String
+  values    Value[]
+  deleted   Boolean         @default(false)
+  passwords EntryPassword[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
@@ -138,15 +139,18 @@ model Password {
   notes    String
 
   history PasswordHistory[]
+  entries EntryPassword[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
 model PasswordHistory {
-  id            String @id @default(uuid())
-  previousTitle String
-  previousBody  String
+  id               String @id @default(uuid())
+  previousTitle    String
+  previousUsername String
+  previousPassword String
+  previousNotes    String
 
   editedBy   User     @relation(fields: [editedById], references: [id])
   editedById String
@@ -155,4 +159,14 @@ model PasswordHistory {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model EntryPassword {
+  id         String   @id @default(uuid())
+  entry      Entry    @relation(fields: [entryId], references: [id], onDelete: Cascade)
+  entryId    String
+  password   Password @relation(fields: [passwordId], references: [id], onDelete: Cascade)
+  passwordId String
+
+  @@unique([entryId, passwordId])
 }

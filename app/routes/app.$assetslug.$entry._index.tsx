@@ -16,7 +16,13 @@ export const loader = async ({request, params}: LoaderFunctionArgs) => {
 
   const entry = await prisma.entry.findFirstOrThrow({
     where: {id: params.entry},
-    include: {asset: true, values: {include: {field: true}}}
+    include: {
+      asset: true,
+      values: {include: {field: true}},
+      passwords: {
+        include: {password: {select: {id: true, title: true, username: true}}}
+      }
+    }
   })
 
   const relations = await prisma.$queryRaw<
@@ -106,6 +112,28 @@ const AssetEntry = () => {
                 )
               })}
         </div>
+        <h4>Linked Passwords</h4>
+        <div className="flex gap-2">
+          {entry.passwords.length === 0
+            ? 'No Passwords'
+            : entry.passwords.map(({id, password}) => {
+                return (
+                  <a
+                    key={id}
+                    href={`/app/passwords/${password.id}`}
+                    className="bg-gray-300 p-2 rounded"
+                  >
+                    {password.title}
+                  </a>
+                )
+              })}
+        </div>
+        <AButton
+          href={`/app/${entry.asset.slug}/${entry.id}/link-password`}
+          className="bg-info"
+        >
+          Link a Password
+        </AButton>
       </div>
     </div>
   )
