@@ -101,6 +101,7 @@ model User {
   pastValueEdits  ValueHistory[]
   documentChanges DocumentHistory[]
   passwordChanges PasswordHistory[]
+  passwordViews   PasswordView[]
 }
 
 model Session {
@@ -146,6 +147,7 @@ model Password {
 
   history PasswordHistory[]
   entries EntryPassword[]
+  views   PasswordView[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -165,6 +167,15 @@ model PasswordHistory {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model PasswordView {
+  id         String   @id @default(uuid())
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId     String
+  password   Password @relation(fields: [passwordId], references: [id], onDelete: Cascade)
+  passwordId String
+  createdAt  DateTime @default(now())
 }
 
 model EntryPassword {
