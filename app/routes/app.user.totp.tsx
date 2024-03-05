@@ -1,8 +1,7 @@
 import {
   type LoaderFunctionArgs,
   type ActionFunctionArgs,
-  json,
-  redirect
+  json
 } from '@remix-run/node'
 import {useLoaderData, useActionData} from '@remix-run/react'
 import {invariant, omit} from '@arcath/utils'
@@ -12,9 +11,9 @@ import {toDataURL} from 'qrcode'
 import {ensureUser} from '~/lib/utils/ensure-user'
 import {getPrisma} from '~/lib/prisma.server'
 import {Button} from '~/lib/components/button'
-import {Label, Input, Select} from '~/lib/components/input'
+import {Label, Input} from '~/lib/components/input'
 
-export const loader = async ({request, params}: LoaderFunctionArgs) => {
+export const loader = async ({request}: LoaderFunctionArgs) => {
   const currentUser = await ensureUser(request, 'user:edit', {})
 
   const prisma = getPrisma()
@@ -101,7 +100,7 @@ const UserTOTP = () => {
   return (
     <div>
       <h3>2FA Setup</h3>
-      <img src={dataURL} />
+      <img src={dataURL} alt="2FA QR Code" />
       <form method="POST">
         <Label>
           Verification Code
