@@ -187,3 +187,12 @@ model EntryPassword {
 
   @@unique([entryId, passwordId])
 }
+
+model DashboardBox {
+  id        String   @id @default(uuid())
+  boxType   String
+  meta      String
+  order     Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
