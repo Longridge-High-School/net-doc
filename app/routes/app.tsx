@@ -24,7 +24,7 @@ export const loader = async ({request}: LoaderFunctionArgs) => {
 export type AppLoader = {user: {name: string; id: string}}
 
 const Dashboard = () => {
-  const {assets} = useLoaderData<typeof loader>()
+  const {assets, user} = useLoaderData<typeof loader>()
 
   return (
     <div className="grid grid-cols-dashboard min-h-screen gap-8">
@@ -55,6 +55,7 @@ const Dashboard = () => {
         </div>
         <h2 className="text-xl ml-4">User</h2>
         <div className="pl-8 mb-2 flex flex-col gap-2 mt-2">
+          <a href="/app/user">👤 {user.name}</a>
           <a href="/app/logout">👋 Logout</a>
         </div>
       </nav>

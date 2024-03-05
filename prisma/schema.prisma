@@ -85,11 +85,17 @@ model ValueHistory {
 }
 
 model User {
-  id              String            @id @default(uuid())
-  name            String
-  email           String
-  passwordHash    String
-  role            String
+  id           String @id @default(uuid())
+  name         String
+  email        String
+  passwordHash String
+  role         String
+
+  totpSecret    String @default("")
+  totpPeriod    Int    @default(0)
+  totpDigits    Int    @default(0)
+  totpAlgorithm String @default("")
+
   sessions        Session[]
   valueEdits      Value[]
   pastValueEdits  ValueHistory[]

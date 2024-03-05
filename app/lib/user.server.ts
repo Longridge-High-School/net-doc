@@ -1,4 +1,5 @@
 import bcrypt from 'bcrypt'
+import {generateTOTP, getTOTPAuthUri, verifyTOTP} from '@epic-web/totp'
 
 const SALT_ROUNDS = 10
 
