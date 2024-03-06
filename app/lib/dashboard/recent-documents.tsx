@@ -6,7 +6,7 @@ import {formatAsDate} from '../utils/format'
 export const recentDocumentsBox: DashboardBoxFn<
   Array<{id: string; title: string; updatedAt: string}>
 > = {
-  loader: async meta => {
+  loader: async () => {
     const prisma = getPrisma()
 
     const recentDocuments = await prisma.document.findMany({
@@ -14,7 +14,11 @@ export const recentDocumentsBox: DashboardBoxFn<
       take: 5
     })
 
-    return recentDocuments as any
+    return recentDocuments as unknown as Array<{
+      id: string
+      title: string
+      updatedAt: string
+    }>
   },
   render: documents => {
     return (

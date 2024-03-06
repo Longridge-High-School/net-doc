@@ -1,5 +1,6 @@
 import React from 'react'
 
+import {recentChangesBox} from './recent-changes'
 import {recentDocumentsBox} from './recent-documents'
 
 export type DashboardBoxFn<Data> = {
@@ -21,5 +22,6 @@ export const DashboardBox = ({
 }
 
 export const BOXES = {
+  recentChanges: recentChangesBox,
   recentDocuments: recentDocumentsBox
 }

@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import {type LoaderFunctionArgs, json} from '@remix-run/node'
 import {useLoaderData} from '@remix-run/react'
 import {asyncMap} from '@arcath/utils'
@@ -45,7 +47,7 @@ const Dashboard = () => {
         {boxes.map(({id, data, boxType}) => {
           return (
             <div className="border-gray-300 border shadow-xl p-2" key={id}>
-              {BOXES[boxType as keyof typeof BOXES].render(data)}
+              {BOXES[boxType as keyof typeof BOXES].render(data as any)}
             </div>
           )
         })}

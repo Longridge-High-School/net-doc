@@ -12,6 +12,7 @@ import {ensureUser} from '~/lib/utils/ensure-user'
 import {Header} from '~/lib/components/header'
 import {getPrisma} from '~/lib/prisma.server'
 import {Button} from '~/lib/components/button'
+import {Label, Select} from '~/lib/components/input'
 
 import {BOXES} from '~/lib/dashboard/boxes'
 
@@ -29,7 +30,7 @@ export const loader = async ({request}: LoaderFunctionArgs) => {
 }
 
 export const action = async ({request}: ActionFunctionArgs) => {
-  const user = await ensureUser(request, 'dashboard:edit', {})
+  await ensureUser(request, 'dashboard:edit', {})
 
   const formData = await request.formData()
 
@@ -66,11 +67,31 @@ const DashboardEdit = () => {
     <div>
       <Header title="Dashboard" />
       <form method="POST">
-        <div className="grid grid-cols-3 gap-4">
+        <div className="grid grid-cols-3 gap-4 mb-4">
           {dashBoxes.map(({id, boxType, meta}) => {
             return (
-              <div className="border border-gray-300" key={id}>
+              <div className="border border-gray-300 p-2" key={id}>
                 <BoxEditor boxType={boxType} meta={meta} id={id} />
+                <Label>
+                  Type
+                  <Select
+                    value={boxType}
+                    onChange={e => {
+                      setDashBoxes(
+                        dashBoxes.map(box => {
+                          if (box.id === id) {
+                            box.boxType = e.target.value
+                          }
+
+                          return box
+                        })
+                      )
+                    }}
+                  >
+                    <option value="recentChanges">Recent Changes</option>
+                    <option value="recentDocuments">Recent Documents</option>
+                  </Select>
+                </Label>
               </div>
             )
           })}
