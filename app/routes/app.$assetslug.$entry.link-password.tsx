@@ -94,7 +94,7 @@ const LinkPasswordToEntry = () => {
   }
 
   return (
-    <div>
+    <div className="entry">
       <h2>Link Password to {asset.singular}</h2>
       <form method="POST">
         <Selector />

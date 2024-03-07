@@ -5,7 +5,6 @@ import {useQuery} from '@tanstack/react-query'
 
 import {ensureUser} from '~/lib/utils/ensure-user'
 import {getPrisma} from '~/lib/prisma.server'
-import {AButton} from '~/lib/components/button'
 import {buildMDXBundle} from '~/lib/mdx.server'
 import {MDXComponent} from '~/lib/mdx'
 import {formatAsDateTime} from '~/lib/utils/format'
@@ -51,15 +50,9 @@ const AssetManagerAsset = () => {
   })
 
   return (
-    <div className="grid grid-cols-3">
-      <div className="col-span-2">
-        <h4 className="text-xl">{password.title}</h4>
-        <AButton
-          href={`/app/passwords/${password.id}/edit`}
-          className="bg-info"
-        >
-          Edit
-        </AButton>
+    <div className="grid grid-cols-3 gap-4">
+      <div className="col-span-2 entry">
+        <h2>{password.title}</h2>
         <p>
           <b>Username</b>
           <br />
@@ -87,7 +80,9 @@ const AssetManagerAsset = () => {
         <MDXComponent code={code} />
       </div>
       <div>
-        <h3>View History</h3>
+        <h3 className="border-b border-b-gray-200 text-xl font-light mb-4">
+          View History
+        </h3>
         {password.views.map(({id, user, createdAt}) => {
           return (
             <div key={id}>

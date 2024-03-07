@@ -36,11 +36,10 @@ const editComponent = ({
 
 const viewComponent = ({value, title}: {value: string; title: string}) => {
   return (
-    <p>
-      <b>{title}</b>
-      <br />
+    <div className="mb-4">
+      <h5 className="mb-2 font-bold">{title}</h5>
       {value}
-    </p>
+    </div>
   )
 }
 

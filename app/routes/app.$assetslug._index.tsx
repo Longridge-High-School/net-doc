@@ -4,7 +4,6 @@ import {type Entry} from '@prisma/client'
 import {ensureUser} from '~/lib/utils/ensure-user'
 import {getPrisma} from '~/lib/prisma.server'
 import {useLoaderData} from '@remix-run/react'
-import {AButton} from '~/lib/components/button'
 
 export const loader = async ({request, params}: LoaderFunctionArgs) => {
   const user = await ensureUser(request, 'asset:view', {
@@ -30,10 +29,7 @@ const Asset = () => {
 
   return (
     <div>
-      <AButton href={`/app/${asset.slug}/add`} className="bg-success">
-        Add {asset.singular}
-      </AButton>
-      <table>
+      <table className="entry-table">
         <thead>
           <tr>
             <th>{asset.singular}</th>

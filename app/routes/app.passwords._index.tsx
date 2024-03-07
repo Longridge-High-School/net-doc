@@ -3,14 +3,16 @@ import {useLoaderData} from '@remix-run/react'
 
 import {ensureUser} from '~/lib/utils/ensure-user'
 import {getPrisma} from '~/lib/prisma.server'
-import {AButton} from '~/lib/components/button'
 
 export const loader = async ({request}: LoaderFunctionArgs) => {
   const user = await ensureUser(request, 'password:list', {})
 
   const prisma = getPrisma()
 
-  const passwords = await prisma.password.findMany({orderBy: {title: 'asc'}})
+  const passwords = await prisma.password.findMany({
+    select: {id: true, title: true, username: true},
+    orderBy: {title: 'asc'}
+  })
 
   return json({user, passwords})
 }
@@ -20,22 +22,21 @@ const DocumentsList = () => {
 
   return (
     <div>
-      <AButton className="bg-success" href="/app/passwords/add">
-        Add Password
-      </AButton>
-      <table>
+      <table className="entry-table">
         <thead>
           <tr>
             <th>Password</th>
+            <th>Username</th>
           </tr>
         </thead>
         <tbody>
-          {passwords.map(({id, title}) => {
+          {passwords.map(({id, title, username}) => {
             return (
               <tr key={id}>
                 <td>
                   <a href={`/app/passwords/${id}`}>{title}</a>
                 </td>
+                <td>{username}</td>
               </tr>
             )
           })}

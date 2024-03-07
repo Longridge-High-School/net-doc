@@ -5,3 +5,32 @@
 body {
   @apply bg-[#f0f3f4];
 }
+
+.entry-link {
+  @apply text-blue-500 hover:text-blue-300 transition-all;
+}
+
+.entry-table {
+  @apply border border-gray-300 bg-white shadow-xl;
+}
+
+.entry-table th,
+.entry-table td {
+  @apply p-2;
+}
+
+.entry-table a {
+  @apply text-blue-500 hover:text-blue-300 transition-all;
+}
+
+.entry {
+  @apply border border-gray-300 bg-white shadow-xl p-2;
+}
+
+.entry h2 {
+  @apply text-xl font-light mb-4 border-b border-b-gray-200;
+}
+
+.entry p {
+  @apply mb-2;
+}

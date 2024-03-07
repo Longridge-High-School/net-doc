@@ -49,7 +49,7 @@ export const action = async ({request}: ActionFunctionArgs) => {
 
 const PasswordAdd = () => {
   return (
-    <div>
+    <div className="entry">
       <h2>Add Password</h2>
       <form method="POST">
         <Label>

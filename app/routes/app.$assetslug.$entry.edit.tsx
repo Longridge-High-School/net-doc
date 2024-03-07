@@ -92,7 +92,7 @@ const Asset = () => {
   const fieldValues = indexedBy('fieldId', entry.values)
 
   return (
-    <div>
+    <div className="entry">
       <h2>Edit {asset.singular}</h2>
       <form method="POST">
         {asset.assetFields.map(({id, helperText, field}) => {

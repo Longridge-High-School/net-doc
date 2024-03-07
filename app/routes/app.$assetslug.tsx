@@ -1,5 +1,6 @@
 import {type LoaderFunctionArgs, json} from '@remix-run/node'
-import {Outlet, useLoaderData} from '@remix-run/react'
+import {Outlet, useLoaderData, useMatches} from '@remix-run/react'
+import {invariant} from '@arcath/utils'
 
 import {ensureUser} from '~/lib/utils/ensure-user'
 import {getPrisma} from '~/lib/prisma.server'
@@ -21,10 +22,44 @@ export const loader = async ({request, params}: LoaderFunctionArgs) => {
 }
 const Asset = () => {
   const {asset} = useLoaderData<typeof loader>()
+  const matches = useMatches()
+
+  const actions = () => {
+    const {id, params} = matches.pop()!
+
+    invariant(id)
+    invariant(params)
+
+    switch (id) {
+      case 'routes/app.$assetslug._index':
+        return [
+          {
+            link: `/app/${asset.slug}/add`,
+            label: `Add ${asset.singular}`,
+            className: 'bg-success'
+          }
+        ]
+      case 'routes/app.$assetslug.$entry._index':
+        return [
+          {
+            link: `/app/${asset.slug}/${params.entry}/edit`,
+            label: `Edit ${asset.singular}`,
+            className: 'bg-info'
+          },
+          {
+            link: `/app/${asset.slug}/${params.entry}/delete`,
+            label: `Delete ${asset.singular}`,
+            className: 'bg-danger'
+          }
+        ]
+      default:
+        return []
+    }
+  }
 
   return (
     <div>
-      <Header title={asset.name} />
+      <Header title={asset.name} actions={actions()} />
       <Outlet />
     </div>
   )

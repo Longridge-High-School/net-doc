@@ -51,36 +51,30 @@ const AssetEntry = () => {
   }, '')
 
   return (
-    <div className="grid grid-cols-4">
+    <div className="grid grid-cols-4 gap-4">
       <div className="col-span-3">
-        <h2>{name}</h2>
-        <AButton
-          className="bg-info"
-          href={`/app/${entry.asset.slug}/${entry.id}/edit`}
-        >
-          Edit
-        </AButton>
-        <AButton
-          className="bg-danger"
-          href={`/app/${entry.asset.slug}/${entry.id}/delete`}
-        >
-          Delete
-        </AButton>
-        {entry.values.map(({id, value, field}) => {
-          const Field = ({value}: {value: string}) => {
-            return FIELDS[field.type].viewComponent({
-              value,
-              title: field.name,
-              meta: field.meta
-            })
-          }
+        <div className="border border-gray-300 shadow-xl bg-white p-2">
+          <h2 className="border-b border-b-gray-200 text-xl font-light mb-4">
+            {name}
+          </h2>
+          {entry.values.map(({id, value, field}) => {
+            const Field = ({value}: {value: string}) => {
+              return FIELDS[field.type].viewComponent({
+                value,
+                title: field.name,
+                meta: field.meta
+              })
+            }
 
-          return <Field value={value} key={id} />
-        })}
+            return <Field value={value} key={id} />
+          })}
+        </div>
       </div>
       <div>
-        <h3>Additional Details</h3>
-        <h4>Linked Entries</h4>
+        <h3 className="border-b border-b-gray-200 text-xl font-light mb-4">
+          Additional Details
+        </h3>
+        <h4 className="text-xl font-light mb-4">Linked Entries</h4>
         <div className="flex gap-2">
           {relations.length === 0
             ? 'No Linked Entries'
@@ -96,7 +90,7 @@ const AssetEntry = () => {
                 )
               })}
         </div>
-        <h4>Linked Documents</h4>
+        <h4 className="text-xl font-light my-4">Linked Documents</h4>
         <div className="flex gap-2">
           {documents.length === 0
             ? 'No Linked Entries'
@@ -112,7 +106,7 @@ const AssetEntry = () => {
                 )
               })}
         </div>
-        <h4>Linked Passwords</h4>
+        <h4 className="text-xl font-light my-4">Linked Passwords</h4>
         <div className="flex gap-2">
           {entry.passwords.length === 0
             ? 'No Passwords'
@@ -130,7 +124,7 @@ const AssetEntry = () => {
         </div>
         <AButton
           href={`/app/${entry.asset.slug}/${entry.id}/link-password`}
-          className="bg-info"
+          className="bg-info text-sm mt-4"
         >
           Link a Password
         </AButton>

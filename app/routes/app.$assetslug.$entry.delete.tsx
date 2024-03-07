@@ -73,7 +73,7 @@ const AssetEntryDelete = () => {
   }, '')
 
   return (
-    <div>
+    <div className="entry">
       <h2>Delete {name}</h2>
       <p>Are you sure you want to delete this {entry.asset.singular}?</p>
       <form method="POST">

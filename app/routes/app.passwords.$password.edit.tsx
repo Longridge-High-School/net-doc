@@ -80,7 +80,7 @@ const PasswordEdit = () => {
   const {password, decrypted} = useLoaderData<typeof loader>()
 
   return (
-    <div>
+    <div className="entry">
       <h2>Edit Password</h2>
       <form method="POST">
         <Label>

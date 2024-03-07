@@ -27,15 +27,17 @@ const FieldManagerList = () => {
         <thead>
           <tr>
             <th>Name</th>
+            <th>Type</th>
           </tr>
         </thead>
         <tbody>
-          {fields.map(({id, name}) => {
+          {fields.map(({id, name, type}) => {
             return (
               <tr key={id}>
                 <td>
                   <a href={`/app/field-manager/${id}`}>{name}</a>
                 </td>
+                <td>{type}</td>
               </tr>
             )
           })}

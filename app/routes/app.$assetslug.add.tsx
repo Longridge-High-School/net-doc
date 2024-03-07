@@ -58,7 +58,7 @@ const Asset = () => {
   const {asset} = useLoaderData<typeof loader>()
 
   return (
-    <div>
+    <div className="entry">
       <h2>Add {asset.singular}</h2>
       <form method="POST">
         {asset.assetFields.map(({id, helperText, field}) => {

@@ -66,7 +66,7 @@ const DocumentEdit = () => {
   const {document} = useLoaderData<typeof loader>()
 
   return (
-    <div>
+    <div className="entry">
       <h2>Edit Document</h2>
       <form method="POST">
         <Label>

@@ -37,7 +37,7 @@ export const action = async ({request}: ActionFunctionArgs) => {
 
 const DocumentAdd = () => {
   return (
-    <div>
+    <div className="entry">
       <h2>Add Document</h2>
       <form method="POST">
         <Label>

@@ -3,7 +3,6 @@ import {useLoaderData} from '@remix-run/react'
 
 import {ensureUser} from '~/lib/utils/ensure-user'
 import {getPrisma} from '~/lib/prisma.server'
-import {AButton} from '~/lib/components/button'
 import {buildMDXBundle} from '~/lib/mdx.server'
 import {MDXComponent} from '~/lib/mdx'
 
@@ -23,18 +22,15 @@ export const loader = async ({request, params}: LoaderFunctionArgs) => {
   return json({user, document, code})
 }
 
-const AssetManagerAsset = () => {
+const DocumentView = () => {
   const {document, code} = useLoaderData<typeof loader>()
 
   return (
-    <div>
-      <h4 className="text-xl">{document.title}</h4>
-      <AButton href={`/app/documents/${document.id}/edit`} className="bg-info">
-        Edit
-      </AButton>
+    <div className="entry">
+      <h2 className="text-xl">{document.title}</h2>
       <MDXComponent code={code} />
     </div>
   )
 }
 
-export default AssetManagerAsset
+export default DocumentView

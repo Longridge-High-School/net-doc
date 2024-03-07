@@ -59,7 +59,7 @@ const Dashboard = () => {
           <a href="/app/logout">👋 Logout</a>
         </div>
       </nav>
-      <div className="pt-8">
+      <div className="pt-8 pr-8">
         <Outlet />
       </div>
     </div>

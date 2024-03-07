@@ -3,7 +3,7 @@ import {useLoaderData} from '@remix-run/react'
 
 import {ensureUser} from '~/lib/utils/ensure-user'
 import {getPrisma} from '~/lib/prisma.server'
-import {AButton} from '~/lib/components/button'
+import {formatAsDate} from '~/lib/utils/format'
 
 export const loader = async ({request}: LoaderFunctionArgs) => {
   const user = await ensureUser(request, 'document:list', {})
@@ -20,22 +20,23 @@ const DocumentsList = () => {
 
   return (
     <div>
-      <AButton className="bg-success" href="/app/documents/add">
-        Add Document
-      </AButton>
-      <table>
+      <table className="entry-table">
         <thead>
           <tr>
             <th>Document</th>
+            <th>Last Updated</th>
           </tr>
         </thead>
         <tbody>
-          {documents.map(({id, title}) => {
+          {documents.map(({id, title, updatedAt}) => {
             return (
               <tr key={id}>
                 <td>
-                  <a href={`/app/documents/${id}`}>{title}</a>
+                  <a href={`/app/documents/${id}`} className="entry-link">
+                    {title}
+                  </a>
                 </td>
+                <td>{formatAsDate(updatedAt)}</td>
               </tr>
             )
           })}
