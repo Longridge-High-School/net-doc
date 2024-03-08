@@ -27,7 +27,7 @@ const viewComponent = ({value, title}: {value: string; title: string}) => {
   return (
     <div className="mb-4">
       <h5 className="mb-2 font-bold">{title}</h5>
-      <img src={value} />
+      <img src={value} alt={title} />
     </div>
   )
 }
@@ -38,7 +38,7 @@ export const imageField: Field<string> = {
   editComponent,
   viewComponent,
   valueSetter: (formData, name, currentValue) => {
-    const file = formData.get(name) as any as {filepath: string} | undefined
+    const file = formData.get(name) as unknown as {filepath: string} | undefined
 
     if (file) {
       return `/uploads/${basename(file.filepath)}`
