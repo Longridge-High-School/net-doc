@@ -1,5 +1,4 @@
 import {type LoaderFunctionArgs, type MetaFunction, json} from '@remix-run/node'
-import {type Entry} from '@prisma/client'
 import {indexedBy} from '@arcath/utils'
 
 import {ensureUser} from '~/lib/utils/ensure-user'

@@ -53,6 +53,7 @@ const MetaComponent: DashboardBoxFn<ApproachingDatesData>['metaComponent'] = (
             setMetaData({title: e.target.value, fieldId: metaData.fieldId})
           }}
         />
+        <HelperText>The title for the box.</HelperText>
       </Label>
       <Label>
         Date Field
