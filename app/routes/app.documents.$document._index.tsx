@@ -24,7 +24,7 @@ export const loader = async ({request, params}: LoaderFunctionArgs) => {
 }
 
 export const meta: MetaFunction<typeof loader> = ({data}) => {
-  return [{title: pageTitle('Document', data?.document.title!)}]
+  return [{title: pageTitle('Document', data!.document.title)}]
 }
 
 const DocumentView = () => {

@@ -60,7 +60,7 @@ export const action = async ({request, params}: ActionFunctionArgs) => {
 }
 
 export const meta: MetaFunction<typeof loader> = ({data}) => {
-  return [{title: pageTitle('User Manager', data?.user.name!)}]
+  return [{title: pageTitle('User Manager', data!.user.name)}]
 }
 
 const UserManagerUser = () => {

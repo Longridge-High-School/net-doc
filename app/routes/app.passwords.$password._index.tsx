@@ -34,7 +34,7 @@ export const loader = async ({request, params}: LoaderFunctionArgs) => {
 }
 
 export const meta: MetaFunction<typeof loader> = ({data}) => {
-  return [{title: pageTitle('Password', data?.password.title!)}]
+  return [{title: pageTitle('Password', data!.password.title)}]
 }
 
 const AssetManagerAsset = () => {

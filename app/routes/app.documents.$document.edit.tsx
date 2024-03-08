@@ -65,7 +65,7 @@ export const action = async ({request, params}: ActionFunctionArgs) => {
 }
 
 export const meta: MetaFunction<typeof loader> = ({data}) => {
-  return [{title: pageTitle('Document', data?.document.title!, 'Edit')}]
+  return [{title: pageTitle('Document', data!.document.title, 'Edit')}]
 }
 
 const DocumentEdit = () => {

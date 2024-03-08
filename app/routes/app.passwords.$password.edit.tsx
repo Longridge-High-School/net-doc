@@ -79,7 +79,7 @@ export const action = async ({request, params}: ActionFunctionArgs) => {
 }
 
 export const meta: MetaFunction<typeof loader> = ({data}) => {
-  return [{title: pageTitle('Password', data?.password.title!, 'Edit')}]
+  return [{title: pageTitle('Password', data!.password.title, 'Edit')}]
 }
 
 const PasswordEdit = () => {

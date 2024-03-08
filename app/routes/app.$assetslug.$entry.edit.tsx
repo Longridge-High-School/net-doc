@@ -95,7 +95,7 @@ export const action = async ({request, params}: ActionFunctionArgs) => {
 }
 
 export const meta: MetaFunction<typeof loader> = ({data}) => {
-  return [{title: pageTitle(data?.entry.asset.singular!, data?.name!, 'Edit')}]
+  return [{title: pageTitle(data!.entry.asset.singular, data!.name, 'Edit')}]
 }
 
 const Asset = () => {

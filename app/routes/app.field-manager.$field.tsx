@@ -57,7 +57,7 @@ export const action = async ({request, params}: ActionFunctionArgs) => {
 }
 
 export const meta: MetaFunction<typeof loader> = ({data}) => {
-  return [{title: pageTitle('Field Manager', data?.field.name!)}]
+  return [{title: pageTitle('Field Manager', data!.field.name)}]
 }
 
 const FieldManagerField = () => {
