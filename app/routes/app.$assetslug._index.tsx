@@ -74,6 +74,8 @@ const Asset = () => {
                     const lookup = `${entryId}/${field.id}`
 
                     const {value} = values[lookup]
+                      ? values[lookup]
+                      : {value: ''}
 
                     const Value = () => {
                       return FIELDS[field.type].listComponent({
