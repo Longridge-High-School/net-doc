@@ -21,8 +21,11 @@ export const loader = async ({request, params}: LoaderFunctionArgs) => {
   })
 
   const entries = await prisma.$queryRaw<
-    Array<Entry & {value: string; entryId: string}>
-  >`SELECT * FROM Entry INNER JOIN Value value ON fieldId = (SELECT nameFieldId from Asset WHERE slug = ${params.assetslug}) AND entryId = entry.id WHERE assetId = (SELECT id from Asset WHERE slug = ${params.assetslug}) AND deleted = false;`
+    Array<{id: string; name: string}>
+  >`SELECT Entry.id, Value.value as name FROM Entry 
+  INNER JOIN Value ON Value.fieldId = (SELECT nameFieldId from Asset WHERE id = Entry.assetId) AND entryId = entry.id
+  WHERE assetId = (SELECT id from Asset WHERE slug = ${params.assetslug}) AND deleted = false
+  ORDER BY name ASC`
 
   const extraValues = await prisma.$queryRaw<
     Array<{
@@ -62,16 +65,16 @@ const Asset = () => {
           </tr>
         </thead>
         <tbody>
-          {entries.map(({entryId, value}) => {
+          {entries.map(({id, name}) => {
             return (
-              <tr key={entryId}>
+              <tr key={id}>
                 <td>
-                  <a href={`/app/${asset.slug}/${entryId}`}>{value}</a>
+                  <a href={`/app/${asset.slug}/${id}`}>{name}</a>
                 </td>
                 {asset.assetFields
                   .filter(({displayOnTable}) => displayOnTable)
                   .map(({field}) => {
-                    const lookup = `${entryId}/${field.id}`
+                    const lookup = `${id}/${field.id}`
 
                     const {value} = values[lookup]
                       ? values[lookup]
