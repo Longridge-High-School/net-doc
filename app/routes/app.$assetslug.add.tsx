@@ -3,7 +3,8 @@ import {
   type ActionFunctionArgs,
   type MetaFunction,
   json,
-  redirect
+  redirect,
+  unstable_parseMultipartFormData
 } from '@remix-run/node'
 import {useLoaderData} from '@remix-run/react'
 import {asyncForEach} from '@arcath/utils'
@@ -13,6 +14,7 @@ import {getPrisma} from '~/lib/prisma.server'
 import {FIELDS} from '~/lib/fields/field'
 import {Button} from '~/lib/components/button'
 import {pageTitle} from '~/lib/utils/page-title'
+import {getUploadHandler} from '~/lib/utils/upload-handler.server'
 
 export const loader = async ({request, params}: LoaderFunctionArgs) => {
   const user = await ensureUser(request, 'asset:view', {
@@ -36,7 +38,9 @@ export const action = async ({request, params}: ActionFunctionArgs) => {
 
   const prisma = getPrisma()
 
-  const formData = await request.formData()
+  const uploadHandler = getUploadHandler()
+
+  const formData = await unstable_parseMultipartFormData(request, uploadHandler)
 
   const asset = await prisma.asset.findFirstOrThrow({
     where: {slug: params.assetslug},
@@ -45,13 +49,16 @@ export const action = async ({request, params}: ActionFunctionArgs) => {
 
   const entry = await prisma.entry.create({data: {assetId: asset.id}})
 
-  await asyncForEach(asset.assetFields, async ({fieldId, field, id}) => {
-    const value = await FIELDS[field.type].valueSetter(formData, id)
+  await asyncForEach(
+    asset.assetFields,
+    async ({fieldId, field, id}): Promise<void> => {
+      const value = await FIELDS[field.type].valueSetter(formData, id, '')
 
-    await prisma.value.create({
-      data: {entryId: entry.id, fieldId, value, lastEditedById: user.id}
-    })
-  })
+      await prisma.value.create({
+        data: {entryId: entry.id, fieldId, value, lastEditedById: user.id}
+      })
+    }
+  )
 
   return redirect(`/app/${params.assetslug}/${entry.id}`)
 }
@@ -70,7 +77,7 @@ const Asset = () => {
   return (
     <div className="entry">
       <h2>Add {asset.singular}</h2>
-      <form method="POST">
+      <form method="POST" encType="multipart/form-data">
         {asset.assetFields.map(({id, helperText, field}) => {
           const FieldComponent = (params: {
             label: string

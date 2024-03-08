@@ -6,5 +6,6 @@ export default {
   // publicPath: "/build/",
   // serverBuildPath: "build/index.js",
   tailwind: true,
-  serverDependenciesToBundle: [/@arcath\/utils.*/]
+  serverDependenciesToBundle: [/@arcath\/utils.*/],
+  browserNodeBuiltinsPolyfill: {modules: {path: true}}
 }

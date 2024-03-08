@@ -1,4 +1,5 @@
 import {dateField} from './date'
+import {imageField} from './image'
 import {markdownField} from './markdown'
 import {relationField} from './relation'
 import {selectField} from './select'
@@ -29,7 +30,11 @@ export type Field<ValueType> = {
     title: string
     meta: string
   }) => JSX.Element
-  valueSetter: (data: FormData, name: string) => string | Promise<string>
+  valueSetter: (
+    data: FormData,
+    name: string,
+    currentValue: ValueType
+  ) => string | Promise<string>
   valueGetter: (data: string) => ValueType | Promise<ValueType>
   metaComponent: ({meta}: {meta: string}) => JSX.Element
   metaSave: (data: FormData) => string
@@ -40,11 +45,13 @@ export const FIELD_TYPES = [
   'select',
   'relation',
   'markdown',
-  'date'
+  'date',
+  'image'
 ] as const
 
 export const FIELDS: {[type: string]: Field<string>} = {
   date: dateField,
+  image: imageField,
   markdown: markdownField,
   relation: relationField,
   select: selectField,

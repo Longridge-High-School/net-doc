@@ -3,7 +3,8 @@ import {
   type ActionFunctionArgs,
   type MetaFunction,
   json,
-  redirect
+  redirect,
+  unstable_parseMultipartFormData
 } from '@remix-run/node'
 import {asyncForEach, indexedBy} from '@arcath/utils'
 
@@ -13,6 +14,7 @@ import {useLoaderData} from '@remix-run/react'
 import {FIELDS} from '~/lib/fields/field'
 import {Button} from '~/lib/components/button'
 import {pageTitle} from '~/lib/utils/page-title'
+import {getUploadHandler} from '~/lib/utils/upload-handler.server'
 
 export const loader = async ({request, params}: LoaderFunctionArgs) => {
   const user = await ensureUser(request, 'entry:edit', {
@@ -47,7 +49,9 @@ export const action = async ({request, params}: ActionFunctionArgs) => {
 
   const prisma = getPrisma()
 
-  const formData = await request.formData()
+  const uploadHandler = getUploadHandler()
+
+  const formData = await unstable_parseMultipartFormData(request, uploadHandler)
 
   const asset = await prisma.asset.findFirstOrThrow({
     where: {slug: params.assetslug},
@@ -60,11 +64,15 @@ export const action = async ({request, params}: ActionFunctionArgs) => {
   })
 
   await asyncForEach(asset.assetFields, async ({fieldId, field, id}) => {
-    const value = await FIELDS[field.type].valueSetter(formData, id)
-
     const entryValue = await prisma.value.findFirst({
       where: {entryId: params.entry!, fieldId}
     })
+
+    const value = await FIELDS[field.type].valueSetter(
+      formData,
+      id,
+      entryValue ? entryValue.value : ''
+    )
 
     if (entryValue) {
       if (value !== entryValue.value) {
@@ -108,7 +116,7 @@ const Asset = () => {
   return (
     <div className="entry">
       <h2>Edit {asset.singular}</h2>
-      <form method="POST">
+      <form method="POST" encType="multipart/form-data">
         {asset.assetFields.map(({id, helperText, field}) => {
           const FieldComponent = (params: {
             label: string

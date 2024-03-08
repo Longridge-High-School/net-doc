@@ -79,6 +79,7 @@ const FieldManagerAdd = () => {
             }}
           >
             <option value="date">Date</option>
+            <option value="image">Image</option>
             <option value="markdown">Markdown</option>
             <option value="relation">Relation</option>
             <option value="select">Select</option>
