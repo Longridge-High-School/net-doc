@@ -70,7 +70,7 @@ const Asset = () => {
                 </td>
                 {asset.assetFields
                   .filter(({displayOnTable}) => displayOnTable)
-                  .map(({id, field}) => {
+                  .map(({field}) => {
                     const lookup = `${entryId}/${field.id}`
 
                     const {value} = values[lookup]

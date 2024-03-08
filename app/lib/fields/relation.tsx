@@ -197,7 +197,7 @@ const metaSave: Field<string>['metaSave'] = formData => {
   return formData.get('meta') as string
 }
 
-const listComponent: Field<string>['listComponent'] = ({
+const ListComponent: Field<string>['listComponent'] = ({
   value,
   title,
   meta
@@ -248,7 +248,7 @@ export const relationField: Field<string> = {
   editComponent: EditComponent,
   viewComponent: ViewComponent,
   metaComponent: MetaComponent,
-  listComponent,
+  listComponent: ListComponent,
   valueSetter: (formData, name) => {
     return formData.get(name) as string
   },
