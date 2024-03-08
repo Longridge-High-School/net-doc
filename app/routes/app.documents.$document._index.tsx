@@ -1,10 +1,11 @@
-import {type LoaderFunctionArgs, json} from '@remix-run/node'
+import {type LoaderFunctionArgs, type MetaFunction, json} from '@remix-run/node'
 import {useLoaderData} from '@remix-run/react'
 
 import {ensureUser} from '~/lib/utils/ensure-user'
 import {getPrisma} from '~/lib/prisma.server'
 import {buildMDXBundle} from '~/lib/mdx.server'
 import {MDXComponent} from '~/lib/mdx'
+import {pageTitle} from '~/lib/utils/page-title'
 
 export const loader = async ({request, params}: LoaderFunctionArgs) => {
   const user = await ensureUser(request, 'document:view', {
@@ -20,6 +21,10 @@ export const loader = async ({request, params}: LoaderFunctionArgs) => {
   const code = await buildMDXBundle(document.body)
 
   return json({user, document, code})
+}
+
+export const meta: MetaFunction<typeof loader> = ({data}) => {
+  return [{title: pageTitle('Document', data?.document.title!)}]
 }
 
 const DocumentView = () => {

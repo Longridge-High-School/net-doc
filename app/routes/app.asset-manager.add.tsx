@@ -1,6 +1,7 @@
 import {
   type LoaderFunctionArgs,
   type ActionFunctionArgs,
+  type MetaFunction,
   json,
   redirect
 } from '@remix-run/node'
@@ -10,6 +11,7 @@ import {ensureUser} from '~/lib/utils/ensure-user'
 import {getPrisma} from '~/lib/prisma.server'
 import {Button} from '~/lib/components/button'
 import {Label, Input, HelperText} from '~/lib/components/input'
+import {pageTitle} from '~/lib/utils/page-title'
 
 export const loader = async ({request}: LoaderFunctionArgs) => {
   const user = await ensureUser(request, 'asset-manager:add', {})
@@ -41,9 +43,13 @@ export const action = async ({request}: ActionFunctionArgs) => {
   return redirect(`/app/asset-manager/${asset.id}`)
 }
 
+export const meta: MetaFunction = () => {
+  return [{title: pageTitle('Asset Manager', 'Add')}]
+}
+
 const AssetManagerAdd = () => {
   return (
-    <div>
+    <div className="entry">
       <form method="POST">
         <Label>
           Name

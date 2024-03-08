@@ -1,9 +1,8 @@
-import {type LoaderFunctionArgs, json} from '@remix-run/node'
+import {type LoaderFunctionArgs, type MetaFunction, json} from '@remix-run/node'
 import {Outlet, useLoaderData} from '@remix-run/react'
 
 import {ensureUser} from '~/lib/utils/ensure-user'
 import {getPrisma} from '~/lib/prisma.server'
-import {AButton} from '~/lib/components/button'
 
 export const loader = async ({request, params}: LoaderFunctionArgs) => {
   const user = await ensureUser(request, 'asset-manager:edit', {
@@ -33,15 +32,19 @@ const AssetManagerAsset = () => {
   return (
     <div className="grid grid-cols-2 gap-4">
       <div>
-        <h4 className="text-xl">{asset.name}</h4>
-        <AButton
-          href={`/app/asset-manager/${asset.id}/edit`}
-          className="bg-info"
-        >
-          Edit
-        </AButton>
-        <h5>Fields</h5>
-        <table>
+        <div className="entry">
+          <h2>{asset.name}</h2>
+          <div className="mb-4">
+            <h5 className="mb-2 font-bold">Singular</h5>
+            {asset.singular}
+          </div>
+          <div className="mb-4">
+            <h5 className="mb-2 font-bold">Plural</h5>
+            {asset.plural}
+          </div>
+        </div>
+        <h3 className="border-b border-gray-300 font-light mb-2">Fields</h3>
+        <table className="entry-table">
           <thead>
             <tr>
               <th>Field</th>
@@ -59,8 +62,10 @@ const AssetManagerAsset = () => {
             })}
           </tbody>
         </table>
-        <h5>Add Field</h5>
-        <div className="grid grid-cols-3 gap-2">
+        <h3 className="border-b border-gray-300 font-light mt-4 mb-2">
+          Add Field
+        </h3>
+        <div className="grid grid-cols-3 gap-4">
           {fields.map(({id, name, description}) => {
             return (
               <a

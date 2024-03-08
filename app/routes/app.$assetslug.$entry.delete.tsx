@@ -1,6 +1,7 @@
 import {
   type LoaderFunctionArgs,
   type ActionFunctionArgs,
+  MetaFunction,
   json,
   redirect
 } from '@remix-run/node'
@@ -11,6 +12,7 @@ import {ensureUser} from '~/lib/utils/ensure-user'
 import {getPrisma} from '~/lib/prisma.server'
 import {Button} from '~/lib/components/button'
 import {Input, Label} from '~/lib/components/input'
+import {pageTitle} from '~/lib/utils/page-title'
 
 export const loader = async ({request, params}: LoaderFunctionArgs) => {
   const user = await ensureUser(request, 'entry:delete', {
@@ -24,7 +26,15 @@ export const loader = async ({request, params}: LoaderFunctionArgs) => {
     include: {asset: true, values: {include: {field: true}}}
   })
 
-  return json({user, entry})
+  const name = entry.values.reduce((n, v) => {
+    if (n !== '') return n
+
+    if (v.fieldId === entry.asset.nameFieldId) return v.value
+
+    return ''
+  }, '')
+
+  return json({user, entry, name})
 }
 
 export const action = async ({request, params}: ActionFunctionArgs) => {
@@ -61,16 +71,14 @@ export const action = async ({request, params}: ActionFunctionArgs) => {
   return json({error: 'Name does not match'})
 }
 
+export const meta: MetaFunction<typeof loader> = ({data}) => {
+  return [
+    {title: pageTitle(data?.entry.asset.singular!, data?.name!, 'Delete')}
+  ]
+}
+
 const AssetEntryDelete = () => {
-  const {entry} = useLoaderData<typeof loader>()
-
-  const name = entry.values.reduce((n, v) => {
-    if (n !== '') return n
-
-    if (v.fieldId === entry.asset.nameFieldId) return v.value
-
-    return ''
-  }, '')
+  const {entry, name} = useLoaderData<typeof loader>()
 
   return (
     <div className="entry">

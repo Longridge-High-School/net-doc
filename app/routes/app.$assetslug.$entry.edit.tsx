@@ -1,6 +1,7 @@
 import {
   type LoaderFunctionArgs,
   type ActionFunctionArgs,
+  type MetaFunction,
   json,
   redirect
 } from '@remix-run/node'
@@ -11,6 +12,7 @@ import {getPrisma} from '~/lib/prisma.server'
 import {useLoaderData} from '@remix-run/react'
 import {FIELDS} from '~/lib/fields/field'
 import {Button} from '~/lib/components/button'
+import {pageTitle} from '~/lib/utils/page-title'
 
 export const loader = async ({request, params}: LoaderFunctionArgs) => {
   const user = await ensureUser(request, 'entry:edit', {
@@ -27,7 +29,15 @@ export const loader = async ({request, params}: LoaderFunctionArgs) => {
     }
   })
 
-  return json({user, entry})
+  const name = entry.values.reduce((n, v) => {
+    if (n !== '') return n
+
+    if (v.fieldId === entry.asset.nameFieldId) return v.value
+
+    return ''
+  }, '')
+
+  return json({user, entry, name})
 }
 
 export const action = async ({request, params}: ActionFunctionArgs) => {
@@ -82,6 +92,10 @@ export const action = async ({request, params}: ActionFunctionArgs) => {
   })
 
   return redirect(`/app/${params.assetslug}/${params.entry}`)
+}
+
+export const meta: MetaFunction<typeof loader> = ({data}) => {
+  return [{title: pageTitle(data?.entry.asset.singular!, data?.name!, 'Edit')}]
 }
 
 const Asset = () => {

@@ -1,9 +1,10 @@
-import {type LoaderFunctionArgs, json} from '@remix-run/node'
+import {type LoaderFunctionArgs, type MetaFunction, json} from '@remix-run/node'
 import {type Entry} from '@prisma/client'
 
 import {ensureUser} from '~/lib/utils/ensure-user'
 import {getPrisma} from '~/lib/prisma.server'
 import {useLoaderData} from '@remix-run/react'
+import {pageTitle} from '~/lib/utils/page-title'
 
 export const loader = async ({request, params}: LoaderFunctionArgs) => {
   const user = await ensureUser(request, 'asset:view', {
@@ -22,6 +23,10 @@ export const loader = async ({request, params}: LoaderFunctionArgs) => {
   >`SELECT * FROM Entry INNER JOIN Value value ON fieldId = (SELECT nameFieldId from Asset WHERE slug = ${params.assetslug}) AND entryId = entry.id WHERE assetId = (SELECT id from Asset WHERE slug = ${params.assetslug}) AND deleted = false;`
 
   return json({user, asset, entries})
+}
+
+export const meta: MetaFunction<typeof loader> = ({data}) => {
+  return [{title: pageTitle(data?.asset.plural!)}]
 }
 
 const Asset = () => {

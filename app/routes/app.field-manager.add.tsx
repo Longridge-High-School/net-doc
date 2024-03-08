@@ -1,6 +1,7 @@
 import {
   type LoaderFunctionArgs,
   type ActionFunctionArgs,
+  type MetaFunction,
   json,
   redirect
 } from '@remix-run/node'
@@ -12,6 +13,7 @@ import {getPrisma} from '~/lib/prisma.server'
 import {Button} from '~/lib/components/button'
 import {Label, Input, HelperText, Select} from '~/lib/components/input'
 import {FIELDS} from '~/lib/fields/field'
+import {pageTitle} from '~/lib/utils/page-title'
 
 export const loader = async ({request}: LoaderFunctionArgs) => {
   const user = await ensureUser(request, 'field-manager:add', {})
@@ -43,6 +45,10 @@ export const action = async ({request}: ActionFunctionArgs) => {
   return redirect(`/app/field-manager/${field.id}`)
 }
 
+export const meta: MetaFunction = () => {
+  return [{title: pageTitle('Field Manager', 'Add')}]
+}
+
 const FieldManagerAdd = () => {
   const [type, setType] = useState('text')
 
@@ -51,7 +57,7 @@ const FieldManagerAdd = () => {
   }
 
   return (
-    <div>
+    <div className="entry">
       <form method="POST">
         <Label>
           Name

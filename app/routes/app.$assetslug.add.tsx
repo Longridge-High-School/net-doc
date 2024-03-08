@@ -1,6 +1,7 @@
 import {
   type LoaderFunctionArgs,
   type ActionFunctionArgs,
+  type MetaFunction,
   json,
   redirect
 } from '@remix-run/node'
@@ -11,6 +12,7 @@ import {ensureUser} from '~/lib/utils/ensure-user'
 import {getPrisma} from '~/lib/prisma.server'
 import {FIELDS} from '~/lib/fields/field'
 import {Button} from '~/lib/components/button'
+import {pageTitle} from '~/lib/utils/page-title'
 
 export const loader = async ({request, params}: LoaderFunctionArgs) => {
   const user = await ensureUser(request, 'asset:view', {
@@ -52,6 +54,14 @@ export const action = async ({request, params}: ActionFunctionArgs) => {
   })
 
   return redirect(`/app/${params.assetslug}/${entry.id}`)
+}
+
+export const meta: MetaFunction<typeof loader> = ({data}) => {
+  return [
+    {
+      title: pageTitle(data?.asset.singular!, 'New')
+    }
+  ]
 }
 
 const Asset = () => {

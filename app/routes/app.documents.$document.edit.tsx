@@ -1,6 +1,7 @@
 import {
   type LoaderFunctionArgs,
   type ActionFunctionArgs,
+  type MetaFunction,
   json,
   redirect
 } from '@remix-run/node'
@@ -11,6 +12,7 @@ import {ensureUser} from '~/lib/utils/ensure-user'
 import {getPrisma} from '~/lib/prisma.server'
 import {Button} from '~/lib/components/button'
 import {Label, Input, HelperText, TextArea} from '~/lib/components/input'
+import {pageTitle} from '~/lib/utils/page-title'
 
 export const loader = async ({request, params}: LoaderFunctionArgs) => {
   const user = await ensureUser(request, 'document:edit', {
@@ -60,6 +62,10 @@ export const action = async ({request, params}: ActionFunctionArgs) => {
   })
 
   return redirect(`/app/documents/${updatedDocument.id}`)
+}
+
+export const meta: MetaFunction<typeof loader> = ({data}) => {
+  return [{title: pageTitle('Document', data?.document.title!, 'Edit')}]
 }
 
 const DocumentEdit = () => {

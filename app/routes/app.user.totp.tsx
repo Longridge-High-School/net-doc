@@ -1,6 +1,7 @@
 import {
   type LoaderFunctionArgs,
   type ActionFunctionArgs,
+  type MetaFunction,
   json
 } from '@remix-run/node'
 import {useLoaderData, useActionData} from '@remix-run/react'
@@ -12,6 +13,7 @@ import {ensureUser} from '~/lib/utils/ensure-user'
 import {getPrisma} from '~/lib/prisma.server'
 import {Button} from '~/lib/components/button'
 import {Label, Input} from '~/lib/components/input'
+import {pageTitle} from '~/lib/utils/page-title'
 
 export const loader = async ({request}: LoaderFunctionArgs) => {
   const currentUser = await ensureUser(request, 'user:edit', {})
@@ -81,25 +83,29 @@ export const action = async ({request}: ActionFunctionArgs) => {
   return json({result})
 }
 
+export const meta: MetaFunction = () => {
+  return [{title: pageTitle('User', '2FA Setup')}]
+}
+
 const UserTOTP = () => {
   const {state, dataURL, genTotp} = useLoaderData<typeof loader>()
   const data = useActionData<typeof action>()
 
   if (data) {
     if (data.result) {
-      return <div>2FA Setup!</div>
+      return <div className="entry">2FA Setup!</div>
     }
 
-    return <div>2FA Setup Error</div>
+    return <div className="entry">2FA Setup Error</div>
   }
 
   if (state) {
-    return <div>2FA is Setup, Remove?</div>
+    return <div className="entry">2FA is Setup, Remove?</div>
   }
 
   return (
-    <div>
-      <h3>2FA Setup</h3>
+    <div className="entry">
+      <h2>2FA Setup</h2>
       <img src={dataURL} alt="2FA QR Code" />
       <form method="POST">
         <Label>

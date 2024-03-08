@@ -1,6 +1,7 @@
 import {
   type LoaderFunctionArgs,
   type ActionFunctionArgs,
+  type MetaFunction,
   json,
   redirect
 } from '@remix-run/node'
@@ -10,6 +11,7 @@ import {ensureUser} from '~/lib/utils/ensure-user'
 import {getPrisma} from '~/lib/prisma.server'
 import {Button} from '~/lib/components/button'
 import {Label, Input, HelperText, TextArea} from '~/lib/components/input'
+import {pageTitle} from '~/lib/utils/page-title'
 
 export const loader = async ({request}: LoaderFunctionArgs) => {
   const user = await ensureUser(request, 'document:add', {})
@@ -33,6 +35,10 @@ export const action = async ({request}: ActionFunctionArgs) => {
   const document = await prisma.document.create({data: {title, body}})
 
   return redirect(`/app/documents/${document.id}`)
+}
+
+export const meta: MetaFunction = () => {
+  return [{title: pageTitle('Documents', 'Add')}]
 }
 
 const DocumentAdd = () => {

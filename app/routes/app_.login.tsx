@@ -18,6 +18,8 @@ import {checkPassword} from '~/lib/user.server'
 
 import {session} from '~/lib/cookies'
 
+import {pageTitle} from '~/lib/utils/page-title'
+
 export const action = async ({request}: ActionFunctionArgs) => {
   const formData = await request.formData()
 
@@ -94,7 +96,7 @@ export const action = async ({request}: ActionFunctionArgs) => {
 }
 
 export const meta: MetaFunction = () => {
-  return [{title: 'Login'}]
+  return [{title: pageTitle('Login')}]
 }
 
 const DashboardLogin = () => {

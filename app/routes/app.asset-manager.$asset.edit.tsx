@@ -59,8 +59,8 @@ const AssetManagerAsset = () => {
   const {asset} = useLoaderData<typeof loader>()
 
   return (
-    <div>
-      <h3>Edit</h3>
+    <div className="entry">
+      <h2>Edit</h2>
       <form method="POST">
         <Label>
           Name

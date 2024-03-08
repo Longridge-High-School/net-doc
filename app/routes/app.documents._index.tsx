@@ -1,9 +1,10 @@
-import {type LoaderFunctionArgs, json} from '@remix-run/node'
+import {type LoaderFunctionArgs, type MetaFunction, json} from '@remix-run/node'
 import {useLoaderData} from '@remix-run/react'
 
 import {ensureUser} from '~/lib/utils/ensure-user'
 import {getPrisma} from '~/lib/prisma.server'
 import {formatAsDate} from '~/lib/utils/format'
+import {pageTitle} from '~/lib/utils/page-title'
 
 export const loader = async ({request}: LoaderFunctionArgs) => {
   const user = await ensureUser(request, 'document:list', {})
@@ -13,6 +14,10 @@ export const loader = async ({request}: LoaderFunctionArgs) => {
   const documents = await prisma.document.findMany({orderBy: {title: 'asc'}})
 
   return json({user, documents})
+}
+
+export const meta: MetaFunction = () => {
+  return [{title: pageTitle('Documents')}]
 }
 
 const DocumentsList = () => {

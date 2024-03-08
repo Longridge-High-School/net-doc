@@ -1,4 +1,4 @@
-import {type LoaderFunctionArgs, json} from '@remix-run/node'
+import {type LoaderFunctionArgs, type MetaFunction, json} from '@remix-run/node'
 import {useLoaderData} from '@remix-run/react'
 import {useState} from 'react'
 import {useQuery} from '@tanstack/react-query'
@@ -8,6 +8,7 @@ import {getPrisma} from '~/lib/prisma.server'
 import {buildMDXBundle} from '~/lib/mdx.server'
 import {MDXComponent} from '~/lib/mdx'
 import {formatAsDateTime} from '~/lib/utils/format'
+import {pageTitle} from '~/lib/utils/page-title'
 
 export const loader = async ({request, params}: LoaderFunctionArgs) => {
   const user = await ensureUser(request, 'password:view', {
@@ -30,6 +31,10 @@ export const loader = async ({request, params}: LoaderFunctionArgs) => {
   const code = await buildMDXBundle(password.notes)
 
   return json({user, password, code})
+}
+
+export const meta: MetaFunction<typeof loader> = ({data}) => {
+  return [{title: pageTitle('Password', data?.password.title!)}]
 }
 
 const AssetManagerAsset = () => {

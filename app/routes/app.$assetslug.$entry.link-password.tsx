@@ -1,6 +1,7 @@
 import {
   type LoaderFunctionArgs,
   type ActionFunctionArgs,
+  type MetaFunction,
   json,
   redirect
 } from '@remix-run/node'
@@ -11,6 +12,7 @@ import {getPrisma} from '~/lib/prisma.server'
 import {useLoaderData} from '@remix-run/react'
 import {Button} from '~/lib/components/button'
 import {relationField} from '~/lib/fields/relation'
+import {pageTitle} from '~/lib/utils/page-title'
 
 export const loader = async ({request, params}: LoaderFunctionArgs) => {
   const user = await ensureUser(request, 'entry:edit', {
@@ -72,6 +74,14 @@ export const action = async ({request, params}: ActionFunctionArgs) => {
   })
 
   return redirect(`/app/${params.assetslug}/${params.entry}`)
+}
+
+export const meta: MetaFunction<typeof loader> = ({data}) => {
+  return [
+    {
+      title: pageTitle(data?.entry.asset.singular!, 'Link a Password')
+    }
+  ]
 }
 
 const LinkPasswordToEntry = () => {

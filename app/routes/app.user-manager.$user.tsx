@@ -1,6 +1,7 @@
 import {
   type LoaderFunctionArgs,
   type ActionFunctionArgs,
+  type MetaFunction,
   json,
   redirect
 } from '@remix-run/node'
@@ -12,6 +13,7 @@ import {getPrisma} from '~/lib/prisma.server'
 import {Button} from '~/lib/components/button'
 import {Label, Input, Select} from '~/lib/components/input'
 import {hashPassword} from '~/lib/user.server'
+import {pageTitle} from '~/lib/utils/page-title'
 
 export const loader = async ({request, params}: LoaderFunctionArgs) => {
   const currentUser = await ensureUser(request, 'user-manager:edit', {
@@ -57,11 +59,15 @@ export const action = async ({request, params}: ActionFunctionArgs) => {
   return redirect(`/app/user-manager/${user.id}`)
 }
 
+export const meta: MetaFunction<typeof loader> = ({data}) => {
+  return [{title: pageTitle('User Manager', data?.user.name!)}]
+}
+
 const UserManagerUser = () => {
   const {user} = useLoaderData<typeof loader>()
 
   return (
-    <div>
+    <div className="entry">
       <h4 className="text-xl">{user.name}</h4>
       <form method="POST">
         <Label>

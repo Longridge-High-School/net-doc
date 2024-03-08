@@ -1,9 +1,9 @@
-import {type LoaderFunctionArgs, json} from '@remix-run/node'
+import {type LoaderFunctionArgs, type MetaFunction, json} from '@remix-run/node'
 import {useLoaderData} from '@remix-run/react'
 
 import {ensureUser} from '~/lib/utils/ensure-user'
 import {getPrisma} from '~/lib/prisma.server'
-import {AButton} from '~/lib/components/button'
+import {pageTitle} from '~/lib/utils/page-title'
 
 export const loader = async ({request}: LoaderFunctionArgs) => {
   const user = await ensureUser(request, 'user-manager:list', {})
@@ -18,15 +18,16 @@ export const loader = async ({request}: LoaderFunctionArgs) => {
   return json({user, users})
 }
 
+export const meta: MetaFunction = () => {
+  return [{title: pageTitle('User Manager')}]
+}
+
 const UserManagerList = () => {
   const {users} = useLoaderData<typeof loader>()
 
   return (
     <div>
-      <AButton className="bg-success" href="/app/user-manager/add">
-        Add User
-      </AButton>
-      <table className="">
+      <table className="entry-table">
         <thead>
           <tr>
             <th>Name</th>

@@ -1,8 +1,9 @@
-import {type LoaderFunctionArgs, json} from '@remix-run/node'
+import {type LoaderFunctionArgs, type MetaFunction, json} from '@remix-run/node'
 import {useLoaderData} from '@remix-run/react'
 
 import {ensureUser} from '~/lib/utils/ensure-user'
 import {getPrisma} from '~/lib/prisma.server'
+import {pageTitle} from '~/lib/utils/page-title'
 
 export const loader = async ({request}: LoaderFunctionArgs) => {
   const user = await ensureUser(request, 'password:list', {})
@@ -15,6 +16,10 @@ export const loader = async ({request}: LoaderFunctionArgs) => {
   })
 
   return json({user, passwords})
+}
+
+export const meta: MetaFunction = () => {
+  return [{title: pageTitle('Password')}]
 }
 
 const DocumentsList = () => {

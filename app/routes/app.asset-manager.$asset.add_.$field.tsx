@@ -10,7 +10,7 @@ import {invariant} from '@arcath/utils'
 import {ensureUser} from '~/lib/utils/ensure-user'
 import {getPrisma} from '~/lib/prisma.server'
 import {Button} from '~/lib/components/button'
-import {Label, Input} from '~/lib/components/input'
+import {Label, Input, HelperText} from '~/lib/components/input'
 
 export const loader = async ({request, params}: LoaderFunctionArgs) => {
   const user = await ensureUser(request, 'asset-manager:edit', {
@@ -53,18 +53,24 @@ const AssetManagerAddFieldToAsset = () => {
   const {field} = useLoaderData<typeof loader>()
 
   return (
-    <div>
+    <div className="entry">
       <h2>Add Field</h2>
-      <h4>{field.name}</h4>
-      <p>{field.description}</p>
+      <h4 className="font-bold">{field.name}</h4>
+      <p className="mb-4">{field.description}</p>
       <form method="POST">
         <Label>
           Helper Text
           <Input name="helper" />
+          <HelperText>
+            The text displayed under the field in the entry form.
+          </HelperText>
         </Label>
         <Label>
           Order
           <Input name="order" type="number" />
+          <HelperText>
+            The order to display the fields in (number, lowest first).
+          </HelperText>
         </Label>
         <Button className="bg-success">Add Field</Button>
       </form>

@@ -1,6 +1,7 @@
 import {
   type LoaderFunctionArgs,
   type ActionFunctionArgs,
+  type MetaFunction,
   json,
   redirect
 } from '@remix-run/node'
@@ -10,6 +11,7 @@ import {ensureUser} from '~/lib/utils/ensure-user'
 import {getPrisma} from '~/lib/prisma.server'
 import {Button} from '~/lib/components/button'
 import {Label, Input, HelperText, TextArea} from '~/lib/components/input'
+import {pageTitle} from '~/lib/utils/page-title'
 
 import {getCryptoSuite} from '~/lib/crypto.server'
 
@@ -45,6 +47,10 @@ export const action = async ({request}: ActionFunctionArgs) => {
   })
 
   return redirect(`/app/passwords/${newPassword.id}`)
+}
+
+export const meta: MetaFunction = () => {
+  return [{title: pageTitle('Passwords', 'Add')}]
 }
 
 const PasswordAdd = () => {

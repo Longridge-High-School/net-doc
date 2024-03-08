@@ -1,6 +1,7 @@
 import {
   type LoaderFunctionArgs,
   type ActionFunctionArgs,
+  type MetaFunction,
   json
 } from '@remix-run/node'
 import {invariant} from '@arcath/utils'
@@ -11,6 +12,7 @@ import {getPrisma} from '~/lib/prisma.server'
 import {useActionData} from '@remix-run/react'
 import {Header} from '~/lib/components/header'
 import {Input, Label} from '~/lib/components/input'
+import {pageTitle} from '~/lib/utils/page-title'
 
 export const loader = async ({request}: LoaderFunctionArgs) => {
   const user = await ensureUser(request, 'search', {})
@@ -37,6 +39,10 @@ export const action = async ({request}: ActionFunctionArgs) => {
   WHERE Entry.id IN (SELECT entryId FROM Value WHERE value LIKE ${`%${query}%`} OR value = ${query}) AND deleted = false`
 
   return json({results})
+}
+
+export const meta: MetaFunction = () => {
+  return [{title: pageTitle('Search')}]
 }
 
 const Search = () => {

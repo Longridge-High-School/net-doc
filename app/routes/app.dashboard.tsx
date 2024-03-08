@@ -1,6 +1,7 @@
 import {
   type LoaderFunctionArgs,
   type ActionFunctionArgs,
+  type MetaFunction,
   json,
   redirect
 } from '@remix-run/node'
@@ -13,6 +14,7 @@ import {Header} from '~/lib/components/header'
 import {getPrisma} from '~/lib/prisma.server'
 import {Button} from '~/lib/components/button'
 import {Label, Select} from '~/lib/components/input'
+import {pageTitle} from '~/lib/utils/page-title'
 
 import {BOXES} from '~/lib/dashboard/boxes'
 
@@ -57,6 +59,10 @@ export const action = async ({request}: ActionFunctionArgs) => {
   })
 
   return redirect('/app')
+}
+
+export const meta: MetaFunction = () => {
+  return [{title: pageTitle('Dashboard')}]
 }
 
 const DashboardEdit = () => {

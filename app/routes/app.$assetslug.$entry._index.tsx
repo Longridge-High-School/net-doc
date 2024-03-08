@@ -98,7 +98,7 @@ const AssetEntry = () => {
           Additional Details
         </h3>
         <h4 className="text-xl font-light mb-4">Linked Entries</h4>
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-2">
           {relations.length === 0
             ? 'No Linked Entries'
             : relations.map(({entryId, value, slug, icon}) => {
@@ -114,7 +114,7 @@ const AssetEntry = () => {
               })}
         </div>
         <h4 className="text-xl font-light my-4">Linked Documents</h4>
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-2">
           {documents.length === 0
             ? 'No Linked Entries'
             : documents.map(({id, title}) => {
@@ -124,13 +124,13 @@ const AssetEntry = () => {
                     href={`/app/documents/${id}`}
                     className="bg-gray-300 p-2 rounded"
                   >
-                    {title}
+                    📰 {title}
                   </a>
                 )
               })}
         </div>
         <h4 className="text-xl font-light my-4">Linked Passwords</h4>
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-2">
           {entry.passwords.length === 0
             ? 'No Passwords'
             : entry.passwords.map(({id, password}) => {
@@ -140,7 +140,7 @@ const AssetEntry = () => {
                     href={`/app/passwords/${password.id}`}
                     className="bg-gray-300 p-2 rounded"
                   >
-                    {password.title}
+                    🔒 {password.title}
                   </a>
                 )
               })}

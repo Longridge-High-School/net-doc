@@ -1,12 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import {type LoaderFunctionArgs, json} from '@remix-run/node'
+import {type LoaderFunctionArgs, type MetaFunction, json} from '@remix-run/node'
 import {useLoaderData} from '@remix-run/react'
 import {asyncMap} from '@arcath/utils'
 
 import {ensureUser} from '~/lib/utils/ensure-user'
 import {Header} from '~/lib/components/header'
 import {getPrisma} from '~/lib/prisma.server'
+import {pageTitle} from '~/lib/utils/page-title'
 
 import {BOXES} from '~/lib/dashboard/boxes'
 
@@ -26,6 +27,10 @@ export const loader = async ({request, params}: LoaderFunctionArgs) => {
   })
 
   return json({user, boxes: boxesWithData})
+}
+
+export const meta: MetaFunction = () => {
+  return [{title: pageTitle('Dashboard')}]
 }
 
 const Dashboard = () => {

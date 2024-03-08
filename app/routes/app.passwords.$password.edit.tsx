@@ -1,6 +1,7 @@
 import {
   type LoaderFunctionArgs,
   type ActionFunctionArgs,
+  type MetaFunction,
   json,
   redirect
 } from '@remix-run/node'
@@ -12,6 +13,7 @@ import {getPrisma} from '~/lib/prisma.server'
 import {Button} from '~/lib/components/button'
 import {Label, Input, HelperText, TextArea} from '~/lib/components/input'
 import {getCryptoSuite} from '~/lib/crypto.server'
+import {pageTitle} from '~/lib/utils/page-title'
 
 export const loader = async ({request, params}: LoaderFunctionArgs) => {
   const user = await ensureUser(request, 'password:edit', {
@@ -74,6 +76,10 @@ export const action = async ({request, params}: ActionFunctionArgs) => {
   })
 
   return redirect(`/app/passwords/${updatedPassword.id}`)
+}
+
+export const meta: MetaFunction<typeof loader> = ({data}) => {
+  return [{title: pageTitle('Password', data?.password.title!, 'Edit')}]
 }
 
 const PasswordEdit = () => {

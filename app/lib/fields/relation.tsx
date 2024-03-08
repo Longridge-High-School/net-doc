@@ -104,7 +104,7 @@ const ViewComponent: Field<string>['viewComponent'] = ({
 }) => {
   const {isPending, error, data} = useQuery<{
     entries: Array<{entryId: string; value: string}>
-    asset: {slug: string}
+    asset: {slug: string; icon: string}
   }>({
     queryKey: ['entries', meta],
     queryFn: async () => {
@@ -118,9 +118,8 @@ const ViewComponent: Field<string>['viewComponent'] = ({
 
   if (isPending) {
     return (
-      <p>
-        <b>{title}</b>
-        <br />
+      <p className="mb-4">
+        <h5 className="mb-2 font-bold">{title}</h5>
         Loading...
       </p>
     )
@@ -128,9 +127,8 @@ const ViewComponent: Field<string>['viewComponent'] = ({
 
   if (error) {
     return (
-      <p>
-        <b>{title}</b>
-        <br />
+      <p className="mb-4">
+        <h5 className="mb-2 font-bold">{title}</h5>
         Could not load relation
       </p>
     )
@@ -140,9 +138,8 @@ const ViewComponent: Field<string>['viewComponent'] = ({
   const selections = JSON.parse(value)
 
   return (
-    <div>
-      <b>{title}</b>
-      <br />
+    <div className="mb-4">
+      <h5 className="mb-2 font-bold">{title}</h5>
       <div className="flex gap-2">
         {selections.map((entryId: string) => {
           return (
@@ -151,7 +148,7 @@ const ViewComponent: Field<string>['viewComponent'] = ({
               href={`/app/${data.asset.slug}/${entryId}`}
               className="bg-gray-300 p-2 rounded"
             >
-              {entries[entryId].value}
+              {data.asset.icon} {entries[entryId].value}
             </a>
           )
         })}
