@@ -33,9 +33,14 @@ const viewComponent = ({value, title}: {value: string; title: string}) => {
 
 const metaComponent = () => <></>
 
+const listComponent = ({value}: {value: string; title: string}) => {
+  return <>{value}</>
+}
+
 export const textField: Field<string> = {
   editComponent,
   viewComponent,
+  listComponent,
   valueSetter: (formData, name) => {
     return formData.get(name) as string
   },

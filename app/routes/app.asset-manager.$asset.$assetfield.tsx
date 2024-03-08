@@ -1,6 +1,7 @@
 import {
   type LoaderFunctionArgs,
   type ActionFunctionArgs,
+  type MetaFunction,
   json,
   redirect
 } from '@remix-run/node'
@@ -11,6 +12,7 @@ import {ensureUser} from '~/lib/utils/ensure-user'
 import {getPrisma} from '~/lib/prisma.server'
 import {Button} from '~/lib/components/button'
 import {Label, Input, HelperText, Checkbox} from '~/lib/components/input'
+import {pageTitle} from '~/lib/utils/page-title'
 
 export const loader = async ({request, params}: LoaderFunctionArgs) => {
   const user = await ensureUser(request, 'asset-manager:edit', {
@@ -18,10 +20,12 @@ export const loader = async ({request, params}: LoaderFunctionArgs) => {
   })
 
   const prisma = getPrisma()
+  const assetField = await prisma.assetField.findFirstOrThrow({
+    where: {id: params.assetfield!, assetId: params.asset!},
+    include: {field: true}
+  })
 
-  const field = await prisma.field.findFirstOrThrow({where: {id: params.field}})
-
-  return json({user, field})
+  return json({user, assetField})
 }
 
 export const action = async ({request, params}: ActionFunctionArgs) => {
@@ -38,10 +42,9 @@ export const action = async ({request, params}: ActionFunctionArgs) => {
   invariant(helper)
   invariant(order)
 
-  await prisma.assetField.create({
+  await prisma.assetField.update({
+    where: {id: params.assetfield},
     data: {
-      assetId: params.asset!,
-      fieldId: params.field!,
       helperText: helper,
       order: parseInt(order),
       displayOnTable: displayOnTable === 'on'
@@ -51,38 +54,53 @@ export const action = async ({request, params}: ActionFunctionArgs) => {
   return redirect(`/app/asset-manager/${params.asset}`)
 }
 
+export const meta: MetaFunction<typeof loader> = ({data}) => {
+  return [
+    {
+      title: pageTitle(
+        'Asset Manager',
+        'Edit Field',
+        data!.assetField.field.name
+      )
+    }
+  ]
+}
+
 const AssetManagerAddFieldToAsset = () => {
-  const {field} = useLoaderData<typeof loader>()
+  const {assetField} = useLoaderData<typeof loader>()
 
   return (
     <div className="entry">
-      <h2>Add Field</h2>
-      <h4 className="font-bold">{field.name}</h4>
-      <p className="mb-4">{field.description}</p>
+      <h2>Edit Field</h2>
+      <h4 className="font-bold">{assetField.field.name}</h4>
+      <p className="mb-4">{assetField.field.description}</p>
       <form method="POST">
         <Label>
           Helper Text
-          <Input name="helper" />
+          <Input name="helper" defaultValue={assetField.helperText} />
           <HelperText>
             The text displayed under the field in the entry form.
           </HelperText>
         </Label>
         <Label>
           Order
-          <Input name="order" type="number" />
+          <Input name="order" type="number" defaultValue={assetField.order} />
           <HelperText>
             The order to display the fields in (number, lowest first).
           </HelperText>
         </Label>
         <Label>
           Display on Tables?
-          <Checkbox name="displayontable" defaultChecked={false} />
+          <Checkbox
+            name="displayontable"
+            defaultChecked={assetField.displayOnTable}
+          />
           <HelperText>
             Should this field be displayed on the table? (do not set to yes for
             the name field).
           </HelperText>
         </Label>
-        <Button className="bg-success">Add Field</Button>
+        <Button className="bg-success">Update Field</Button>
       </form>
     </div>
   )

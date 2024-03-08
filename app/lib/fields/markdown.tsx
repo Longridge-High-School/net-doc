@@ -42,9 +42,16 @@ const viewComponent = ({value, title}: {value: string; title: string}) => {
 
 const metaComponent = () => <></>
 
+const listComponent: Field<string>['listComponent'] = ({value}) => {
+  const {code} = JSON.parse(value)
+
+  return <MDXComponent code={code} />
+}
+
 export const markdownField: Field<string> = {
   editComponent,
   viewComponent,
+  listComponent,
   valueSetter: async (formData, name) => {
     const markdown = formData.get(name) as string
     const code = await buildMDXBundle(markdown)

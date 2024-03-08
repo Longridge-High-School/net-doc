@@ -37,9 +37,10 @@ model Field {
 }
 
 model AssetField {
-  id         String @id @default(uuid())
-  order      Int
-  helperText String @default("")
+  id             String  @id @default(uuid())
+  order          Int
+  helperText     String  @default("")
+  displayOnTable Boolean @default(false)
 
   asset   Asset  @relation(fields: [assetId], references: [id], onDelete: Cascade)
   assetId String

@@ -197,10 +197,58 @@ const metaSave: Field<string>['metaSave'] = formData => {
   return formData.get('meta') as string
 }
 
+const listComponent: Field<string>['listComponent'] = ({
+  value,
+  title,
+  meta
+}) => {
+  const {isPending, error, data} = useQuery<{
+    entries: Array<{entryId: string; value: string}>
+    asset: {slug: string; icon: string}
+  }>({
+    queryKey: ['entries', meta],
+    queryFn: async () => {
+      const response = await fetch(`/api/${meta}/entries`)
+
+      const json = await response.json()
+
+      return json
+    }
+  })
+
+  if (isPending) {
+    return <>...</>
+  }
+
+  if (error) {
+    return <>Could not fetch {title}</>
+  }
+
+  const entries = indexedBy('entryId', data.entries)
+  const selections = JSON.parse(value)
+
+  return (
+    <div className="flex gap-2">
+      {selections.map((entryId: string) => {
+        return (
+          <a
+            key={entryId}
+            href={`/app/${data.asset.slug}/${entryId}`}
+            className="bg-gray-300 p-2 rounded"
+          >
+            {data.asset.icon} {entries[entryId].value}
+          </a>
+        )
+      })}
+    </div>
+  )
+}
+
 export const relationField: Field<string> = {
   editComponent: EditComponent,
   viewComponent: ViewComponent,
   metaComponent: MetaComponent,
+  listComponent,
   valueSetter: (formData, name) => {
     return formData.get(name) as string
   },

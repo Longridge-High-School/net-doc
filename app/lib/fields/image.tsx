@@ -34,9 +34,14 @@ const viewComponent = ({value, title}: {value: string; title: string}) => {
 
 const metaComponent = () => <></>
 
+const listComponent = ({value, title}: {value: string; title: string}) => {
+  return <img src={value} alt={title} />
+}
+
 export const imageField: Field<string> = {
   editComponent,
   viewComponent,
+  listComponent,
   valueSetter: (formData, name, currentValue) => {
     const file = formData.get(name) as unknown as {filepath: string} | undefined
 

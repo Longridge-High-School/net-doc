@@ -30,6 +30,15 @@ export type Field<ValueType> = {
     title: string
     meta: string
   }) => JSX.Element
+  listComponent: ({
+    value,
+    title,
+    meta
+  }: {
+    value: string
+    title: string
+    meta: string
+  }) => JSX.Element
   valueSetter: (
     data: FormData,
     name: string,

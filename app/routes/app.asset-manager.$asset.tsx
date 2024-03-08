@@ -49,17 +49,25 @@ const AssetManagerAsset = () => {
             <tr>
               <th>Field</th>
               <th>Helper Text</th>
+              <th>Display on Table?</th>
             </tr>
           </thead>
           <tbody>
-            {asset.assetFields.map(({id, helperText, field}) => {
-              return (
-                <tr key={id}>
-                  <td>{field.name}</td>
-                  <td>{helperText}</td>
-                </tr>
-              )
-            })}
+            {asset.assetFields.map(
+              ({id, helperText, field, displayOnTable}) => {
+                return (
+                  <tr key={id}>
+                    <td>
+                      <a href={`/app/asset-manager/${asset.id}/${id}`}>
+                        {field.name}
+                      </a>
+                    </td>
+                    <td>{helperText}</td>
+                    <td>{displayOnTable ? 'Yes' : 'No'}</td>
+                  </tr>
+                )
+              }
+            )}
           </tbody>
         </table>
         <h3 className="border-b border-gray-300 font-light mt-4 mb-2">

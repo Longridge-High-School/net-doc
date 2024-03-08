@@ -16,6 +16,25 @@ export const Input = (
   return <input {...omit(props, ['className'])} className={className} />
 }
 
+export const Checkbox = (
+  props: React.DetailedHTMLProps<
+    React.InputHTMLAttributes<HTMLInputElement>,
+    HTMLInputElement
+  >
+) => {
+  const className = `w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600 ${props.className}`
+
+  return (
+    <div className="mt-2 mb-4">
+      <input
+        {...omit(props, ['className'])}
+        type="checkbox"
+        className={className}
+      />
+    </div>
+  )
+}
+
 export const Label = (
   props: React.DetailedHTMLProps<
     React.LabelHTMLAttributes<HTMLLabelElement>,
