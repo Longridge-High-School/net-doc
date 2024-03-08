@@ -51,11 +51,25 @@ export const action = async ({request}: ActionFunctionArgs) => {
     invariant(meta)
     invariant(boxType)
 
+    console.dir([meta, boxType])
+
+    if (id.substring(0, 3) === 'new') {
+      await prisma.dashboardBox.create({data: {order: i, boxType, meta}})
+    } else {
+      await prisma.dashboardBox.update({
+        where: {id},
+        data: {order: i, boxType, meta}
+      })
+    }
+
+    /*
+    There is a prisma error that prevents this from working
+    https://github.com/prisma/prisma/issues/22947
     await prisma.dashboardBox.upsert({
       where: {id},
       create: {order: i, boxType, meta},
       update: {order: i, boxType, meta}
-    })
+    })*/
   })
 
   return redirect('/app')
@@ -94,6 +108,7 @@ const DashboardEdit = () => {
                       )
                     }}
                   >
+                    <option value="approachingDates">Approaching Dates</option>
                     <option value="recentChanges">Recent Changes</option>
                     <option value="recentDocuments">Recent Documents</option>
                   </Select>

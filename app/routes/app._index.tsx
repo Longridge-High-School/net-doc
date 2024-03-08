@@ -49,13 +49,13 @@ const Dashboard = () => {
         ]}
       />
       <div className="grid grid-cols-3 gap-4">
-        {boxes.map(({id, data, boxType}) => {
+        {boxes.map(({id, data, boxType, meta}) => {
           return (
             <div
               className="border-gray-300 border shadow-xl p-2 bg-white"
               key={id}
             >
-              {BOXES[boxType as keyof typeof BOXES].render(data as any)}
+              {BOXES[boxType as keyof typeof BOXES].render(data as any, meta)}
             </div>
           )
         })}

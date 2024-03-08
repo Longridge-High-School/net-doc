@@ -1,11 +1,12 @@
 import React from 'react'
 
+import {approachingDatesBox} from './approaching-dates'
 import {recentChangesBox} from './recent-changes'
 import {recentDocumentsBox} from './recent-documents'
 
 export type DashboardBoxFn<Data> = {
   loader: (meta: string) => Promise<Data>
-  render: (data: Data) => JSX.Element
+  render: (data: Data, meta: string) => JSX.Element
   metaComponent: (meta: string, id: string) => JSX.Element
 }
 
@@ -22,6 +23,7 @@ export const DashboardBox = ({
 }
 
 export const BOXES = {
+  approachingDates: approachingDatesBox,
   recentChanges: recentChangesBox,
   recentDocuments: recentDocumentsBox
 }
