@@ -13,7 +13,7 @@ export const loader = async ({request, params}: LoaderFunctionArgs) => {
 
   const asset = await prisma.asset.findFirstOrThrow({
     where: {id: params.asset},
-    include: {assetFields: {include: {field: true}}}
+    include: {assetFields: {include: {field: true}, orderBy: {order: 'asc'}}}
   })
 
   const fieldIds = asset.assetFields.map(({fieldId}) => fieldId)
@@ -50,11 +50,12 @@ const AssetManagerAsset = () => {
               <th>Field</th>
               <th>Helper Text</th>
               <th>Display on Table?</th>
+              <th>Order</th>
             </tr>
           </thead>
           <tbody>
             {asset.assetFields.map(
-              ({id, helperText, field, displayOnTable}) => {
+              ({id, helperText, field, displayOnTable, order}) => {
                 return (
                   <tr key={id}>
                     <td>
@@ -64,6 +65,7 @@ const AssetManagerAsset = () => {
                     </td>
                     <td>{helperText}</td>
                     <td>{displayOnTable ? 'Yes' : 'No'}</td>
+                    <td>{order}</td>
                   </tr>
                 )
               }
