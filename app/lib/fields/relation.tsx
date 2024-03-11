@@ -32,7 +32,7 @@ const EditComponent: Field<string>['editComponent'] = ({
     JSON.parse(value === '' || value === undefined ? '[]' : value)
   )
 
-  if (isPending) {
+  if (isPending || data === undefined) {
     return <span>Loading</span>
   }
   if (error) {
