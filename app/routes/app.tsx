@@ -3,10 +3,12 @@ import {
   Outlet,
   useRouteError,
   isRouteErrorResponse,
-  useLoaderData
+  useLoaderData,
+  Link
 } from '@remix-run/react'
 
 import {AButton} from '~/lib/components/button'
+import {Notificatons} from '~/lib/components/notifications'
 
 import {getPrisma} from '~/lib/prisma.server'
 import {ensureUser} from '~/lib/utils/ensure-user'
@@ -28,35 +30,36 @@ const Dashboard = () => {
 
   return (
     <div className="grid grid-cols-dashboard min-h-screen gap-8">
+      <Notificatons />
       <nav className="bg-gray-300 shadow-xl pt-8 text-[#444]">
         <h1 className="text-center text-4xl mb-8">Net Doc</h1>
         <h2 className="text-xl ml-4 mb-4">Core</h2>
         <div className="pl-8 mb-2 flex flex-col gap-2 mt-2">
-          <a href="/app">📜 Dashboard</a>
-          <a href="/app/search">🔎 Search</a>
-          <a href="/app/documents">📰 Documents</a>
-          <a href="/app/passwords">🔐 Passwords</a>
+          <Link to="/app">📜 Dashboard</Link>
+          <Link to="/app/search">🔎 Search</Link>
+          <Link to="/app/documents">📰 Documents</Link>
+          <Link to="/app/passwords">🔐 Passwords</Link>
         </div>
         <h2 className="text-xl ml-4">Assets</h2>
         <div className="pl-8 mb-2 flex flex-col gap-2 mt-2">
           {assets.map(({id, name, slug, icon}) => {
             return (
-              <a href={`/app/${slug}`} key={id}>
+              <Link to={`/app/${slug}`} key={id}>
                 {icon} {name}
-              </a>
+              </Link>
             )
           })}
         </div>
         <h2 className="text-xl ml-4">System</h2>
         <div className="pl-8 mb-2 flex flex-col gap-2 mt-2">
-          <a href="/app/asset-manager">📦 Asset Manager</a>
-          <a href="/app/field-manager">🚜 Field Manager</a>
-          <a href="/app/user-manager">👤 User Manager</a>
+          <Link to="/app/asset-manager">📦 Asset Manager</Link>
+          <Link to="/app/field-manager">🚜 Field Manager</Link>
+          <Link to="/app/user-manager">👤 User Manager</Link>
         </div>
         <h2 className="text-xl ml-4">User</h2>
         <div className="pl-8 mb-2 flex flex-col gap-2 mt-2">
-          <a href="/app/user">👤 {user.name}</a>
-          <a href="/app/logout">👋 Logout</a>
+          <Link to="/app/user">👤 {user.name}</Link>
+          <Link to="/app/logout">👋 Logout</Link>
         </div>
       </nav>
       <div className="pt-8 pr-8">

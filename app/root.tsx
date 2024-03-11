@@ -10,6 +10,8 @@ import {
 } from '@remix-run/react'
 import {QueryClient, QueryClientProvider} from '@tanstack/react-query'
 
+import {Notifications} from '~/lib/hooks/use-notify'
+
 import rootCSS from './styles/root.css'
 
 export const links: LinksFunction = () => [
@@ -30,7 +32,9 @@ export default function App() {
       </head>
       <body>
         <QueryClientProvider client={queryClient}>
-          <Outlet />
+          <Notifications>
+            <Outlet />
+          </Notifications>
         </QueryClientProvider>
         <ScrollRestoration />
         <Scripts />

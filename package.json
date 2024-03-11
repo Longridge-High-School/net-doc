@@ -24,11 +24,13 @@
     "bcrypt": "^5.1.1",
     "cancant": "^1.1.0",
     "date-fns": "^3.3.1",
+    "framer-motion": "^11.0.8",
     "isbot": "^4.1.0",
     "mdx-bundler": "^10.0.1",
     "qrcode": "^1.5.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-use": "^17.5.0",
     "uuid": "^9.0.1"
   },
   "devDependencies": {
