@@ -1,10 +1,11 @@
 import {type LoaderFunctionArgs, type MetaFunction, json} from '@remix-run/node'
+import {Link} from '@remix-run/react'
 import {type Entry} from '@prisma/client'
 
 import {ensureUser} from '~/lib/utils/ensure-user'
 import {getPrisma} from '~/lib/prisma.server'
 import {useLoaderData} from '@remix-run/react'
-import {AButton} from '~/lib/components/button'
+import {LinkButton} from '~/lib/components/button'
 import {FIELDS} from '~/lib/fields/field'
 import {pageTitle} from '~/lib/utils/page-title'
 
@@ -103,13 +104,13 @@ const AssetEntry = () => {
             ? 'No Linked Entries'
             : relations.map(({entryId, value, slug, icon}) => {
                 return (
-                  <a
+                  <Link
                     key={entryId}
-                    href={`/app/${slug}/${entryId}`}
+                    to={`/app/${slug}/${entryId}`}
                     className="bg-gray-300 p-2 rounded"
                   >
                     {icon} {value}
-                  </a>
+                  </Link>
                 )
               })}
         </div>
@@ -119,13 +120,13 @@ const AssetEntry = () => {
             ? 'No Linked Entries'
             : documents.map(({id, title}) => {
                 return (
-                  <a
+                  <Link
                     key={id}
-                    href={`/app/documents/${id}`}
+                    to={`/app/documents/${id}`}
                     className="bg-gray-300 p-2 rounded"
                   >
                     📰 {title}
-                  </a>
+                  </Link>
                 )
               })}
         </div>
@@ -135,22 +136,22 @@ const AssetEntry = () => {
             ? 'No Passwords'
             : entry.passwords.map(({id, password}) => {
                 return (
-                  <a
+                  <Link
                     key={id}
-                    href={`/app/passwords/${password.id}`}
+                    to={`/app/passwords/${password.id}`}
                     className="bg-gray-300 p-2 rounded"
                   >
                     🔒 {password.title}
-                  </a>
+                  </Link>
                 )
               })}
         </div>
-        <AButton
-          href={`/app/${entry.asset.slug}/${entry.id}/link-password`}
+        <LinkButton
+          to={`/app/${entry.asset.slug}/${entry.id}/link-password`}
           className="bg-info text-sm mt-4"
         >
           Link a Password
-        </AButton>
+        </LinkButton>
       </div>
     </div>
   )

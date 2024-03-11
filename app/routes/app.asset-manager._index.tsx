@@ -1,5 +1,5 @@
 import {type LoaderFunctionArgs, type MetaFunction, json} from '@remix-run/node'
-import {useLoaderData} from '@remix-run/react'
+import {useLoaderData, Link} from '@remix-run/react'
 import {pageTitle} from '~/lib/utils/page-title'
 
 import {ensureUser} from '~/lib/utils/ensure-user'
@@ -39,7 +39,7 @@ const AssetManagerList = () => {
             return (
               <tr key={id}>
                 <td>
-                  <a href={`/app/asset-manager/${id}`}>{name}</a>
+                  <Link to={`/app/asset-manager/${id}`}>{name}</Link>
                 </td>
               </tr>
             )

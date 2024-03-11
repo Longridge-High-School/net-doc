@@ -51,8 +51,6 @@ export const action = async ({request}: ActionFunctionArgs) => {
     invariant(meta)
     invariant(boxType)
 
-    console.dir([meta, boxType])
-
     if (id.substring(0, 3) === 'new') {
       await prisma.dashboardBox.create({data: {order: i, boxType, meta}})
     } else {

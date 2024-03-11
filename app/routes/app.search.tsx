@@ -4,6 +4,7 @@ import {
   type MetaFunction,
   json
 } from '@remix-run/node'
+import {Link} from '@remix-run/react'
 import {invariant} from '@arcath/utils'
 
 import {ensureUser} from '~/lib/utils/ensure-user'
@@ -82,9 +83,9 @@ const Search = () => {
         {data
           ? data.results.map(({label, link}) => {
               return (
-                <a key={link} href={link} className="bg-gray-300 p-2 rounded">
+                <Link key={link} to={link} className="bg-gray-300 p-2 rounded">
                   {label}
-                </a>
+                </Link>
               )
             })
           : ''}

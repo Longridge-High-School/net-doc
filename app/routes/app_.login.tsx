@@ -8,7 +8,7 @@ import {useActionData} from '@remix-run/react'
 import {invariant} from '@arcath/utils'
 import {verifyTOTP} from '@epic-web/totp'
 
-import {Button, AButton} from '~/lib/components/button'
+import {Button} from '~/lib/components/button'
 import {Label, Input} from '~/lib/components/input'
 import {FlashMessage} from '~/lib/components/flash'
 
@@ -133,9 +133,6 @@ const DashboardLogin = () => {
             ''
           )}
           <div className="grid grid-cols-2 gap-4">
-            <AButton className="bg-gray-100 text-center" href="/">
-              Back
-            </AButton>
             <Button className="bg-success">Login</Button>
           </div>
         </form>

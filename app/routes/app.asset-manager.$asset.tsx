@@ -1,5 +1,5 @@
 import {type LoaderFunctionArgs, json} from '@remix-run/node'
-import {Outlet, useLoaderData} from '@remix-run/react'
+import {Outlet, useLoaderData, Link} from '@remix-run/react'
 
 import {ensureUser} from '~/lib/utils/ensure-user'
 import {getPrisma} from '~/lib/prisma.server'
@@ -59,9 +59,9 @@ const AssetManagerAsset = () => {
                 return (
                   <tr key={id}>
                     <td>
-                      <a href={`/app/asset-manager/${asset.id}/${id}`}>
+                      <Link to={`/app/asset-manager/${asset.id}/${id}`}>
                         {field.name}
-                      </a>
+                      </Link>
                     </td>
                     <td>{helperText}</td>
                     <td>{displayOnTable ? 'Yes' : 'No'}</td>
@@ -78,15 +78,15 @@ const AssetManagerAsset = () => {
         <div className="grid grid-cols-3 gap-4">
           {fields.map(({id, name, description}) => {
             return (
-              <a
+              <Link
                 key={id}
                 className="bg-white shadow p-2 cursor-pointer hover:shadow-none"
-                href={`/app/asset-manager/${asset.id}/add/${id}`}
+                to={`/app/asset-manager/${asset.id}/add/${id}`}
               >
                 {name}
                 <br />
                 {description}
-              </a>
+              </Link>
             )
           })}
         </div>

@@ -3,7 +3,7 @@ import {indexedBy} from '@arcath/utils'
 
 import {ensureUser} from '~/lib/utils/ensure-user'
 import {getPrisma} from '~/lib/prisma.server'
-import {useLoaderData} from '@remix-run/react'
+import {Link, useLoaderData} from '@remix-run/react'
 import {pageTitle} from '~/lib/utils/page-title'
 import {FIELDS} from '~/lib/fields/field'
 
@@ -68,7 +68,7 @@ const Asset = () => {
             return (
               <tr key={id}>
                 <td>
-                  <a href={`/app/${asset.slug}/${id}`}>{name}</a>
+                  <Link to={`/app/${asset.slug}/${id}`}>{name}</Link>
                 </td>
                 {asset.assetFields
                   .filter(({displayOnTable}) => displayOnTable)

@@ -1,5 +1,5 @@
 import {type LoaderFunctionArgs, type MetaFunction, json} from '@remix-run/node'
-import {useLoaderData, Outlet} from '@remix-run/react'
+import {useLoaderData, Outlet, Link} from '@remix-run/react'
 
 import {ensureUser} from '~/lib/utils/ensure-user'
 import {Header} from '~/lib/components/header'
@@ -25,12 +25,12 @@ const User = () => {
       <Header title={user.name} />
       <div className="grid grid-cols-2 gap-2">
         <div>
-          <a
-            href="/app/user/totp"
+          <Link
+            to="/app/user/totp"
             className="bg-white p-2 border border-gray-300 hover:shadow-none shadow-xl"
           >
             2FA Setup
-          </a>
+          </Link>
         </div>
         <Outlet />
       </div>

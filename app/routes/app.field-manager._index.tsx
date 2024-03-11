@@ -1,5 +1,5 @@
 import {type LoaderFunctionArgs, type MetaFunction, json} from '@remix-run/node'
-import {useLoaderData} from '@remix-run/react'
+import {useLoaderData, Link} from '@remix-run/react'
 
 import {ensureUser} from '~/lib/utils/ensure-user'
 import {getPrisma} from '~/lib/prisma.server'
@@ -36,7 +36,7 @@ const FieldManagerList = () => {
             return (
               <tr key={id}>
                 <td>
-                  <a href={`/app/field-manager/${id}`}>{name}</a>
+                  <Link to={`/app/field-manager/${id}`}>{name}</Link>
                 </td>
                 <td>{type}</td>
               </tr>

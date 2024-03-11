@@ -1,5 +1,5 @@
 import {type LoaderFunctionArgs, type MetaFunction, json} from '@remix-run/node'
-import {useLoaderData} from '@remix-run/react'
+import {useLoaderData, Link} from '@remix-run/react'
 
 import {ensureUser} from '~/lib/utils/ensure-user'
 import {getPrisma} from '~/lib/prisma.server'
@@ -39,7 +39,7 @@ const DocumentsList = () => {
             return (
               <tr key={id}>
                 <td>
-                  <a href={`/app/passwords/${id}`}>{title}</a>
+                  <Link to={`/app/passwords/${id}`}>{title}</Link>
                 </td>
                 <td>{username}</td>
               </tr>
