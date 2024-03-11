@@ -31,12 +31,33 @@ export const action = async ({request}: ActionFunctionArgs) => {
 
   const prisma = getPrisma()
 
-  const results = await prisma.$queryRaw<
-    Array<Entry & {entryId: string; value: string; icon: string; slug: string}>
-  >`SELECT * FROM Entry 
-  INNER JOIN Value value ON fieldId = (SELECT nameFieldId FROM Asset WHERE Asset.id = entry.assetId) AND entryId = Entry.id
-  INNER JOIN Asset ON Entry.assetId = Asset.id
-  WHERE Entry.id IN (SELECT entryId FROM Value WHERE value LIKE ${`%${query}%`} OR value = ${query}) AND deleted = false`
+  const entryResults = await prisma.$queryRaw<
+    Array<{label: string; link: string}>
+  >`SELECT Asset.icon || " " || NameValue.value as label, "/app/" || Asset.slug || "/" || Entry.id as link FROM Value 
+  INNER JOIN Entry ON Entry.id = Value.entryId
+  INNER JOIN Asset ON Asset.id = Entry.assetId
+  INNER JOIN Value NameValue ON NameValue.entryId = Entry.id AND NameValue.fieldId = Asset.nameFieldId
+  WHERE lower(Value.value) LIKE lower(${`%${query}%`})
+  GROUP BY Value.entryId
+  ORDER BY label ASC`
+
+  const passwordResults = await prisma.$queryRaw<
+    Array<{label: string; link: string}>
+  >`SELECT "🔐" || " " || Password.title as label, "/app/passwords/" || Password.id as link FROM Password
+  WHERE lower(Password.notes) LIKE lower(${`%${query}%`}) OR Password.title LIKE lower(${`%${query}%`})
+  ORDER BY Password.title ASC`
+
+  const documentResults = await prisma.$queryRaw<
+    Array<{label: string; link: string}>
+  >`SELECT "📰" || " " || Document.title as label, "/app/documents/" || Document.id as link FROM Document
+  WHERE lower(Document.body) LIKE lower(${`%${query}%`}) OR lower(Document.title) LIKE lower(${`%${query}%`})
+  ORDER BY Document.title ASC`
+
+  const results = [
+    ...entryResults,
+    ...passwordResults,
+    ...documentResults
+  ].sort((a, b) => a.label.localeCompare(b.label))
 
   return json({results})
 }
@@ -58,15 +79,17 @@ const Search = () => {
         </Label>
       </form>
 
-      {data
-        ? data.results.map(({entryId, value, icon, slug}) => {
-            return (
-              <a key={entryId} href={`/app/${slug}/${entryId}`}>
-                {icon} {value}
-              </a>
-            )
-          })
-        : ''}
+      <div className="flex gap-4 flex-wrap">
+        {data
+          ? data.results.map(({label, link}) => {
+              return (
+                <a key={link} href={link} className="bg-gray-300 p-2 rounded">
+                  {label}
+                </a>
+              )
+            })
+          : ''}
+      </div>
     </div>
   )
 }
