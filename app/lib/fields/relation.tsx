@@ -23,21 +23,25 @@ const EditComponent: Field<string>['editComponent'] = ({
     queryFn: async () => {
       const response = await fetch(`/api/${meta}/entries`)
 
-      const json = await response.json()
+      const {entries} = await response.json()
 
-      return json.entries
+      console.dir(entries)
+
+      return entries
     }
   })
   const [newValue, setNewValue] = useState(
     JSON.parse(value === '' || value === undefined ? '[]' : value)
   )
 
-  if (isPending || data === undefined) {
+  if (isPending) {
     return <span>Loading</span>
   }
   if (error) {
     return <span>error</span>
   }
+
+  console.dir({isPending, error, data})
 
   const suggestions = data.filter(({value}) => {
     return value.toLowerCase().match(`${search.toLowerCase()}`)
@@ -107,7 +111,7 @@ const ViewComponent: Field<string>['viewComponent'] = ({
     entries: Array<{entryId: string; value: string}>
     asset: {slug: string; icon: string}
   }>({
-    queryKey: ['entries', meta],
+    queryKey: ['entries-with-asset', meta],
     queryFn: async () => {
       const response = await fetch(`/api/${meta}/entries`)
 
@@ -207,7 +211,7 @@ const ListComponent: Field<string>['listComponent'] = ({
     entries: Array<{entryId: string; value: string}>
     asset: {slug: string; icon: string}
   }>({
-    queryKey: ['entries', meta],
+    queryKey: ['entries-with-asset', meta],
     queryFn: async () => {
       const response = await fetch(`/api/${meta}/entries`)
 

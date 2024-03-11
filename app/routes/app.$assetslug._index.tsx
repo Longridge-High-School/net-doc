@@ -24,7 +24,7 @@ export const loader = async ({request, params}: LoaderFunctionArgs) => {
   >`SELECT Entry.id, Value.value as name FROM Entry 
   INNER JOIN Value ON Value.fieldId = (SELECT nameFieldId from Asset WHERE id = Entry.assetId) AND entryId = entry.id
   WHERE assetId = (SELECT id from Asset WHERE slug = ${params.assetslug}) AND deleted = false
-  ORDER BY name ASC`
+  ORDER BY lower(name) ASC`
 
   const extraValues = await prisma.$queryRaw<
     Array<{
