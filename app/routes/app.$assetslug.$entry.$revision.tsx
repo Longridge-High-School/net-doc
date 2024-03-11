@@ -1,6 +1,5 @@
 import {type LoaderFunctionArgs, type MetaFunction, json} from '@remix-run/node'
 import {Link, useLoaderData} from '@remix-run/react'
-import {type Entry} from '@prisma/client'
 import {groupedBy} from '@arcath/utils'
 
 import {ensureUser} from '~/lib/utils/ensure-user'

@@ -4,12 +4,11 @@ import {
   type MetaFunction,
   json
 } from '@remix-run/node'
-import {Link} from '@remix-run/react'
+import {Link, useActionData} from '@remix-run/react'
 import {invariant} from '@arcath/utils'
 
 import {ensureUser} from '~/lib/utils/ensure-user'
 import {getPrisma} from '~/lib/prisma.server'
-import {useActionData} from '@remix-run/react'
 import {Header} from '~/lib/components/header'
 import {Input, Label} from '~/lib/components/input'
 import {pageTitle} from '~/lib/utils/page-title'
