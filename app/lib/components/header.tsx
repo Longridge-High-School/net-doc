@@ -1,6 +1,6 @@
 import {useCopyToClipboard} from 'react-use'
 
-import {AButton, Button} from './button'
+import {LinkButton, Button} from './button'
 import {useNotify} from '../hooks/use-notify'
 
 export const Header = ({
@@ -18,9 +18,9 @@ export const Header = ({
       <div className="flex gap-2 float-right">
         {actions?.map(({link, label, className}, i) => {
           return (
-            <AButton key={i} href={link} className={className}>
+            <LinkButton key={i} to={link} className={className}>
               {label}
-            </AButton>
+            </LinkButton>
           )
         })}
         <Button

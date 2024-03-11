@@ -15,6 +15,7 @@ import {FIELDS} from '~/lib/fields/field'
 import {Button} from '~/lib/components/button'
 import {pageTitle} from '~/lib/utils/page-title'
 import {getUploadHandler} from '~/lib/utils/upload-handler.server'
+import {HelperText, Label, TextArea} from '~/lib/components/input'
 
 export const loader = async ({request, params}: LoaderFunctionArgs) => {
   const user = await ensureUser(request, 'entry:edit', {
@@ -53,6 +54,8 @@ export const action = async ({request, params}: ActionFunctionArgs) => {
 
   const formData = await unstable_parseMultipartFormData(request, uploadHandler)
 
+  const changelog = formData.get('changelog') as string | undefined
+
   const asset = await prisma.asset.findFirstOrThrow({
     where: {slug: params.assetslug},
     include: {assetFields: {include: {field: true}, orderBy: {order: 'asc'}}}
@@ -63,41 +66,44 @@ export const action = async ({request, params}: ActionFunctionArgs) => {
     data: {assetId: asset.id}
   })
 
-  await asyncForEach(asset.assetFields, async ({fieldId, field, id}) => {
-    const entryValue = await prisma.value.findFirst({
-      where: {entryId: params.entry!, fieldId}
-    })
-
-    const value = await FIELDS[field.type].valueSetter(
-      formData,
-      id,
-      entryValue ? entryValue.value : ''
-    )
-
-    if (entryValue) {
-      if (value !== entryValue.value) {
-        await prisma.valueHistory.create({
-          data: {
-            valueId: entryValue.id,
-            valueAtPoint: entryValue.value,
-            changeNote: '',
-            editedById: user.id
-          }
-        })
-      }
-
-      await prisma.value.update({
-        where: {id: entryValue.id},
-        data: {value}
+  await asyncForEach(
+    asset.assetFields,
+    async ({fieldId, field, id}): Promise<void> => {
+      const entryValue = await prisma.value.findFirst({
+        where: {entryId: params.entry!, fieldId}
       })
 
-      return
-    }
+      const value = await FIELDS[field.type].valueSetter(
+        formData,
+        id,
+        entryValue ? entryValue.value : ''
+      )
 
-    await prisma.value.create({
-      data: {entryId: params.entry!, fieldId, value, lastEditedById: user.id}
-    })
-  })
+      if (entryValue) {
+        if (value !== entryValue.value) {
+          await prisma.valueHistory.create({
+            data: {
+              valueId: entryValue.id,
+              valueAtPoint: entryValue.value,
+              changeNote: changelog ? changelog : '',
+              editedById: user.id
+            }
+          })
+        }
+
+        await prisma.value.update({
+          where: {id: entryValue.id},
+          data: {value}
+        })
+
+        return
+      }
+
+      await prisma.value.create({
+        data: {entryId: params.entry!, fieldId, value, lastEditedById: user.id}
+      })
+    }
+  )
 
   return redirect(`/app/${params.assetslug}/${params.entry}`)
 }
@@ -140,6 +146,11 @@ const Asset = () => {
             </div>
           )
         })}
+        <Label>
+          Change Log
+          <TextArea name="changelog" />
+          <HelperText>Explain the reason for this change.</HelperText>
+        </Label>
         <Button className="bg-success">Update {asset.singular}</Button>
       </form>
     </div>

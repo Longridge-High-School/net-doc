@@ -1,6 +1,7 @@
 import {type LoaderFunctionArgs, type MetaFunction, json} from '@remix-run/node'
 import {Link, useLoaderData} from '@remix-run/react'
 import {type Entry} from '@prisma/client'
+import {groupedBy} from '@arcath/utils'
 
 import {ensureUser} from '~/lib/utils/ensure-user'
 import {getPrisma} from '~/lib/prisma.server'
@@ -44,17 +45,6 @@ export const loader = async ({request, params}: LoaderFunctionArgs) => {
   WHERE entryId = ${entry.id}
   ORDER BY AssetField."order" ASC`
 
-  const relations = await prisma.$queryRaw<
-    Array<Entry & {value: string; slug: string; entryId: string; icon: string}>
-  >`SELECT * FROM Entry 
-  INNER JOIN Value value ON fieldId = (SELECT nameFieldId FROM Asset WHERE Asset.id = entry.assetId) AND entryId = Entry.id 
-  INNER JOIN Asset ON Entry.assetId = Asset.id
-  WHERE Entry.id IN (SELECT entryId FROM Value WHERE value LIKE ${`%${entry.id}%`}) AND deleted = false`
-
-  const documents = await prisma.document.findMany({
-    where: {body: {contains: params.entry}}
-  })
-
   const revisions = await prisma.$queryRaw<
     Array<{
       id: string
@@ -70,6 +60,15 @@ export const loader = async ({request, params}: LoaderFunctionArgs) => {
   WHERE Value.entryId = ${params.entry}
   ORDER BY ValueHistory.createdAt DESC`
 
+  const pastValues = await prisma.$queryRaw<
+    Array<{valueAtPoint: string; valueId: string}>
+  >`SELECT ValueHistory.valueAtPoint, ValueHistory.valueId FROM ValueHistory
+  INNER JOIN ValueHistory Revision ON Revision.id = ${params.revision}
+  INNER JOIN Value RevisionValue ON RevisionValue.id = Revision.valueId
+  INNER JOIN Value ON Value.id = ValueHistory.valueId
+  WHERE ValueHistory.createdAt >= Revision.createdAt AND ValueHistory.valueId IN (SELECT id FROM Value WHERE entryId = RevisionValue.entryId)
+  ORDER BY ValueHistory.createdAt DESC`
+
   const name = values.reduce((n, v) => {
     if (n !== '') return n
 
@@ -78,7 +77,7 @@ export const loader = async ({request, params}: LoaderFunctionArgs) => {
     return ''
   }, '')
 
-  return json({user, entry, relations, documents, name, values, revisions})
+  return json({user, entry, name, values, revisions, pastValues})
 }
 
 export const meta: MetaFunction<typeof loader> = ({data}) => {
@@ -86,8 +85,10 @@ export const meta: MetaFunction<typeof loader> = ({data}) => {
 }
 
 const AssetEntry = () => {
-  const {entry, relations, documents, name, values, revisions} =
+  const {entry, name, values, revisions, pastValues} =
     useLoaderData<typeof loader>()
+
+  const pastValuesById = groupedBy('valueId', pastValues)
 
   return (
     <div className="grid grid-cols-4 gap-4">
@@ -97,6 +98,10 @@ const AssetEntry = () => {
             {name}
           </h2>
           {values.map(({id, value, type, meta, fieldName}) => {
+            const v = pastValuesById[id]
+              ? pastValuesById[id].pop()!.valueAtPoint
+              : value
+
             const Field = ({value}: {value: string}) => {
               return FIELDS[type].viewComponent({
                 value,
@@ -105,69 +110,18 @@ const AssetEntry = () => {
               })
             }
 
-            return <Field value={value} key={id} />
+            return <Field value={v} key={id} />
           })}
         </div>
       </div>
       <div>
-        <h3 className="border-b border-b-gray-200 text-xl font-light mb-4">
-          Additional Details
-        </h3>
-        <h4 className="text-xl font-light mb-4">Linked Entries</h4>
-        <div className="flex flex-wrap gap-2">
-          {relations.length === 0
-            ? 'No Linked Entries'
-            : relations.map(({entryId, value, slug, icon}) => {
-                return (
-                  <Link
-                    key={entryId}
-                    to={`/app/${slug}/${entryId}`}
-                    className="bg-gray-300 p-2 rounded"
-                  >
-                    {icon} {value}
-                  </Link>
-                )
-              })}
-        </div>
-        <h4 className="text-xl font-light my-4">Linked Documents</h4>
-        <div className="flex flex-wrap gap-2">
-          {documents.length === 0
-            ? 'No Linked Entries'
-            : documents.map(({id, title}) => {
-                return (
-                  <Link
-                    key={id}
-                    to={`/app/documents/${id}`}
-                    className="bg-gray-300 p-2 rounded"
-                  >
-                    📰 {title}
-                  </Link>
-                )
-              })}
-        </div>
-        <h4 className="text-xl font-light my-4">Linked Passwords</h4>
-        <div className="flex flex-wrap gap-2">
-          {entry.passwords.length === 0
-            ? 'No Passwords'
-            : entry.passwords.map(({id, password}) => {
-                return (
-                  <Link
-                    key={id}
-                    to={`/app/passwords/${password.id}`}
-                    className="bg-gray-300 p-2 rounded"
-                  >
-                    🔒 {password.title}
-                  </Link>
-                )
-              })}
-        </div>
-        <LinkButton
-          to={`/app/${entry.asset.slug}/${entry.id}/link-password`}
-          className="bg-info text-sm mt-4"
-        >
-          Link a Password
-        </LinkButton>
         <h4 className="text-xl font-light my-4">Revision History</h4>
+        <LinkButton
+          className="bg-info mb-4"
+          to={`/app/${entry.asset.slug}/${entry.id}`}
+        >
+          Current
+        </LinkButton>
         {revisions.map(({id, changeNote, createdAt, userName, fieldName}) => {
           return (
             <div key={id}>
