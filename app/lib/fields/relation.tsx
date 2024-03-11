@@ -40,7 +40,7 @@ const EditComponent: Field<string>['editComponent'] = ({
   }
 
   const suggestions = data.filter(({value}) => {
-    return value.toLowerCase().match(`${search}`)
+    return value.toLowerCase().match(`${search.toLowerCase()}`)
   })
 
   const entries = indexedBy('entryId', data)
@@ -60,6 +60,7 @@ const EditComponent: Field<string>['editComponent'] = ({
               <button
                 key={entryId}
                 type="button"
+                className="bg-gray-300 p-2 rounded m-2 hover:bg-gray-200"
                 onClick={() => {
                   setNewValue([...newValue, entryId])
                   setText('')
