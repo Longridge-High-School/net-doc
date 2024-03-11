@@ -31,13 +31,11 @@ const notificationReducer = (
   state: Notification[],
   action: NotificationActions
 ) => {
-  let newState = ([] as Notification[]).concat(state)
+  const newState = ([] as Notification[]).concat(state)
 
   switch (action.type) {
     case 'add':
-      let notification = Object.assign({uuid: uuidv4()}, action.payload)
-
-      newState.push(notification)
+      newState.push({uuid: uuidv4(), ...action.payload})
       return newState
     case 'remove':
       return newState.filter(notification => {

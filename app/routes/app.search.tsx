@@ -5,7 +5,6 @@ import {
   json
 } from '@remix-run/node'
 import {invariant} from '@arcath/utils'
-import {type Entry} from '@prisma/client'
 
 import {ensureUser} from '~/lib/utils/ensure-user'
 import {getPrisma} from '~/lib/prisma.server'

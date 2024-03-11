@@ -23,10 +23,13 @@ export const Notificatons = () => {
   )
 }
 
-const NotificationBox: React.FC<{
+const NotificationBox = ({
+  notification,
+  removeNotification
+}: {
   notification: Notification
   removeNotification: (uuid: string) => void
-}> = ({notification, removeNotification}) => {
+}) => {
   const [, cancel, reset] = useTimeoutFn(() => {
     removeNotification(notification.uuid)
   }, 5000)
