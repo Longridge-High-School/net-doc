@@ -9,7 +9,7 @@ import {pageTitle} from '~/lib/utils/page-title'
 
 export const loader = async ({request, params}: LoaderFunctionArgs) => {
   const user = await ensureUser(request, 'process:view', {
-    documentId: params.document
+    processId: params.process
   })
 
   const prisma = getPrisma()

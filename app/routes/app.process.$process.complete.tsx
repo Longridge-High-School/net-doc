@@ -5,7 +5,7 @@ import {getPrisma} from '~/lib/prisma.server'
 
 export const loader = async ({request, params}: LoaderFunctionArgs) => {
   await ensureUser(request, 'process:view', {
-    process: params.process
+    processId: params.process
   })
 
   const prisma = getPrisma()
