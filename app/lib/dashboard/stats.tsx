@@ -15,12 +15,12 @@ export const statsBox: DashboardBoxFn<{
 
     const counts = await prisma.$queryRaw<
       Array<{
-        fields: BigInt
-        assets: BigInt
-        entries: BigInt
-        values: BigInt
-        documents: BigInt
-        passwords: BigInt
+        fields: bigint
+        assets: bigint
+        entries: bigint
+        values: bigint
+        documents: bigint
+        passwords: bigint
       }>
     >`SELECT (SELECT count(*) FROM Field) as fields, (SELECT count(*) FROM Asset) as assets, (SELECT count(*) FROM Entry) as entries, (SELECT count(*) FROM Value) as "values", (SELECT count(*) from Document) as documents, (SELECT count(*) FROM Password) as passwords`
 
