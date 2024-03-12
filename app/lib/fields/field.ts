@@ -1,3 +1,4 @@
+import {attachmentField} from './attachment'
 import {dateField} from './date'
 import {imageField} from './image'
 import {markdownField} from './markdown'
@@ -14,7 +15,7 @@ export type Field<ValueType> = {
     helperText,
     meta
   }: {
-    /** The cureent value of the field from the database */
+    /** The curent value of the field from the database */
     value: string
     name: string
     label: string
@@ -59,6 +60,7 @@ export const FIELD_TYPES = [
 ] as const
 
 export const FIELDS: {[type: string]: Field<string>} = {
+  attachment: attachmentField,
   date: dateField,
   image: imageField,
   markdown: markdownField,

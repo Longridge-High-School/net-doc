@@ -78,6 +78,7 @@ const FieldManagerAdd = () => {
               setType(e.target.value)
             }}
           >
+            <option value="attachment">Attachment</option>
             <option value="date">Date</option>
             <option value="image">Image</option>
             <option value="markdown">Markdown</option>
