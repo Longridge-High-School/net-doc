@@ -9,6 +9,12 @@ const Process = () => {
     {process: {complete: boolean}} | undefined
   >('routes/app.process.$process._index')
 
+  const processActions: Array<{
+    link: string
+    label: string
+    className: string
+  }> = []
+
   const actions = () => {
     const {id, params} = matches.pop()!
 
@@ -17,12 +23,6 @@ const Process = () => {
 
     switch (id) {
       case 'routes/app.process.$process._index':
-        const processActions: Array<{
-          link: string
-          label: string
-          className: string
-        }> = []
-
         if (!processData?.process.complete) {
           processActions.push({
             link: `/app/process/${params.process}/complete`,

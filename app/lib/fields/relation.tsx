@@ -41,8 +41,6 @@ const EditComponent: Field<string>['editComponent'] = ({
     return <span>error</span>
   }
 
-  console.dir({isPending, error, data})
-
   const suggestions = data.filter(({value}) => {
     return value.toLowerCase().match(`${search.toLowerCase()}`)
   })

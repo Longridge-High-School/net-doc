@@ -13,6 +13,12 @@ const Documents = () => {
     documentData && documentData.document.body.match(/- \[ \]/g)
   )
 
+  const documentActions: Array<{
+    link: string
+    label: string
+    className: string
+  }> = []
+
   const actions = () => {
     const {id, params} = matches.pop()!
 
@@ -29,12 +35,6 @@ const Documents = () => {
           }
         ]
       case 'routes/app.documents.$document._index':
-        const documentActions: Array<{
-          link: string
-          label: string
-          className: string
-        }> = []
-
         if (isProcess) {
           documentActions.push({
             link: `/app/process/add/${params.document}`,
