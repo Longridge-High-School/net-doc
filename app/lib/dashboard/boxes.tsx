@@ -3,6 +3,7 @@ import React from 'react'
 import {approachingDatesBox} from './approaching-dates'
 import {recentChangesBox} from './recent-changes'
 import {recentDocumentsBox} from './recent-documents'
+import {statsBox} from './stats'
 
 export type DashboardBoxFn<Data> = {
   loader: (meta: string) => Promise<Data>
@@ -25,5 +26,6 @@ export const DashboardBox = ({
 export const BOXES = {
   approachingDates: approachingDatesBox,
   recentChanges: recentChangesBox,
-  recentDocuments: recentDocumentsBox
+  recentDocuments: recentDocumentsBox,
+  stats: statsBox
 }
