@@ -1,0 +1,14 @@
+version: '3.9'
+services:
+  remix:
+    image: longridgehighschool/net-doc:main
+    restart: always
+    ports:
+      - '3000:3000'
+    environment:
+      - PASSWORD_KEY=YOUR KEY
+      - PASSWORD_SALT=YOUR SALT
+      - PASSWORD_IV=YOUR IV
+    volumes:
+      - ./db:/app/prisma/data
+      - ./uploads:/app/public/uploads

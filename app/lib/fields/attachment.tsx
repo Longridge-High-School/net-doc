@@ -37,7 +37,7 @@ const viewComponent = ({value, title}: {value: string; title: string}) => {
 
 const metaComponent = () => <></>
 
-const listComponent = ({value, title}: {value: string; title: string}) => {
+const listComponent = ({value}: {value: string; title: string}) => {
   const {uri, originalFileName} = JSON.parse(
     value !== '' ? value : '{"uri": "#", "originalFileName": ""}'
   )
