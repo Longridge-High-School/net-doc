@@ -24,8 +24,12 @@ const viewComponent = ({value, title}: {value: string; title: string}) => {
   return (
     <div className="mb-4">
       <h5 className="mb-2 font-bold">{title}</h5>
-      <a href={uri} download={originalFileName}>
-        {originalFileName}
+      <a
+        href={uri}
+        download={originalFileName}
+        className="bg-gray-300 p-2 rounded inline-block"
+      >
+        💾 {originalFileName}
       </a>
     </div>
   )
@@ -34,7 +38,19 @@ const viewComponent = ({value, title}: {value: string; title: string}) => {
 const metaComponent = () => <></>
 
 const listComponent = ({value, title}: {value: string; title: string}) => {
-  return <img src={value} alt={title} />
+  const {uri, originalFileName} = JSON.parse(
+    value !== '' ? value : '{"uri": "#", "originalFileName": ""}'
+  )
+
+  return (
+    <a
+      href={uri}
+      download={originalFileName}
+      className="bg-gray-300 p-2 rounded inline-block"
+    >
+      💾 {originalFileName}
+    </a>
+  )
 }
 
 export const attachmentField: Field<string> = {
