@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<url>
+<loc>/docs/update/2024/03/15/welcome-to-the-documentation.html</loc>
+<lastmod>2024-03-15T18:29:04+00:00</lastmod>
+</url>
+<url>
+<loc>/docs/fields/attachment.html</loc>
+</url>
+<url>
+<loc>/docs/</loc>
+</url>
+<url>
+<loc>/</loc>
+</url>
+<url>
+<loc>/docs/getting-started/initial-setup.html</loc>
+</url>
+<url>
+<loc>/docs/getting-started/install.html</loc>
+</url>
+</urlset>

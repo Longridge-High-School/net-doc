@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+
+
+
+
+<html
+ dir="ltr"
+ lang="en"
+ >
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content=#ffffff>
+    <link rel="stylesheet" href="/assets/css/app.css">
+    <link rel="shortcut icon" type="image/png"
+           href="/favicon.png" 
+    />
+    <script defer src="https://unpkg.com/alpinejs@3.9.0/dist/cdn.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css">
+    
+    <!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Install | Net-Doc</title>
+<meta name="generator" content="Jekyll v4.3.3" />
+<meta property="og:title" content="Install" />
+<meta property="og:locale" content="en_US" />
+<meta property="og:site_name" content="Net-Doc" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Install" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","headline":"Install","url":"/docs/getting-started/install.html"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <!-- head scripts --></head>
+
+  <body>
+    <nav class="navbar is-primary " x-data="{ openNav: false }">
+    <div class="container">
+        <div class="navbar-brand">
+            <a href="/" class="navbar-item">
+                Net-Doc
+            </a>
+            <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navMenu" :class="{ 'is-active': openNav }" x-on:click="openNav = !openNav">
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+            </a>
+        </div>
+        <div class="navbar-menu" id="navMenu" :class="{ 'is-active': openNav }">
+            <div class="navbar-start">
+                <a href="/" class="navbar-item ">Home</a>
+                
+                
+                    
+                    <a href="/features/" class="navbar-item ">Features</a>
+                    
+                
+                    
+                    <a href="/docs/" class="navbar-item ">Documentation</a>
+                    
+                
+                
+            </div>
+
+            <div class="navbar-end">
+                
+            </div>
+
+        </div>
+    </div>
+</nav>
+
+    
+        <section class="hero  is-medium  is-bold is-primary" >
+    <div class="hero-body ">
+        <div class="container">
+            <h1 class="title is-2">Install</h1>
+            <p class="subtitle is-3"></p>
+            
+        </div>
+    </div>
+</section>
+    
+    
+
+
+    <section class="section">
+        <div class="container">
+            <div class="columns is-multiline">
+                
+                <div class="column is-4-desktop is-4-tablet">
+                    
+
+<aside class="menu">
+
+    <p class="menu-label">Getting Started</p>
+    <ul class="menu-list">
+        
+        <li>
+            <a href="/docs/getting-started/install" class="">Installation</a>
+            
+        </li>
+        
+        <li>
+            <a href="/docs/getting-started/initial-setup" class="">Initial Setup</a>
+            
+        </li>
+            
+    </ul>
+
+    <p class="menu-label">Fields</p>
+    <ul class="menu-list">
+        
+        <li>
+            <a href="/docs/fields/attachment" class="">Attachment</a>
+            
+        </li>
+            
+    </ul>
+
+</aside>
+                </div>
+                
+                <div class="column is-8">
+                    
+                    
+
+                    
+                    
+                    
+    
+    
+
+<div class="contents">
+    <div class="menu">
+        <p class="menu-label">Contents</p>
+        <ul class="menu-list">
+  <li><a href="#docker-compose">Docker Compose</a>
+    <ul>
+      <li><a href="#environment-variables">Environment Variables</a></li>
+      <li><a href="#volumes">Volumes</a></li>
+    </ul>
+  </li>
+</ul>
+    </div>
+</div>
+
+
+
+
+<div class="content">
+    <h1 id="install">Install</h1>
+
+<p>Net-Doc is distributed as a docker container.</p>
+
+<h2 id="docker-compose">Docker Compose</h2>
+
+<blockquote>
+  <p>The tag <code class="language-plaintext highlighter-rouge">latest</code> will always pull the latest
+<a href="https://github.com/Longridge-High-School/net-doc/releases">release</a>, <code class="language-plaintext highlighter-rouge">main</code>
+will pull the latest commit to the main branch.</p>
+</blockquote>
+
+<div class="language-yml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">version</span><span class="pi">:</span> <span class="s1">'</span><span class="s">3.9'</span>
+<span class="na">services</span><span class="pi">:</span>
+  <span class="na">remix</span><span class="pi">:</span>
+    <span class="na">image</span><span class="pi">:</span> <span class="s">longridgehighschool/net-doc:latest</span>
+    <span class="na">restart</span><span class="pi">:</span> <span class="s">always</span>
+    <span class="na">ports</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s1">'</span><span class="s">3000:3000'</span>
+    <span class="na">environment</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">PASSWORD_KEY=YOUR KEY</span>
+      <span class="pi">-</span> <span class="s">PASSWORD_SALT=YOUR SALT</span>
+      <span class="pi">-</span> <span class="s">PASSWORD_IV=YOUR IV</span>
+    <span class="na">volumes</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">./db:/app/prisma/data</span>
+      <span class="pi">-</span> <span class="s">./uploads:/app/public/uploads</span>
+</code></pre></div></div>
+
+<h3 id="environment-variables">Environment Variables</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left">Variable</th>
+      <th style="text-align: left">Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left"><code class="language-plaintext highlighter-rouge">PASSWORD_KEY</code></td>
+      <td style="text-align: left">Your unique Password Key. Used to encrypt the passwords stored in the database.</td>
+    </tr>
+    <tr>
+      <td style="text-align: left"><code class="language-plaintext highlighter-rouge">PASSWORD_SLAT</code></td>
+      <td style="text-align: left">Your unique Password Salt. Used to salt the value for encryption of passwords in the database.</td>
+    </tr>
+    <tr>
+      <td style="text-align: left"><code class="language-plaintext highlighter-rouge">PASSWORD_IV</code></td>
+      <td style="text-align: left">The initiation vector for your password encryption. Needs to be a 16 Character HEX Value.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="volumes">Volumes</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left">Container Path</th>
+      <th style="text-align: left">Purpose</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left"><code class="language-plaintext highlighter-rouge">/app/prisma/data</code></td>
+      <td style="text-align: left">Contains the sqlite database</td>
+    </tr>
+    <tr>
+      <td style="text-align: left"><code class="language-plaintext highlighter-rouge">/app/public/uploads</code></td>
+      <td style="text-align: left"><a href="/docs/fields/attachment">Attachments</a> are uploaded here.</td>
+    </tr>
+  </tbody>
+</table>
+
+</div>
+                </div>
+                
+            </div>
+        </div>
+    </section>
+    
+        <footer class="footer">
+    <div class="container">
+        
+        
+
+        <div class="content is-small has-text-centered">
+            <p class="">Theme built by <a href="https://www.csrhymes.com">C.S. Rhymes</a></p>
+        </div>
+    </div>
+</footer>
+
+    
+    <script src="/assets/js/app.js" type="text/javascript"></script><!-- footer scripts --></body>
+</html>
