@@ -1,7 +1,13 @@
 # Net-Doc
 
-🏗️ WIP
+![Version](https://badge.fury.io/gh/longridge-high-school%2Fnet-doc.svg)
+![Deployment](https://github.com/longridge-high-school/net-doc/actions/workflows/deployment.yml/badge.svg)
 
-# TODO
+Highly Opinionatable Documentation for your network.
 
-- Sub Assets. E.g. Network Interface that can be applied to VMs, Servers etc...
+> This is highly alpha software. All features are subject to change.
+
+## More
+
+[Read More](https://longridge-high-school.github.io/net-doc/) in the
+documentation.
