@@ -1,0 +1,26 @@
+style: is-light
+height: is-medium
+items:
+  - title: Your Documentation
+    subtitle: Your Way
+    icon: fa-file
+    description: >
+      Make your documentation work for you.
+    call_to_action_name: Features
+    call_to_action_link: /features/
+  - title: Docker
+    subtitle: Easy to deploy
+    icon: fa-docker
+    icon_brand: true
+    description: >
+      Quick and easy to deploy with docker.
+    call_to_action_name: Deploy
+    call_to_action_link: /docs/getting-started/install
+  - title: Open Source
+    subtitle: A Remix Application
+    icon: fa-github
+    icon_brand: true
+    description: >
+      Net-Docs source is available on GitHub.
+    call_to_action_name: Github
+    call_to_action_link: https://github.com/Longridge-High-School/net-doc
