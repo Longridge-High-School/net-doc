@@ -19,18 +19,24 @@ const editComponent: Field<string>['editComponent'] = ({
 }
 
 const viewComponent = ({value, title}: {value: string; title: string}) => {
-  const {uri, originalFileName} = JSON.parse(value)
+  const {uri, originalFileName} = JSON.parse(
+    value !== '' ? value : '{"uri": "#", "originalFileName": ""}'
+  )
 
   return (
     <div className="mb-4">
       <h5 className="mb-2 font-bold">{title}</h5>
-      <a
-        href={uri}
-        download={originalFileName}
-        className="bg-gray-300 p-2 rounded inline-block"
-      >
-        💾 {originalFileName}
-      </a>
+      {uri !== '#' ? (
+        <a
+          href={uri}
+          download={originalFileName}
+          className="bg-gray-300 p-2 rounded inline-block"
+        >
+          💾 {originalFileName}
+        </a>
+      ) : (
+        <i>No attached file.</i>
+      )}
     </div>
   )
 }
@@ -41,6 +47,12 @@ const listComponent = ({value}: {value: string; title: string}) => {
   const {uri, originalFileName} = JSON.parse(
     value !== '' ? value : '{"uri": "#", "originalFileName": ""}'
   )
+
+  console.dir({uri})
+
+  if (uri === '') {
+    return <></>
+  }
 
   return (
     <a
@@ -62,7 +74,7 @@ export const attachmentField: Field<string> = {
       | {filepath: string; type: string}
       | undefined
 
-    if (file) {
+    if (file && file.filepath) {
       const fileName = basename(file.filepath)
 
       const metaData = getUploadMetaData(fileName)
