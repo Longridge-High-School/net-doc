@@ -62,11 +62,11 @@ export const attachmentField: Field<string> = {
       | {filepath: string; type: string}
       | undefined
 
-    const fileName = basename(file!.filepath)
-
-    const metaData = getUploadMetaData(fileName)
-
     if (file) {
+      const fileName = basename(file.filepath)
+
+      const metaData = getUploadMetaData(fileName)
+
       return JSON.stringify({
         uri: `/uploads/${fileName}`,
         originalFileName: metaData ? metaData.originalFileName : fileName,
