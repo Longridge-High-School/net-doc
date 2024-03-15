@@ -1,1 +1,1 @@
-Sitemap: /sitemap.xml
+Sitemap: /net-doc/sitemap.xml
