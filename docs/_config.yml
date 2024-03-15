@@ -2,4 +2,5 @@ title: Net-Doc
 
 theme: bulma-clean-theme
 
+baseurl: /net-doc
 hide_share_buttons: true
