@@ -4,7 +4,21 @@
       link: /docs/getting-started/install
     - name: Initial Setup
       link: /docs/getting-started/initial-setup
+- label: Concepts
+  items:
+    - name: Assets
+      link: /docs/concepts/assets
+    - name: Entries
+      link: /docs/concepts/entries
+    - name: Fields
+      link: /docs/concepts/fields
 - label: Fields
   items:
     - name: Attachment
       link: /docs/fields/attachment
+    - name: Date
+      link: /docs/fields/date
+- label: Dashboard Boxes
+  items:
+    - name: Approaching Dates
+      link: /docs/dashboard-boxes/approaching-dates

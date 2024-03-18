@@ -6,6 +6,8 @@ callouts: home_callouts
 show_sidebar: true
 ---
 
+![Net Doc Logo](./assets/logo.png)
+
 # Net-Doc
 
 Net-Doc is a highly opionatable documentation system that can be configured to
