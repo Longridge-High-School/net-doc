@@ -1,4 +1,9 @@
-import {type LoaderFunctionArgs, type MetaFunction, json} from '@remix-run/node'
+import {
+  type LoaderFunctionArgs,
+  type MetaFunction,
+  type HeadersArgs,
+  json
+} from '@remix-run/node'
 import {indexedBy} from '@arcath/utils'
 
 import {ensureUser} from '~/lib/utils/ensure-user'
@@ -6,45 +11,67 @@ import {getPrisma} from '~/lib/prisma.server'
 import {Link, useLoaderData} from '@remix-run/react'
 import {pageTitle} from '~/lib/utils/page-title'
 import {FIELDS} from '~/lib/fields/field'
+import {createTimings} from '~/lib/utils/timings.server'
 
 export const loader = async ({request, params}: LoaderFunctionArgs) => {
-  const user = await ensureUser(request, 'asset:view', {
-    assetSlug: params.assetslug
-  })
+  const {time, headers} = createTimings()
+
+  const user = await time('getUser', 'Get User', () =>
+    ensureUser(request, 'asset:view', {
+      assetSlug: params.assetslug
+    })
+  )
 
   const prisma = getPrisma()
 
-  const asset = await prisma.asset.findFirstOrThrow({
-    where: {slug: params.assetslug},
-    include: {assetFields: {include: {field: true}, orderBy: {order: 'asc'}}}
-  })
+  const asset = await time('getAsset', 'Get Asset', () =>
+    prisma.asset.findFirstOrThrow({
+      where: {slug: params.assetslug},
+      include: {assetFields: {include: {field: true}, orderBy: {order: 'asc'}}}
+    })
+  )
 
-  const entries = await prisma.$queryRaw<
-    Array<{id: string; name: string}>
-  >`SELECT Entry.id, Value.value as name FROM Entry 
+  const entries = await time(
+    'getEntries',
+    'Get Entries',
+    () => prisma.$queryRaw<
+      Array<{id: string; name: string}>
+    >`SELECT Entry.id, Value.value as name FROM Entry 
   INNER JOIN Value ON Value.fieldId = (SELECT nameFieldId from Asset WHERE id = Entry.assetId) AND entryId = entry.id
   WHERE assetId = (SELECT id from Asset WHERE slug = ${params.assetslug}) AND deleted = false
   ORDER BY lower(name) ASC`
+  )
 
-  const extraValues = await prisma.$queryRaw<
-    Array<{
-      valueId: string
-      name: string
-      value: string
-      type: string
-      lookup: string
-    }>
-  >`SELECT Value.id as valueId, Field.name, Value.value, Field.type, Value.entryId || '/' || Value.fieldId as lookup FROM AssetField 
+  const extraValues = await time(
+    'getColumns',
+    'Get Column Values',
+    () => prisma.$queryRaw<
+      Array<{
+        valueId: string
+        name: string
+        value: string
+        type: string
+        lookup: string
+      }>
+    >`SELECT Value.id as valueId, Field.name, Value.value, Field.type, Value.entryId || '/' || Value.fieldId as lookup FROM AssetField 
   INNER JOIN Asset on Asset.id = AssetField.assetId
   INNER JOIN Field on Field.id = AssetField.fieldId
   INNER JOIN Value on Value.fieldId = AssetField.fieldId
   WHERE AssetField.displayOnTable = true AND AssetField.assetId = (SELECT id FROM Asset WHERE slug = ${params.assetslug})`
+  )
 
-  return json({user, asset, entries, values: indexedBy('lookup', extraValues)})
+  return json(
+    {user, asset, entries, values: indexedBy('lookup', extraValues)},
+    {headers: headers()}
+  )
 }
 
 export const meta: MetaFunction<typeof loader> = ({data}) => {
   return [{title: pageTitle(data!.asset.plural)}]
+}
+
+export const headers = ({loaderHeaders}: HeadersArgs) => {
+  return loaderHeaders
 }
 
 const Asset = () => {

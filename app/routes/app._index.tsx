@@ -1,6 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import {type LoaderFunctionArgs, type MetaFunction, json} from '@remix-run/node'
+import {
+  type LoaderFunctionArgs,
+  type MetaFunction,
+  type HeadersArgs,
+  json
+} from '@remix-run/node'
 import {useLoaderData} from '@remix-run/react'
 import {asyncMap} from '@arcath/utils'
 
@@ -8,29 +13,44 @@ import {ensureUser} from '~/lib/utils/ensure-user'
 import {Header} from '~/lib/components/header'
 import {getPrisma} from '~/lib/prisma.server'
 import {pageTitle} from '~/lib/utils/page-title'
+import {createTimings} from '~/lib/utils/timings.server'
 
 import {BOXES} from '~/lib/dashboard/boxes'
 
 export const loader = async ({request, params}: LoaderFunctionArgs) => {
-  const user = await ensureUser(request, 'dashboard', {
-    assetSlug: params.assetslug
-  })
+  const {time, headers} = createTimings()
+
+  const user = await time('getUser', 'Get User', () =>
+    ensureUser(request, 'dashboard', {
+      assetSlug: params.assetslug
+    })
+  )
 
   const prisma = getPrisma()
 
-  const boxes = await prisma.dashboardBox.findMany({orderBy: {order: 'asc'}})
+  const boxes = await time('getBoxes', 'Get Boxes', () =>
+    prisma.dashboardBox.findMany({orderBy: {order: 'asc'}})
+  )
 
-  const boxesWithData = await asyncMap(boxes, async box => {
-    const data = await BOXES[box.boxType as keyof typeof BOXES].loader(box.meta)
+  const boxesWithData = await time('boxLoaders', 'Box Loaders', () =>
+    asyncMap(boxes, async box => {
+      const data = await BOXES[box.boxType as keyof typeof BOXES].loader(
+        box.meta
+      )
 
-    return {...box, data}
-  })
+      return {...box, data}
+    })
+  )
 
-  return json({user, boxes: boxesWithData})
+  return json({user, boxes: boxesWithData}, {headers: headers()})
 }
 
 export const meta: MetaFunction = () => {
   return [{title: pageTitle('Dashboard')}]
+}
+
+export const headers = ({loaderHeaders}: HeadersArgs) => {
+  return loaderHeaders
 }
 
 const Dashboard = () => {

@@ -2,6 +2,7 @@ import {
   type LoaderFunctionArgs,
   type ActionFunctionArgs,
   type MetaFunction,
+  type HeadersArgs,
   json,
   redirect
 } from '@remix-run/node'
@@ -15,20 +16,27 @@ import {getPrisma} from '~/lib/prisma.server'
 import {Button} from '~/lib/components/button'
 import {Label, Select} from '~/lib/components/input'
 import {pageTitle} from '~/lib/utils/page-title'
+import {createTimings} from '~/lib/utils/timings.server'
 
 import {BOXES} from '~/lib/dashboard/boxes'
 
 export const loader = async ({request}: LoaderFunctionArgs) => {
-  const user = await ensureUser(request, 'dashboard:edit', {})
+  const {time, headers} = createTimings()
+
+  const user = await time('getUser', '', () =>
+    ensureUser(request, 'dashboard:edit', {})
+  )
 
   const prisma = getPrisma()
 
-  const boxes = await prisma.dashboardBox.findMany({
-    select: {id: true, meta: true, boxType: true, order: true},
-    orderBy: {order: 'asc'}
-  })
+  const boxes = await time('getBoxes', '', () =>
+    prisma.dashboardBox.findMany({
+      select: {id: true, meta: true, boxType: true, order: true},
+      orderBy: {order: 'asc'}
+    })
+  )
 
-  return json({user, boxes})
+  return json({user, boxes}, {headers: headers()})
 }
 
 export const action = async ({request}: ActionFunctionArgs) => {
@@ -75,6 +83,10 @@ export const action = async ({request}: ActionFunctionArgs) => {
 
 export const meta: MetaFunction = () => {
   return [{title: pageTitle('Dashboard')}]
+}
+
+export const headers = ({loaderHeaders}: HeadersArgs) => {
+  return loaderHeaders
 }
 
 const DashboardEdit = () => {

@@ -1,6 +1,7 @@
 import {
   type ActionFunctionArgs,
   type MetaFunction,
+  type HeadersArgs,
   json,
   redirect
 } from '@remix-run/node'
@@ -13,14 +14,16 @@ import {Label, Input} from '~/lib/components/input'
 import {FlashMessage} from '~/lib/components/flash'
 
 import {getPrisma} from '~/lib/prisma.server'
-
 import {checkPassword} from '~/lib/user.server'
+import {createTimings} from '~/lib/utils/timings.server'
 
 import {session} from '~/lib/cookies'
 
 import {pageTitle} from '~/lib/utils/page-title'
 
 export const action = async ({request}: ActionFunctionArgs) => {
+  const {time, getHeader, headers} = createTimings()
+
   const formData = await request.formData()
 
   const email = formData.get('email') as string | undefined
@@ -32,38 +35,49 @@ export const action = async ({request}: ActionFunctionArgs) => {
 
   const prisma = getPrisma()
 
-  const user = await prisma.user.findFirst({
-    select: {
-      id: true,
-      passwordHash: true,
-      totpSecret: true,
-      totpAlgorithm: true,
-      totpDigits: true,
-      totpPeriod: true
-    },
-    where: {email}
-  })
+  const user = await time('getUser', 'Get user', () =>
+    prisma.user.findFirst({
+      select: {
+        id: true,
+        passwordHash: true,
+        totpSecret: true,
+        totpAlgorithm: true,
+        totpDigits: true,
+        totpPeriod: true
+      },
+      where: {email}
+    })
+  )
 
   if (!user) {
-    return json({
-      error: 'User not found.',
-      twoFactor: false,
-      email: '',
-      password: ''
-    })
+    return json(
+      {
+        error: 'User not found.',
+        twoFactor: false,
+        email: '',
+        password: ''
+      },
+      {headers: headers()}
+    )
   }
 
   if (!(await checkPassword(password, user.passwordHash))) {
-    return json({
-      error: 'Pasword does not match.',
-      twoFactor: false,
-      email,
-      password: ''
-    })
+    return json(
+      {
+        error: 'Pasword does not match.',
+        twoFactor: false,
+        email,
+        password: ''
+      },
+      {headers: headers()}
+    )
   }
 
   if (user.totpSecret !== '' && otp === null) {
-    return json({twoFactor: true, error: false, email, password})
+    return json(
+      {twoFactor: true, error: false, email, password},
+      {headers: headers()}
+    )
   }
 
   if (user.totpSecret !== '' && otp !== null) {
@@ -77,26 +91,38 @@ export const action = async ({request}: ActionFunctionArgs) => {
       }) !== null
 
     if (!result) {
-      return json({
-        twoFactor: true,
-        error: '2FA verification failed.',
-        email,
-        password: ''
-      })
+      return json(
+        {
+          twoFactor: true,
+          error: '2FA verification failed.',
+          email,
+          password: ''
+        },
+        {headers: headers()}
+      )
     }
   }
 
-  const newSession = await prisma.session.create({
-    data: {userId: user.id, ip: '0.0.0.0'}
-  })
+  const newSession = await time('createSession', 'Create Session', () =>
+    prisma.session.create({
+      data: {userId: user.id, ip: '0.0.0.0'}
+    })
+  )
 
   return redirect('/app', {
-    headers: {'Set-Cookie': await session.serialize(newSession.id)}
+    headers: {
+      'Set-Cookie': await session.serialize(newSession.id),
+      'Server-Timing': getHeader()
+    }
   })
 }
 
 export const meta: MetaFunction = () => {
   return [{title: pageTitle('Login')}]
+}
+
+export const headers = ({actionHeaders}: HeadersArgs) => {
+  return actionHeaders
 }
 
 const DashboardLogin = () => {
