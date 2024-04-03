@@ -1,5 +1,5 @@
 import {type LoaderFunctionArgs, type MetaFunction, json} from '@remix-run/node'
-import {useLoaderData} from '@remix-run/react'
+import {useLoaderData, Link} from '@remix-run/react'
 import {useState} from 'react'
 import {useQuery} from '@tanstack/react-query'
 
@@ -23,7 +23,10 @@ export const loader = async ({request, params}: LoaderFunctionArgs) => {
       title: true,
       username: true,
       notes: true,
-      views: {include: {user: true}, take: 10, orderBy: {createdAt: 'desc'}}
+      views: {include: {user: true}, take: 10, orderBy: {createdAt: 'desc'}},
+      history: {
+        select: {id: true, editedBy: true, createdAt: true}
+      }
     },
     where: {id: params.password}
   })
@@ -96,6 +99,21 @@ const AssetManagerAsset = () => {
               <span className="text-gray-400">
                 {formatAsDateTime(createdAt)}
               </span>
+            </div>
+          )
+        })}
+        <h3 className="border-b border-b-gray-200 text-xl font-light mb-4">
+          Revision History
+        </h3>
+        {password.history.map(({id, createdAt, editedBy}) => {
+          return (
+            <div key={id} className="mb-2">
+              <Link
+                to={`/app/passwords/${password.id}/${id}`}
+                className="text-sm text-gray-400"
+              >
+                {formatAsDateTime(createdAt)} - {editedBy.name}
+              </Link>
             </div>
           )
         })}
