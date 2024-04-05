@@ -1,7 +1,5 @@
 import {type LoaderFunctionArgs, type MetaFunction, json} from '@remix-run/node'
 import {useLoaderData} from '@remix-run/react'
-import {useState} from 'react'
-import {useQuery} from '@tanstack/react-query'
 
 import {ensureUser} from '~/lib/utils/ensure-user'
 import {getPrisma} from '~/lib/prisma.server'
@@ -15,8 +13,6 @@ export const loader = async ({request, params}: LoaderFunctionArgs) => {
   const user = await ensureUser(request, 'password:view', {
     passwordId: params.password
   })
-
-  console.dir(params)
 
   const prisma = getPrisma()
   const {decrypt} = await getCryptoSuite()

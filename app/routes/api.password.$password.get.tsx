@@ -30,11 +30,11 @@ export const loader = async ({request, params}: LoaderFunctionArgs) => {
     )
   }
 
-  const password = await time('getPassword', 'Get Password', () =>
-    prisma.password.findFirstOrThrow({
+  const password = await time('getPassword', 'Get Password', async () => {
+    return prisma.password.findFirstOrThrow({
       where: {id: params.password}
     })
-  )
+  })
 
   await time('createPasswordView', 'Create Password View', () =>
     prisma.passwordView.create({
@@ -46,7 +46,7 @@ export const loader = async ({request, params}: LoaderFunctionArgs) => {
     getCryptoSuite()
   )
 
-  const decryptedPassword = time(
+  const decryptedPassword = await time(
     'decrypt',
     'Decrypt Passwprd',
     () => new Promise(resolve => resolve(decrypt(password.password)))
