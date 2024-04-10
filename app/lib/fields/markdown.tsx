@@ -2,7 +2,6 @@ import {Label, TextArea, HelperText} from '../components/input'
 
 import {type Field} from './field'
 
-import {buildMDXBundle} from '../mdx.server'
 import {MDXComponent} from '../mdx'
 
 const editComponent = ({
@@ -41,23 +40,15 @@ const viewComponent = ({value, title}: {value: string; title: string}) => {
 
 const metaComponent = () => <></>
 
-const listComponent: Field<string>['listComponent'] = ({value}) => {
+const listComponent: Field['listComponent'] = ({value}) => {
   const {code} = JSON.parse(value)
 
   return <MDXComponent code={code} />
 }
 
-export const markdownField: Field<string> = {
+export const markdownField: Field = {
   editComponent,
   viewComponent,
   listComponent,
-  valueSetter: async (formData, name) => {
-    const markdown = formData.get(name) as string
-    const code = await buildMDXBundle(markdown)
-
-    return JSON.stringify({markdown, code})
-  },
-  valueGetter: value => value,
-  metaComponent,
-  metaSave: () => ''
+  metaComponent
 }

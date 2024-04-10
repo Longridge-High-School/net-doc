@@ -37,14 +37,9 @@ const listComponent = ({value}: {value: string; title: string}) => {
   return <>{value}</>
 }
 
-export const textField: Field<string> = {
+export const textField: Field = {
   editComponent,
   viewComponent,
   listComponent,
-  valueSetter: (formData, name) => {
-    return formData.get(name) as string
-  },
-  valueGetter: value => value,
-  metaComponent,
-  metaSave: () => ''
+  metaComponent
 }

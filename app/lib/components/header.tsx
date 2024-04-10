@@ -1,7 +1,6 @@
-import {useCopyToClipboard} from 'react-use'
-
 import {LinkButton, Button} from './button'
 import {useNotify} from '../hooks/use-notify'
+import {useCopyToClipboard} from '../hooks/use-copy-to-clipboard'
 
 export const Header = ({
   title,

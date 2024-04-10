@@ -16,6 +16,7 @@ import {pageTitle} from '~/lib/utils/page-title'
 import {createTimings} from '~/lib/utils/timings.server'
 
 import {BOXES} from '~/lib/dashboard/boxes'
+import {BOXES_HANDLERS} from '~/lib/dashboard/boxes.server'
 
 export const loader = async ({request, params}: LoaderFunctionArgs) => {
   const {time, headers} = createTimings()
@@ -34,9 +35,9 @@ export const loader = async ({request, params}: LoaderFunctionArgs) => {
 
   const boxesWithData = await time('boxLoaders', 'Box Loaders', () =>
     asyncMap(boxes, async box => {
-      const data = await BOXES[box.boxType as keyof typeof BOXES].loader(
-        box.meta
-      )
+      const data = await BOXES_HANDLERS[
+        box.boxType as keyof typeof BOXES
+      ].loader(box.meta)
 
       return {...box, data}
     })

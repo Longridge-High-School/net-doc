@@ -1,23 +1,9 @@
-import {cssBundleHref} from '@remix-run/css-bundle'
-import type {LinksFunction} from '@remix-run/node'
-import {
-  Links,
-  LiveReload,
-  Meta,
-  Outlet,
-  Scripts,
-  ScrollRestoration
-} from '@remix-run/react'
+import {Links, Meta, Outlet, Scripts, ScrollRestoration} from '@remix-run/react'
 import {QueryClient, QueryClientProvider} from '@tanstack/react-query'
 
 import {Notifications} from '~/lib/hooks/use-notify'
 
-import rootCSS from './styles/root.css'
-
-export const links: LinksFunction = () => [
-  ...(cssBundleHref ? [{rel: 'stylesheet', href: cssBundleHref}] : []),
-  {rel: 'stylesheet', href: rootCSS}
-]
+import './styles/root.css'
 
 const queryClient = new QueryClient()
 
@@ -38,7 +24,6 @@ export default function App() {
         </QueryClientProvider>
         <ScrollRestoration />
         <Scripts />
-        <LiveReload />
       </body>
     </html>
   )

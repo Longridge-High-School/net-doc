@@ -7,7 +7,7 @@ import {Label, Input, HelperText, Select} from '../components/input'
 import {useDebounce} from '../hooks/use-debounce'
 import {indexedBy} from '@arcath/utils'
 
-const EditComponent: Field<string>['editComponent'] = ({
+const EditComponent: Field['editComponent'] = ({
   value,
   name,
   label,
@@ -100,11 +100,7 @@ const EditComponent: Field<string>['editComponent'] = ({
   )
 }
 
-const ViewComponent: Field<string>['viewComponent'] = ({
-  value,
-  title,
-  meta
-}) => {
+const ViewComponent: Field['viewComponent'] = ({value, title, meta}) => {
   const {isPending, error, data} = useQuery<{
     entries: Array<{entryId: string; value: string}>
     asset: {slug: string; icon: string}
@@ -160,7 +156,7 @@ const ViewComponent: Field<string>['viewComponent'] = ({
   )
 }
 
-const MetaComponent: Field<string>['metaComponent'] = ({meta}) => {
+const MetaComponent: Field['metaComponent'] = ({meta}) => {
   const {isPending, error, data} = useQuery<Array<{id: string; name: string}>>({
     queryKey: ['asset-list'],
     queryFn: async () => {
@@ -196,15 +192,7 @@ const MetaComponent: Field<string>['metaComponent'] = ({meta}) => {
   )
 }
 
-const metaSave: Field<string>['metaSave'] = formData => {
-  return formData.get('meta') as string
-}
-
-const ListComponent: Field<string>['listComponent'] = ({
-  value,
-  title,
-  meta
-}) => {
+const ListComponent: Field['listComponent'] = ({value, title, meta}) => {
   const {isPending, error, data} = useQuery<{
     entries: Array<{entryId: string; value: string}>
     asset: {slug: string; icon: string}
@@ -247,14 +235,9 @@ const ListComponent: Field<string>['listComponent'] = ({
   )
 }
 
-export const relationField: Field<string> = {
+export const relationField: Field = {
   editComponent: EditComponent,
   viewComponent: ViewComponent,
   metaComponent: MetaComponent,
-  listComponent: ListComponent,
-  valueSetter: (formData, name) => {
-    return formData.get(name) as string
-  },
-  valueGetter: value => value,
-  metaSave
+  listComponent: ListComponent
 }

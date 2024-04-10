@@ -6,7 +6,7 @@ import {relationField} from './relation'
 import {selectField} from './select'
 import {textField} from './text'
 
-export type Field<ValueType> = {
+export type Field = {
   /** The Component rendered in the asset editor */
   editComponent: ({
     value,
@@ -40,14 +40,7 @@ export type Field<ValueType> = {
     title: string
     meta: string
   }) => JSX.Element
-  valueSetter: (
-    data: FormData,
-    name: string,
-    currentValue: ValueType
-  ) => string | Promise<string>
-  valueGetter: (data: string) => ValueType | Promise<ValueType>
   metaComponent: ({meta}: {meta: string}) => JSX.Element
-  metaSave: (data: FormData) => string
 }
 
 export const FIELD_TYPES = [
@@ -59,7 +52,7 @@ export const FIELD_TYPES = [
   'image'
 ] as const
 
-export const FIELDS: {[type: string]: Field<string>} = {
+export const FIELDS: {[type: string]: Field} = {
   attachment: attachmentField,
   date: dateField,
   image: imageField,

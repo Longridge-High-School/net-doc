@@ -15,6 +15,7 @@ import {FIELDS} from '~/lib/fields/field'
 import {Button} from '~/lib/components/button'
 import {pageTitle} from '~/lib/utils/page-title'
 import {getUploadHandler} from '~/lib/utils/upload-handler.server'
+import {FIELD_HANDLERS} from '~/lib/fields/field.server'
 
 export const loader = async ({request, params}: LoaderFunctionArgs) => {
   const user = await ensureUser(request, 'asset:view', {
@@ -52,7 +53,11 @@ export const action = async ({request, params}: ActionFunctionArgs) => {
   await asyncForEach(
     asset.assetFields,
     async ({fieldId, field, id}): Promise<void> => {
-      const value = await FIELDS[field.type].valueSetter(formData, id, '')
+      const value = await FIELD_HANDLERS[field.type].valueSetter(
+        formData,
+        id,
+        ''
+      )
 
       await prisma.value.create({
         data: {entryId: entry.id, fieldId, value, lastEditedById: user.id}

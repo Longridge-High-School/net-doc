@@ -1,5 +1,4 @@
 import {Label, Input, HelperText} from '../components/input'
-import {basename} from 'path'
 
 import {type Field} from './field'
 
@@ -38,20 +37,9 @@ const listComponent = ({value, title}: {value: string; title: string}) => {
   return <img src={value} alt={title} />
 }
 
-export const imageField: Field<string> = {
+export const imageField: Field = {
   editComponent,
   viewComponent,
   listComponent,
-  valueSetter: (formData, name, currentValue) => {
-    const file = formData.get(name) as unknown as {filepath: string} | undefined
-
-    if (file) {
-      return `/uploads/${basename(file.filepath)}`
-    }
-
-    return currentValue
-  },
-  valueGetter: value => value,
-  metaComponent,
-  metaSave: () => ''
+  metaComponent
 }

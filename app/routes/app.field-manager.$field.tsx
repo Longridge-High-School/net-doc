@@ -14,6 +14,7 @@ import {Button} from '~/lib/components/button'
 import {Label, Input, HelperText} from '~/lib/components/input'
 import {FIELDS} from '~/lib/fields/field'
 import {pageTitle} from '~/lib/utils/page-title'
+import {FIELD_HANDLERS} from '~/lib/fields/field.server'
 
 export const loader = async ({request, params}: LoaderFunctionArgs) => {
   const user = await ensureUser(request, 'field-manager:edit', {
@@ -46,7 +47,7 @@ export const action = async ({request, params}: ActionFunctionArgs) => {
   invariant(name)
   invariant(description)
 
-  const meta = FIELDS[currentField.type].metaSave(formData)
+  const meta = FIELD_HANDLERS[currentField.type].metaSave(formData)
 
   const field = await prisma.field.update({
     where: {id: params.field},

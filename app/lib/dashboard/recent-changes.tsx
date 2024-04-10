@@ -1,35 +1,16 @@
 import {type DashboardBoxFn, DashboardBox} from './boxes'
 
-import {getPrisma} from '../prisma.server'
 import {formatAsDate} from '../utils/format'
-export const recentChangesBox: DashboardBoxFn<
-  Array<{
-    slug: string
-    id: string
-    name: string
-    updatedAt: string
-    icon: string
-  }>
-> = {
-  loader: async () => {
-    const prisma = getPrisma()
 
-    const recentChanges =
-      (await prisma.$queryRaw`SELECT Entry.id, Entry.updatedAt, Value.value as name, Asset.slug, Asset.icon FROM Entry 
-    INNER JOIN Value value ON fieldId = (SELECT nameFieldId from Asset WHERE Asset.id = Entry.assetId) AND entryId = Entry.id
-    INNER JOIN Asset ON Asset.id = Entry.assetId
-WHERE deleted = false 
-ORDER BY Entry.updatedAt DESC
-LIMIT 5`) as Array<{
-        slug: string
-        id: string
-        name: string
-        updatedAt: string
-        icon: string
-      }>
+export type RecentChangesData = Array<{
+  slug: string
+  id: string
+  name: string
+  updatedAt: string
+  icon: string
+}>
 
-    return recentChanges
-  },
+export const recentChangesBox: DashboardBoxFn<RecentChangesData> = {
   render: documents => {
     return (
       <DashboardBox title="Recent Changes">

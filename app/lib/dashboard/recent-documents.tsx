@@ -1,25 +1,14 @@
 import {type DashboardBoxFn, DashboardBox} from './boxes'
 
-import {getPrisma} from '../prisma.server'
 import {formatAsDate} from '../utils/format'
 
-export const recentDocumentsBox: DashboardBoxFn<
-  Array<{id: string; title: string; updatedAt: string}>
-> = {
-  loader: async () => {
-    const prisma = getPrisma()
+export type RecentDocumentsData = Array<{
+  id: string
+  title: string
+  updatedAt: string
+}>
 
-    const recentDocuments = await prisma.document.findMany({
-      orderBy: {updatedAt: 'desc'},
-      take: 5
-    })
-
-    return recentDocuments as unknown as Array<{
-      id: string
-      title: string
-      updatedAt: string
-    }>
-  },
+export const recentDocumentsBox: DashboardBoxFn<RecentDocumentsData> = {
   render: documents => {
     return (
       <DashboardBox title="Recent Documents">

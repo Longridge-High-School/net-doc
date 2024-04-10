@@ -14,6 +14,7 @@ import {Button} from '~/lib/components/button'
 import {Label, Input, HelperText, Select} from '~/lib/components/input'
 import {FIELDS} from '~/lib/fields/field'
 import {pageTitle} from '~/lib/utils/page-title'
+import {FIELD_HANDLERS} from '~/lib/fields/field.server'
 
 export const loader = async ({request}: LoaderFunctionArgs) => {
   const user = await ensureUser(request, 'field-manager:add', {})
@@ -36,7 +37,7 @@ export const action = async ({request}: ActionFunctionArgs) => {
   invariant(description)
   invariant(type)
 
-  const meta = FIELDS[type].metaSave(formData)
+  const meta = FIELD_HANDLERS[type].metaSave(formData)
 
   const field = await prisma.field.create({
     data: {name, description, type, icon: '', meta}

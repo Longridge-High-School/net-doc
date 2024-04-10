@@ -37,14 +37,9 @@ const listComponent = ({value}: {value: string; title: string}) => {
 
 const metaComponent = () => <></>
 
-export const dateField: Field<string> = {
+export const dateField: Field = {
   editComponent,
   viewComponent,
   listComponent,
-  valueSetter: (formData, name) => {
-    return formData.get(name) as string
-  },
-  valueGetter: value => value,
-  metaComponent,
-  metaSave: () => ''
+  metaComponent
 }

@@ -3,11 +3,10 @@ import {useQuery} from '@tanstack/react-query'
 
 import {type DashboardBoxFn, DashboardBox} from './boxes'
 
-import {getPrisma} from '../prisma.server'
 import {formatAsDate} from '../utils/format'
 import {Label, Select, HelperText, Input} from '~/lib/components/input'
 
-type ApproachingDatesData = Array<{
+export type ApproachingDatesData = Array<{
   id: string
   value: string
   slug: string
@@ -83,21 +82,6 @@ const MetaComponent: DashboardBoxFn<ApproachingDatesData>['metaComponent'] = (
 }
 
 export const approachingDatesBox: DashboardBoxFn<ApproachingDatesData> = {
-  loader: async meta => {
-    const {fieldId} = JSON.parse(meta)
-    const prisma = getPrisma()
-
-    const values =
-      await prisma.$queryRaw<ApproachingDatesData>`SELECT Entry.id, Value.value, Asset.slug, Asset.icon, NameValue.value as name FROM Value 
-      INNER JOIN Entry ON Entry.id = Value.entryId
-      INNER JOIN Asset ON Asset.id = Entry.assetId
-      INNER JOIN Value NameValue ON NameValue.entryId = Entry.id AND NameValue.fieldId = Asset.nameFieldId
-      WHERE Value.fieldId = ${fieldId} AND date(Value.value) > date('now')
-      ORDER BY Value.value ASC
-      LIMIT 5`
-
-    return values
-  },
   render: (values, meta) => {
     const {title} = JSON.parse(meta)
 

@@ -2,38 +2,16 @@ import {type DashboardBoxFn, DashboardBox} from './boxes'
 
 import {getPrisma} from '../prisma.server'
 
-export const statsBox: DashboardBoxFn<{
+export type StatsData = {
   fields: number
   assets: number
   entries: number
   values: number
   documents: number
   passwords: number
-}> = {
-  loader: async () => {
-    const prisma = getPrisma()
+}
 
-    const counts = await prisma.$queryRaw<
-      Array<{
-        fields: bigint
-        assets: bigint
-        entries: bigint
-        values: bigint
-        documents: bigint
-        passwords: bigint
-      }>
-    >`SELECT (SELECT count(*) FROM Field) as fields, (SELECT count(*) FROM Asset) as assets, (SELECT count(*) FROM Entry) as entries, (SELECT count(*) FROM Value) as "values", (SELECT count(*) from Document) as documents, (SELECT count(*) FROM Password) as passwords`
-
-    // Prisma returns counts as BigInts which the JSON serialiser doesn't work with.
-    return {
-      fields: parseInt(counts[0].fields.toString()),
-      assets: parseInt(counts[0].assets.toString()),
-      entries: parseInt(counts[0].entries.toString()),
-      values: parseInt(counts[0].values.toString()),
-      documents: parseInt(counts[0].documents.toString()),
-      passwords: parseInt(counts[0].passwords.toString())
-    }
-  },
+export const statsBox: DashboardBoxFn<StatsData> = {
   render: ({fields, assets, entries, values, documents, passwords}) => {
     return (
       <DashboardBox title="Stats">

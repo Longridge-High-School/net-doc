@@ -6,7 +6,6 @@ import {recentDocumentsBox} from './recent-documents'
 import {statsBox} from './stats'
 
 export type DashboardBoxFn<Data> = {
-  loader: (meta: string) => Promise<Data>
   render: (data: Data, meta: string) => JSX.Element
   metaComponent: (meta: string, id: string) => JSX.Element
 }

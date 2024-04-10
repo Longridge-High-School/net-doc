@@ -1,4 +1,4 @@
-import {useTimeoutFn} from 'react-use'
+import useTimeoutFn from 'react-use/lib/useTimeoutFn'
 import {motion, AnimatePresence} from 'framer-motion'
 
 import {type Notification, useNotifications} from '../hooks/use-notify'

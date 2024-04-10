@@ -55,22 +55,13 @@ const metaComponent = ({meta}: {meta: string}) => {
   )
 }
 
-const metaSave = (formData: FormData) => {
-  return JSON.stringify((formData.get('meta') as string).split('\r\n'))
-}
-
 const listComponent = ({value}: {value: string; title: string}) => {
   return <>{value}</>
 }
 
-export const selectField: Field<string> = {
+export const selectField: Field = {
   editComponent,
   viewComponent,
   listComponent,
-  valueSetter: (formData, name) => {
-    return formData.get(name) as string
-  },
-  valueGetter: value => value,
-  metaComponent,
-  metaSave
+  metaComponent
 }

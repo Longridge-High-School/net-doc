@@ -16,6 +16,7 @@ import {Button} from '~/lib/components/button'
 import {pageTitle} from '~/lib/utils/page-title'
 import {getUploadHandler} from '~/lib/utils/upload-handler.server'
 import {HelperText, Label, TextArea} from '~/lib/components/input'
+import {FIELD_HANDLERS} from '~/lib/fields/field.server'
 
 export const loader = async ({request, params}: LoaderFunctionArgs) => {
   const user = await ensureUser(request, 'entry:edit', {
@@ -73,7 +74,7 @@ export const action = async ({request, params}: ActionFunctionArgs) => {
         where: {entryId: params.entry!, fieldId}
       })
 
-      const value = await FIELDS[field.type].valueSetter(
+      const value = await FIELD_HANDLERS[field.type].valueSetter(
         formData,
         id,
         entryValue ? entryValue.value : ''

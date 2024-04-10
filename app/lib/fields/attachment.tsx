@@ -1,14 +1,8 @@
 import {Label, Input, HelperText} from '../components/input'
-import {basename} from 'path'
 
 import {type Field} from './field'
-import {getUploadMetaData} from '../utils/upload-handler.server'
 
-const editComponent: Field<string>['editComponent'] = ({
-  name,
-  label,
-  helperText
-}) => {
+const editComponent: Field['editComponent'] = ({name, label, helperText}) => {
   return (
     <Label>
       {label}
@@ -48,8 +42,6 @@ const listComponent = ({value}: {value: string; title: string}) => {
     value !== '' ? value : '{"uri": "#", "originalFileName": ""}'
   )
 
-  console.dir({uri})
-
   if (uri === '') {
     return <></>
   }
@@ -65,30 +57,9 @@ const listComponent = ({value}: {value: string; title: string}) => {
   )
 }
 
-export const attachmentField: Field<string> = {
+export const attachmentField: Field = {
   editComponent,
   viewComponent,
   listComponent,
-  valueSetter: (formData, name, currentValue) => {
-    const file = formData.get(name) as unknown as
-      | {filepath: string; type: string}
-      | undefined
-
-    if (file && file.filepath) {
-      const fileName = basename(file.filepath)
-
-      const metaData = getUploadMetaData(fileName)
-
-      return JSON.stringify({
-        uri: `/uploads/${fileName}`,
-        originalFileName: metaData ? metaData.originalFileName : fileName,
-        type: file.type
-      })
-    }
-
-    return currentValue
-  },
-  valueGetter: value => value,
-  metaComponent,
-  metaSave: () => ''
+  metaComponent
 }
