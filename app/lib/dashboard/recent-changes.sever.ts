@@ -4,7 +4,7 @@ import {type RecentChangesData} from './recent-changes'
 import {getPrisma} from '../prisma.server'
 
 const loader: DashboardBoxFnHandlers<RecentChangesData>['loader'] =
-  async meta => {
+  async () => {
     const prisma = getPrisma()
 
     const recentChanges =

@@ -3,7 +3,7 @@ import {type StatsData} from './stats'
 
 import {getPrisma} from '../prisma.server'
 
-const loader: DashboardBoxFnHandlers<StatsData>['loader'] = async meta => {
+const loader: DashboardBoxFnHandlers<StatsData>['loader'] = async () => {
   const prisma = getPrisma()
 
   const counts = await prisma.$queryRaw<

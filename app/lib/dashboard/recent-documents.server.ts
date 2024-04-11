@@ -4,7 +4,7 @@ import {type RecentDocumentsData} from './recent-documents'
 import {getPrisma} from '../prisma.server'
 
 const loader: DashboardBoxFnHandlers<RecentDocumentsData>['loader'] =
-  async meta => {
+  async () => {
     const prisma = getPrisma()
 
     const recentDocuments = await prisma.document.findMany({

@@ -1,7 +1,5 @@
 import {type DashboardBoxFn, DashboardBox} from './boxes'
 
-import {getPrisma} from '../prisma.server'
-
 export type StatsData = {
   fields: number
   assets: number

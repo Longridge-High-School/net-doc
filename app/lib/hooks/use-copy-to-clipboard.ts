@@ -23,7 +23,7 @@ const useSetState = <T extends object>(
   initialState: T = {} as T
 ): [T, (patch: Partial<T> | ((prevState: T) => Partial<T>)) => void] => {
   const [state, set] = useState<T>(initialState)
-  // @ts-ignore
+  // @ts-expect-error
   const setState = useCallback(patch => {
     set(prevState =>
       Object.assign(
@@ -54,7 +54,7 @@ export const useCopyToClipboard = (): [
     noUserInteraction: true
   })
 
-  // @ts-ignore
+  // @ts-expect-error
   const copyToClipboard = useCallback(value => {
     if (!isMounted()) {
       return
@@ -96,7 +96,7 @@ export const useCopyToClipboard = (): [
     } catch (error) {
       setState({
         value: normalizedValue,
-        // @ts-ignore
+        // @ts-expect-error
         error,
         noUserInteraction
       })
