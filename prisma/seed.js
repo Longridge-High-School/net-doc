@@ -1,3 +1,7 @@
+// Seed.js is run every time the container starts,
+// any code here needs to make sure that it checks
+// to see if the data needs to be added before adding it.
+
 import {PrismaClient} from '@prisma/client'
 const prisma = new PrismaClient()
 import bcrypt from 'bcrypt'

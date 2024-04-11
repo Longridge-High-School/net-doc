@@ -2,7 +2,7 @@
 FROM node:20-bookworm-slim as base
 
 # Install openssl for Prisma
-RUN apt-get update && apt-get install -y openssl postgresql-client
+RUN apt-get update && apt-get install -y openssl
 
 # Install all node_modules, including dev dependencies
 FROM base as deps
