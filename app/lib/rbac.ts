@@ -10,10 +10,11 @@ export const {can} = canCant<'guest' | 'user' | 'manager' | 'admin'>({
       'app',
       'dashboard',
       'search',
+      'user:self',
       {
         name: 'user:*',
-        when: async ({userId, targetId}) => {
-          return userId === targetId
+        when: async ({user, targetId}) => {
+          return user.id === targetId
         }
       }
     ]
