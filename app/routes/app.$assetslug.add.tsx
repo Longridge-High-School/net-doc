@@ -48,7 +48,9 @@ export const action = async ({request, params}: ActionFunctionArgs) => {
     include: {assetFields: {include: {field: true}, orderBy: {order: 'asc'}}}
   })
 
-  const entry = await prisma.entry.create({data: {assetId: asset.id}})
+  const entry = await prisma.entry.create({
+    data: {assetId: asset.id, aclId: asset.aclId}
+  })
 
   await asyncForEach(
     asset.assetFields,

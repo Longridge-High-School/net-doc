@@ -2,7 +2,6 @@ import {
   type LoaderFunctionArgs,
   type MetaFunction,
   json,
-  redirect,
   ActionFunction
 } from '@remix-run/node'
 import {useLoaderData, Outlet, useActionData} from '@remix-run/react'

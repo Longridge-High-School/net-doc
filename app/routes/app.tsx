@@ -12,6 +12,8 @@ import {Notificatons} from '~/lib/components/notifications'
 
 import {getPrisma} from '~/lib/prisma.server'
 import {ensureUser} from '~/lib/utils/ensure-user'
+import {canList} from '~/lib/rbac.server'
+import {canFromList} from '~/lib/rbac'
 
 export const loader = async ({request}: LoaderFunctionArgs) => {
   const user = await ensureUser(request, 'app', {})
@@ -20,13 +22,27 @@ export const loader = async ({request}: LoaderFunctionArgs) => {
 
   const assets = await prisma.asset.findMany({orderBy: {name: 'asc'}})
 
-  return json({user, assets})
+  const cans = await canList(user, [
+    {index: 'asset-manager', operation: 'asset-manager:list', meta: {}},
+    {index: 'field-manager', operation: 'field-manager:list', meta: {}},
+    {index: 'user-manager', operation: 'user-manager:list', meta: {}},
+    {index: 'acl-manager', operation: 'acl-manager:list', meta: {}},
+    ...assets.map(({slug}) => {
+      return {
+        index: `asset:${slug}`,
+        operation: 'asset:view',
+        meta: {assetSlug: slug}
+      }
+    })
+  ])
+
+  return json({user, assets, cans})
 }
 
 export type AppLoader = {user: {name: string; id: string}}
 
 const Dashboard = () => {
-  const {assets, user} = useLoaderData<typeof loader>()
+  const {assets, user, cans} = useLoaderData<typeof loader>()
 
   return (
     <div className="grid grid-cols-dashboard min-h-screen gap-8">
@@ -44,6 +60,8 @@ const Dashboard = () => {
         <h2 className="text-xl ml-4">Assets</h2>
         <div className="pl-8 mb-2 flex flex-col gap-2 mt-2">
           {assets.map(({id, name, slug, icon}) => {
+            if (!canFromList(`asset:${slug}`, cans)) return
+
             return (
               <Link to={`/app/${slug}`} key={id}>
                 {icon} {name}
@@ -51,11 +69,35 @@ const Dashboard = () => {
             )
           })}
         </div>
-        <h2 className="text-xl ml-4">System</h2>
+        {canFromList('asset-manager', cans) ||
+        canFromList('field-manager', cans) ||
+        canFromList('user-manager', cans) ||
+        canFromList('acl-manager', cans) ? (
+          <h2 className="text-xl ml-4">System</h2>
+        ) : (
+          ''
+        )}
         <div className="pl-8 mb-2 flex flex-col gap-2 mt-2">
-          <Link to="/app/asset-manager">📦 Asset Manager</Link>
-          <Link to="/app/field-manager">🚜 Field Manager</Link>
-          <Link to="/app/user-manager">👤 User Manager</Link>
+          {canFromList('acl-manager', cans) ? (
+            <Link to="/app/acl-manager">🛂 ACL Manager</Link>
+          ) : (
+            ''
+          )}
+          {canFromList('asset-manager', cans) ? (
+            <Link to="/app/asset-manager">📦 Asset Manager</Link>
+          ) : (
+            ''
+          )}
+          {canFromList('field-manager', cans) ? (
+            <Link to="/app/field-manager">🚜 Field Manager</Link>
+          ) : (
+            ''
+          )}
+          {canFromList('user-manager', cans) ? (
+            <Link to="/app/user-manager">👤 User Manager</Link>
+          ) : (
+            ''
+          )}
         </div>
         <h2 className="text-xl ml-4">User</h2>
         <div className="pl-8 mb-2 flex flex-col gap-2 mt-2">

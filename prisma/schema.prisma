@@ -23,6 +23,9 @@ model Asset {
   nameFieldId String
   assetFields AssetField[]
   entries     Entry[]
+
+  acl   ACL    @relation(fields: [aclId], references: [id])
+  aclId String @default("")
 }
 
 model Field {
@@ -55,6 +58,9 @@ model Entry {
   values    Value[]
   deleted   Boolean         @default(false)
   passwords EntryPassword[]
+
+  acl   ACL    @relation(fields: [aclId], references: [id])
+  aclId String @default("")
 
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
@@ -206,4 +212,26 @@ model Process {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model ACL {
+  id   String @id @default(uuid())
+  name String
+
+  entries ACLEntry[]
+
+  assets Asset[]
+  assetEntries Entry[]
+}
+
+model ACLEntry {
+  id     String  @id @default(uuid())
+  type   String //'role' or 'user'
+  target String //'role name' or 'user id'
+  read   Boolean
+  write  Boolean
+  delete Boolean
+
+  acl   ACL    @relation(fields: [aclId], references: [id], onDelete: Cascade)
+  aclId String
 }

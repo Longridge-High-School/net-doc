@@ -8,9 +8,10 @@ import {LinkButton} from '~/lib/components/button'
 import {FIELDS} from '~/lib/fields/field'
 import {pageTitle} from '~/lib/utils/page-title'
 import {formatAsDateTime} from '~/lib/utils/format'
+import {can} from '~/lib/rbac.server'
 
 export const loader = async ({request, params}: LoaderFunctionArgs) => {
-  const user = await ensureUser(request, 'entry:view', {
+  const user = await ensureUser(request, 'entry:read', {
     entryId: params.entry
   })
 
@@ -78,7 +79,18 @@ export const loader = async ({request, params}: LoaderFunctionArgs) => {
     return ''
   }, '')
 
-  return json({user, entry, relations, documents, name, values, revisions})
+  const canEdit = await can(user.role, 'entry:edit', {user, entryId: entry.id})
+
+  return json({
+    user,
+    entry,
+    relations,
+    documents,
+    name,
+    values,
+    revisions,
+    canEdit
+  })
 }
 
 export const meta: MetaFunction<typeof loader> = ({data}) => {

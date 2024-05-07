@@ -13,7 +13,10 @@ export const loader = async ({request, params}: LoaderFunctionArgs) => {
 
   const asset = await prisma.asset.findFirstOrThrow({
     where: {id: params.asset},
-    include: {assetFields: {include: {field: true}, orderBy: {order: 'asc'}}}
+    include: {
+      assetFields: {include: {field: true}, orderBy: {order: 'asc'}},
+      acl: true
+    }
   })
 
   const fieldIds = asset.assetFields.map(({fieldId}) => fieldId)
@@ -41,6 +44,10 @@ const AssetManagerAsset = () => {
           <div className="mb-4">
             <h5 className="mb-2 font-bold">Plural</h5>
             {asset.plural}
+          </div>
+          <div className="mb-4">
+            <h5 className="mb-2 font-bold">ACL</h5>
+            <Link to={`/app/acl-manager/${asset.aclId}`}>{asset.acl.name}</Link>
           </div>
         </div>
         <h3 className="border-b border-gray-300 font-light mb-2">Fields</h3>

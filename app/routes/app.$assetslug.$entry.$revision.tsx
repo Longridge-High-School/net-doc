@@ -10,7 +10,7 @@ import {pageTitle} from '~/lib/utils/page-title'
 import {formatAsDateTime} from '~/lib/utils/format'
 
 export const loader = async ({request, params}: LoaderFunctionArgs) => {
-  const user = await ensureUser(request, 'entry:view', {
+  const user = await ensureUser(request, 'entry:read', {
     entryId: params.entry
   })
 

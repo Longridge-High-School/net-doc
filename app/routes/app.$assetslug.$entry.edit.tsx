@@ -6,7 +6,7 @@ import {
   redirect,
   unstable_parseMultipartFormData
 } from '@remix-run/node'
-import {asyncForEach, indexedBy} from '@arcath/utils'
+import {asyncForEach, indexedBy, invariant} from '@arcath/utils'
 
 import {ensureUser} from '~/lib/utils/ensure-user'
 import {getPrisma} from '~/lib/prisma.server'
@@ -15,11 +15,11 @@ import {FIELDS} from '~/lib/fields/field'
 import {Button} from '~/lib/components/button'
 import {pageTitle} from '~/lib/utils/page-title'
 import {getUploadHandler} from '~/lib/utils/upload-handler.server'
-import {HelperText, Label, TextArea} from '~/lib/components/input'
+import {HelperText, Label, Select, TextArea} from '~/lib/components/input'
 import {FIELD_HANDLERS} from '~/lib/fields/field.server'
 
 export const loader = async ({request, params}: LoaderFunctionArgs) => {
-  const user = await ensureUser(request, 'entry:edit', {
+  const user = await ensureUser(request, 'entry:write', {
     entryId: params.entry
   })
 
@@ -41,12 +41,14 @@ export const loader = async ({request, params}: LoaderFunctionArgs) => {
     return ''
   }, '')
 
-  return json({user, entry, name})
+  const acls = await prisma.aCL.findMany({orderBy: {name: 'asc'}})
+
+  return json({user, entry, name, acls})
 }
 
 export const action = async ({request, params}: ActionFunctionArgs) => {
-  const user = await ensureUser(request, 'asset:add', {
-    assetSlug: params.assetslug
+  const user = await ensureUser(request, 'entry:write', {
+    entryId: params.entry
   })
 
   const prisma = getPrisma()
@@ -56,6 +58,9 @@ export const action = async ({request, params}: ActionFunctionArgs) => {
   const formData = await unstable_parseMultipartFormData(request, uploadHandler)
 
   const changelog = formData.get('changelog') as string | undefined
+  const acl = formData.get('acl') as string | undefined
+
+  invariant(acl)
 
   const asset = await prisma.asset.findFirstOrThrow({
     where: {slug: params.assetslug},
@@ -64,7 +69,7 @@ export const action = async ({request, params}: ActionFunctionArgs) => {
 
   await prisma.entry.update({
     where: {id: params.entry!},
-    data: {assetId: asset.id}
+    data: {aclId: acl}
   })
 
   await asyncForEach(
@@ -114,7 +119,7 @@ export const meta: MetaFunction<typeof loader> = ({data}) => {
 }
 
 const Asset = () => {
-  const {entry} = useLoaderData<typeof loader>()
+  const {entry, acls} = useLoaderData<typeof loader>()
 
   const {asset} = entry
 
@@ -151,6 +156,18 @@ const Asset = () => {
           Change Log
           <TextArea name="changelog" />
           <HelperText>Explain the reason for this change.</HelperText>
+        </Label>
+        <Label>
+          ACL
+          <Select name="acl" defaultValue={entry.aclId}>
+            {acls.map(({id, name}) => {
+              return (
+                <option key={id} value={id}>
+                  {name}
+                </option>
+              )
+            })}
+          </Select>
         </Label>
         <Button className="bg-success">Update {asset.singular}</Button>
       </form>

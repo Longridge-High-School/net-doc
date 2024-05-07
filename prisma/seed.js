@@ -20,6 +20,50 @@ const main = async () => {
       }
     })
   }
+
+  const aclCount = await prisma.aCL.count()
+
+  if (aclCount === 0) {
+    console.log('No ACLs')
+
+    const acl = await prisma.aCL.create({data: {name: 'Default'}})
+
+    await prisma.aCLEntry.create({
+      data: {
+        aclId: acl.id,
+        type: 'role',
+        target: 'admin',
+        read: true,
+        write: true,
+        delete: true
+      }
+    })
+
+    await prisma.aCLEntry.create({
+      data: {
+        aclId: acl.id,
+        type: 'role',
+        target: 'writer',
+        read: true,
+        write: true,
+        delete: true
+      }
+    })
+
+    await prisma.aCLEntry.create({
+      data: {
+        aclId: acl.id,
+        type: 'role',
+        target: 'reader',
+        read: true,
+        write: false,
+        delete: false
+      }
+    })
+
+    await prisma.entry.updateMany({data: {aclId: acl.id}})
+    await prisma.asset.updateMany({data: {aclId: acl.id}})
+  }
 }
 
 main()

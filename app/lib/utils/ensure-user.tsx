@@ -1,7 +1,7 @@
 import {session} from '~/lib/cookies'
 
 import {getPrisma} from '../prisma.server'
-import {can} from '../rbac'
+import {can} from '../rbac.server'
 
 export const ensureUser = async (
   request: Request,

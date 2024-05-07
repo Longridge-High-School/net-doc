@@ -34,11 +34,21 @@ export const loader = async ({request, params}: LoaderFunctionArgs) => {
   const entries = await time(
     'getEntries',
     'Get Entries',
-    () => prisma.$queryRaw<
-      Array<{id: string; name: string}>
-    >`SELECT Entry.id, Value.value as name FROM Entry 
+    () => prisma.$queryRaw<Array<{id: string; name: string}>>`
+    SELECT Entry.id, Value.value as name FROM Entry 
   INNER JOIN Value ON Value.fieldId = (SELECT nameFieldId from Asset WHERE id = Entry.assetId) AND entryId = entry.id
-  WHERE assetId = (SELECT id from Asset WHERE slug = ${params.assetslug}) AND deleted = false
+  WHERE 
+	assetId = (SELECT id from Asset WHERE slug = ${params.assetslug}) 
+	AND
+	deleted = false
+	AND
+	aclId IN (SELECT aclId FROM ACLEntry 
+		WHERE read = true AND (
+			(type = "role" AND target = ${user.role}) 
+			OR 
+			(type = "user" AND target = ${user.id})
+			)
+		)
   ORDER BY lower(name) ASC`
   )
 
