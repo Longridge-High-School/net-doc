@@ -35,7 +35,7 @@ export const loader = async ({request, params}: LoaderFunctionArgs) => {
 }
 
 export const action: ActionFunction = async ({request, params}) => {
-  const user = await ensureUser(request, 'acl-manager:edit', {
+  await ensureUser(request, 'acl-manager:edit', {
     aclId: params.acl
   })
 
