@@ -52,6 +52,31 @@ export const {can} = canCant<'guest' | 'reader' | 'writer' | 'admin'>({
         }
       },
       {
+        name: 'asset:write',
+        when: async ({
+          user,
+          assetSlug,
+          asset
+        }: {
+          user: SessionUser
+          assetSlug?: string
+          asset?: string
+        }) => {
+          const prisma = getPrisma()
+
+          const aclEntries: Array<{write: boolean}> =
+            await prisma.$queryRaw`SELECT write FROM ACLEntry WHERE aclId = (SELECT aclId FROM Asset WHERE slug = ${assetSlug} OR id = ${asset}) AND (target = ${user.role} OR target = ${user.id})`
+
+          const result = aclEntries.reduce((r, {write}) => {
+            if (r) return true
+
+            return write
+          }, false)
+
+          return result
+        }
+      },
+      {
         name: 'entry:read',
         when: async ({user, entryId}: {user: SessionUser; entryId: string}) => {
           const prisma = getPrisma()

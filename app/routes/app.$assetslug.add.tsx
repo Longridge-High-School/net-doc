@@ -33,7 +33,7 @@ export const loader = async ({request, params}: LoaderFunctionArgs) => {
 }
 
 export const action = async ({request, params}: ActionFunctionArgs) => {
-  const user = await ensureUser(request, 'asset:add', {
+  const user = await ensureUser(request, 'asset:write', {
     assetSlug: params.assetslug
   })
 
