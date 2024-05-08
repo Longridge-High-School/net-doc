@@ -31,8 +31,8 @@ export const meta: MetaFunction<typeof loader> = ({data}) => {
 const ProcessView = () => {
   const {process, code} = useLoaderData<typeof loader>()
 
-  const handleCheckbox = ({target}: {target: {dataset: {index: string}}}) => {
-    const index = target!.dataset.index
+  const handleCheckbox: EventListener = ({target}) => {
+    const index = (target! as HTMLInputElement).dataset.index
 
     fetch(`/api/process/${process.id}/toggle/${index}`).then(() => {
       location.reload()
@@ -45,12 +45,12 @@ const ProcessView = () => {
 
       box.setAttribute('data-index', i.toString())
 
-      box.addEventListener('change', handleCheckbox as any)
+      box.addEventListener('change', handleCheckbox)
     })
 
     return () => {
       document.querySelectorAll('input[type=checkbox]').forEach(box => {
-        box.removeEventListener('change', handleCheckbox as any)
+        box.removeEventListener('change', handleCheckbox)
       })
     }
   })
