@@ -14,4 +14,5 @@ login screen. The defaut login details are:
 
 ## First Steps
 
-> TBC
+> Something like, 1. create an field, 2. create an asset, 3. create and
+> entry, 4. build relations, 5. add dashboard box.

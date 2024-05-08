@@ -23,3 +23,9 @@ Asset Manager when editing an Asset.
 ## Field Types
 
 - [Attachment](/net-doc/docs/fields/attachment)
+- [Date](/net-doc/docs/fields/date)
+- [Image](/net-doc/docs/fields/image)
+- [Markdown](/net-doc/docs/fields/markdown)
+- [Relation](/net-doc/docs/fields/relation)
+- [Select](/net-doc/docs/fields/select)
+- [Text](/net-doc/docs/fields/text)

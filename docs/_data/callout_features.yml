@@ -1,0 +1,24 @@
+style: is-light
+height: is-medium
+items:
+  - title: Documents
+    subtitle: MDX backed documents store.
+    icon: fa-file
+    description: >
+      Write rich, interactive, linked documents using MDX.
+  - title: Fields & Assets
+    subtitle: Your fields, your assets, your way.
+    icon: fa-shapes
+    description: >
+      Build assets from your own fields to describe your documentations
+      structure.
+  - title: Passwords
+    subtitle: Secure password storage within the database.
+    icon: fa-key
+    description: >
+      Safely store your passwords with revision and view history.
+  - title: Access Control
+    subtitle: Control who can see/edit/delete any asset or entry.
+    icon: fa-user-shield
+    description: >
+      Build your own Access Control Lists and assign them to Assets and Entries.

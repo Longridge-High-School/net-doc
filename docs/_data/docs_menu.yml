@@ -18,6 +18,16 @@
       link: /docs/fields/attachment
     - name: Date
       link: /docs/fields/date
+    - name: Image
+      link: /docs/fields/image
+    - name: Markdown
+      link: /docs/fields/markdown
+    - name: Relation
+      link: /docs/fields/relation
+    - name: Select
+      link: /docs/fields/select
+    - name: Text
+      link: /docs/fields/text
 - label: Dashboard Boxes
   items:
     - name: Approaching Dates

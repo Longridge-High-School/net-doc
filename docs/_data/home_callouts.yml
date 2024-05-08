@@ -7,7 +7,7 @@ items:
     description: >
       Make your documentation work for you.
     call_to_action_name: Features
-    call_to_action_link: /features/
+    call_to_action_link: /features.html
   - title: Docker
     subtitle: Easy to deploy
     icon: fa-docker
