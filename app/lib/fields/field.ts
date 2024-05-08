@@ -13,7 +13,8 @@ export type Field = {
     name,
     label,
     helperText,
-    meta
+    meta,
+    validation
   }: {
     /** The curent value of the field from the database */
     value: string
@@ -21,6 +22,7 @@ export type Field = {
     label: string
     helperText: string
     meta: string
+    validation: {required: boolean}
   }) => JSX.Element
   viewComponent: ({
     value,

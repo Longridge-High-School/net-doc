@@ -3,7 +3,7 @@
 import {omit} from '@arcath/utils'
 
 export const inputClasses =
-  'w-full border border-gray-300 rounded p-2 mt-2 mb-4 shadow'
+  'w-full border border-gray-300 rounded p-2 mt-2 mb-4 shadow invalid:border-pink-300'
 
 export const Input = (
   props: React.DetailedHTMLProps<

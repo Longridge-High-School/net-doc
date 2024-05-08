@@ -99,7 +99,8 @@ const LinkPasswordToEntry = () => {
       label: 'Passwords',
       meta: 'password',
       value: JSON.stringify(initialValue),
-      helperText: 'Select any linked passwords here.'
+      helperText: 'Select any linked passwords here.',
+      validation: {required: false}
     })
   }
 

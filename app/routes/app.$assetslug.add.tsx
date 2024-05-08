@@ -92,6 +92,7 @@ const Asset = () => {
             helperText: string
             name: string
             meta: string
+            validation: {required: boolean}
           }) => {
             return FIELDS[field.type].editComponent(params)
           }
@@ -104,6 +105,7 @@ const Asset = () => {
                 helperText={helperText}
                 name={id}
                 meta={field.meta}
+                validation={{required: field.id === asset.nameFieldId}}
               />
             </div>
           )
