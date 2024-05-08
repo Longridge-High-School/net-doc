@@ -59,3 +59,15 @@ body {
 .markdown pre {
   @apply m-2;
 }
+
+.markdown h3,
+h4,
+h5,
+h6 {
+  @apply text-lg font-light mb-4 mt-2;
+}
+
+.markdown .icon-link::before {
+  @apply text-sm;
+  content: '🔗';
+}
