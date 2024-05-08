@@ -1,6 +1,6 @@
 # Net-Doc
 
-![Logo](./docs/logo.png)
+![Logo](./docs/assets/logo.png)
 
 ![Version](https://badge.fury.io/gh/longridge-high-school%2Fnet-doc.svg)
 ![Deployment](https://github.com/longridge-high-school/net-doc/actions/workflows/deployment.yml/badge.svg)
