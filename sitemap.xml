@@ -26,6 +26,9 @@
 <loc>/net-doc/docs/concepts/fields.html</loc>
 </url>
 <url>
+<loc>/net-doc/docs/fields/image.html</loc>
+</url>
+<url>
 <loc>/net-doc/docs/</loc>
 </url>
 <url>
@@ -36,5 +39,17 @@
 </url>
 <url>
 <loc>/net-doc/docs/getting-started/install.html</loc>
+</url>
+<url>
+<loc>/net-doc/docs/fields/markdown.html</loc>
+</url>
+<url>
+<loc>/net-doc/docs/fields/relation.html</loc>
+</url>
+<url>
+<loc>/net-doc/docs/fields/select.html</loc>
+</url>
+<url>
+<loc>/net-doc/docs/fields/text.html</loc>
 </url>
 </urlset>
