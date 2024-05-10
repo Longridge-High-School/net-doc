@@ -71,3 +71,19 @@ h6 {
   @apply text-sm;
   content: '🔗';
 }
+
+.markdown ul {
+  @apply list-disc ml-4;
+}
+
+.markdown > ul {
+  @apply mb-2;
+}
+
+.markdown ol {
+  @apply list-decimal ml-4;
+}
+
+.markdown > ol {
+  @apply mb-2;
+}
