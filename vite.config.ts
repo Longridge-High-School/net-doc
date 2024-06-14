@@ -11,5 +11,6 @@ export default defineConfig({
       ignoredRouteFiles: ['**/*.css']
     }),
     tsconfigPaths()
-  ]
+  ],
+  optimizeDeps: {exclude: ['@mapbox/node-pre-gyp']}
 })
