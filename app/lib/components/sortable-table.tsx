@@ -24,8 +24,8 @@ export const SortableTable = ({
     asset,
     entries,
     values,
-    sortedBy: asset.nameFieldId,
-    sortOrder: 'ASC'
+    sortedBy: asset.sortFieldId !== '' ? asset.sortFieldId : asset.nameFieldId,
+    sortOrder: asset.sortOrder as 'ASC' | 'DESC'
   })
 
   return (

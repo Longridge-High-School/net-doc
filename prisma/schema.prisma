@@ -23,6 +23,8 @@ model Asset {
   nameFieldId String
   assetFields AssetField[]
   entries     Entry[]
+  sortFieldId String       @default("")
+  sortOrder   String       @default("ASC")
 
   acl   ACL    @relation(fields: [aclId], references: [id])
   aclId String @default("")
@@ -220,7 +222,7 @@ model ACL {
 
   entries ACLEntry[]
 
-  assets Asset[]
+  assets       Asset[]
   assetEntries Entry[]
 }
 

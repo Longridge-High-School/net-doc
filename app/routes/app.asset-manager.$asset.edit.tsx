@@ -40,6 +40,8 @@ export const action = async ({request, params}: ActionFunctionArgs) => {
   const singular = formData.get('singular') as string | undefined
   const plural = formData.get('plural') as string | undefined
   const nameFieldId = formData.get('namefield') as string | undefined
+  const sortFieldId = formData.get('sortfield') as string | undefined
+  const sortOrder = formData.get('sortorder') as ('ASC' | 'DESC') | undefined
   const icon = formData.get('icon') as string | undefined
   const acl = formData.get('acl') as string | undefined
 
@@ -48,6 +50,8 @@ export const action = async ({request, params}: ActionFunctionArgs) => {
   invariant(singular)
   invariant(plural)
   invariant(nameFieldId)
+  invariant(sortFieldId)
+  invariant(sortOrder)
   invariant(icon)
   invariant(acl)
 
@@ -67,7 +71,17 @@ export const action = async ({request, params}: ActionFunctionArgs) => {
 
   const asset = await prisma.asset.update({
     where: {id: params.asset},
-    data: {name, slug, singular, plural, icon, nameFieldId, aclId: acl}
+    data: {
+      name,
+      slug,
+      singular,
+      plural,
+      icon,
+      nameFieldId,
+      aclId: acl,
+      sortFieldId,
+      sortOrder
+    }
   })
 
   return redirect(`/app/asset-manager/${asset.id}`)
@@ -118,7 +132,33 @@ const AssetManagerAsset = () => {
               )
             })}
           </Select>
-          <HelperText>Which filed provides the name for an entry</HelperText>
+          <HelperText>Which field provides the name for an entry</HelperText>
+        </Label>
+        <Label>
+          Sort Field
+          <Select name="sortfield" defaultValue={asset.sortFieldId}>
+            {asset.assetFields
+              .filter(
+                ({displayOnTable, fieldId}) =>
+                  displayOnTable || fieldId === asset.nameFieldId
+              )
+              .map(({id, field}) => {
+                return (
+                  <option key={id} value={field.id}>
+                    {field.name}
+                  </option>
+                )
+              })}
+          </Select>
+          <HelperText>Which field should be used to sort the table</HelperText>
+        </Label>
+        <Label>
+          Sort Order
+          <Select name="sortorder" defaultValue={asset.sortOrder}>
+            <option value="ASC">Ascending</option>
+            <option value="DESC">Descending</option>
+          </Select>
+          <HelperText>Which order should the table be displayed in</HelperText>
         </Label>
         <Label>
           ACL
