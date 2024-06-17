@@ -25,7 +25,13 @@ const Asset = () => {
   const matches = useMatches()
 
   const actions = () => {
-    const {id, params} = matches.pop()!
+    const match = matches.pop()
+
+    if (!match) {
+      return []
+    }
+
+    const {id, params} = match
 
     invariant(id)
     invariant(params)

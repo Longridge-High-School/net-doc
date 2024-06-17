@@ -8,10 +8,11 @@ import {indexedBy} from '@arcath/utils'
 
 import {ensureUser} from '~/lib/utils/ensure-user'
 import {getPrisma} from '~/lib/prisma.server'
-import {Link, useLoaderData} from '@remix-run/react'
+import {useLoaderData} from '@remix-run/react'
 import {pageTitle} from '~/lib/utils/page-title'
-import {FIELDS} from '~/lib/fields/field'
 import {createTimings} from '~/lib/utils/timings.server'
+
+import {SortableTable} from '~/lib/components/sortable-table'
 
 export const loader = async ({request, params}: LoaderFunctionArgs) => {
   const {time, headers} = createTimings()
@@ -48,8 +49,7 @@ export const loader = async ({request, params}: LoaderFunctionArgs) => {
 			OR 
 			(type = "user" AND target = ${user.id})
 			)
-		)
-  ORDER BY lower(name) ASC`
+		)`
   )
 
   const extraValues = await time(
@@ -57,17 +57,33 @@ export const loader = async ({request, params}: LoaderFunctionArgs) => {
     'Get Column Values',
     () => prisma.$queryRaw<
       Array<{
-        valueId: string
-        name: string
+        id: string
         value: string
         type: string
         lookup: string
       }>
-    >`SELECT Value.id as valueId, Field.name, Value.value, Field.type, Value.entryId || '/' || Value.fieldId as lookup FROM AssetField 
-  INNER JOIN Asset on Asset.id = AssetField.assetId
-  INNER JOIN Field on Field.id = AssetField.fieldId
-  INNER JOIN Value on Value.fieldId = AssetField.fieldId
-  WHERE AssetField.displayOnTable = true AND AssetField.assetId = (SELECT id FROM Asset WHERE slug = ${params.assetslug})`
+    >`SELECT Value.id, Value.value, Value.entryId || '/' || Value.fieldId as lookup, Field.type  FROM Value 
+    INNER JOIN Entry ON Entry.id = Value.entryId
+    INNER JOIN Asset ON Asset.id = Entry.assetId
+    INNER JOIN AssetField ON AssetField.assetId = Asset.id AND AssetField.fieldId = Value.fieldId
+    INNER JOIN Field ON Field.id = Value.fieldId
+  WHERE 
+    ((AssetField.displayOnTable = true) OR (Value.fieldId = Asset.nameFieldId))
+    AND
+    Value.entryId IN (SELECT Entry.id FROM Entry
+      WHERE 
+        assetId = (SELECT id from Asset WHERE slug = ${params.assetslug}) 
+        AND
+        deleted = false
+        AND
+        aclId IN (SELECT aclId FROM ACLEntry 
+          WHERE read = true AND (
+            (type = "role" AND target = ${user.role}) 
+            OR 
+            (type = "user" AND target = ${user.id})
+            )
+          )
+    )`
   )
 
   return json(
@@ -89,52 +105,12 @@ const Asset = () => {
 
   return (
     <div>
-      <table className="entry-table">
-        <thead>
-          <tr>
-            <th>{asset.singular}</th>
-            {asset.assetFields
-              .filter(({displayOnTable}) => displayOnTable)
-              .map(({id, field}) => {
-                return <th key={id}>{field.name}</th>
-              })}
-          </tr>
-        </thead>
-        <tbody>
-          {entries.map(({id, name}) => {
-            return (
-              <tr key={id}>
-                <td>
-                  <Link to={`/app/${asset.slug}/${id}`}>{name}</Link>
-                </td>
-                {asset.assetFields
-                  .filter(({displayOnTable}) => displayOnTable)
-                  .map(({field}) => {
-                    const lookup = `${id}/${field.id}`
-
-                    const {value} = values[lookup]
-                      ? values[lookup]
-                      : {value: ''}
-
-                    const Value = () => {
-                      return FIELDS[field.type].listComponent({
-                        value,
-                        title: field.name,
-                        meta: field.meta
-                      })
-                    }
-
-                    return (
-                      <td key={lookup}>
-                        <Value />
-                      </td>
-                    )
-                  })}
-              </tr>
-            )
-          })}
-        </tbody>
-      </table>
+      <SortableTable
+        asset={asset}
+        entries={entries}
+        values={values}
+        key={asset.slug}
+      />
     </div>
   )
 }
