@@ -15,7 +15,7 @@ import {relationField} from '~/lib/fields/relation'
 import {pageTitle} from '~/lib/utils/page-title'
 
 export const loader = async ({request, params}: LoaderFunctionArgs) => {
-  const user = await ensureUser(request, 'entry:edit', {
+  const user = await ensureUser(request, 'entry:write', {
     entryId: params.entry
   })
 
@@ -33,7 +33,7 @@ export const loader = async ({request, params}: LoaderFunctionArgs) => {
 }
 
 export const action = async ({request, params}: ActionFunctionArgs) => {
-  await ensureUser(request, 'entry:update', {
+  await ensureUser(request, 'entry:write', {
     entryId: params.entry
   })
 
