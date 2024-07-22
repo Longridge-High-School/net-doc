@@ -5,6 +5,7 @@ import {invariant} from '@arcath/utils'
 import {ensureUser} from '~/lib/utils/ensure-user'
 import {getPrisma} from '~/lib/prisma.server'
 import {Header} from '~/lib/components/header'
+import {useNotify} from '~/lib/hooks/use-notify'
 
 export const loader = async ({request, params}: LoaderFunctionArgs) => {
   const user = await ensureUser(request, 'asset:view', {
@@ -23,6 +24,7 @@ export const loader = async ({request, params}: LoaderFunctionArgs) => {
 const Asset = () => {
   const {asset} = useLoaderData<typeof loader>()
   const matches = useMatches()
+  const {notify} = useNotify()
 
   const actions = () => {
     const match = matches.pop()
@@ -56,6 +58,48 @@ const Asset = () => {
             link: `/app/${asset.slug}/${params.entry}/delete`,
             label: `Delete ${asset.singular}`,
             className: 'bg-danger'
+          },
+          {
+            link: '#',
+            label: '📌',
+            className: 'bg-info',
+            action: async () => {
+              const response = await fetch('/api/pin', {
+                method: 'POST',
+                body: JSON.stringify({
+                  target: asset.slug,
+                  targetId: params.entry
+                })
+              })
+
+              const {result} = await response.json()
+
+              if (!result) {
+                notify({
+                  title: 'Error',
+                  type: 'danger',
+                  message: 'Unable to pin/unpin'
+                })
+
+                return
+              }
+
+              if (result === 'remove') {
+                notify({
+                  title: 'Pin Removed',
+                  type: 'info',
+                  message: 'Entry un pinned.'
+                })
+
+                return
+              }
+
+              notify({
+                title: 'Pin Added',
+                type: 'success',
+                message: 'Entry pinned.'
+              })
+            }
           }
         ]
       default:

@@ -1,6 +1,7 @@
 import React from 'react'
 
 import {approachingDatesBox} from './approaching-dates'
+import {pinnedItemsBox} from './pinned-items'
 import {recentChangesBox} from './recent-changes'
 import {recentDocumentsBox} from './recent-documents'
 import {statsBox} from './stats'
@@ -24,6 +25,7 @@ export const DashboardBox = ({
 
 export const BOXES = {
   approachingDates: approachingDatesBox,
+  pinnedItems: pinnedItemsBox,
   recentChanges: recentChangesBox,
   recentDocuments: recentDocumentsBox,
   stats: statsBox

@@ -96,7 +96,7 @@ model ValueHistory {
 model User {
   id           String @id @default(uuid())
   name         String
-  email        String
+  email        String @unique()
   passwordHash String
   role         String
 
@@ -111,6 +111,7 @@ model User {
   documentChanges DocumentHistory[]
   passwordChanges PasswordHistory[]
   passwordViews   PasswordView[]
+  pins            Pin[]
 }
 
 model Session {
@@ -236,4 +237,14 @@ model ACLEntry {
 
   acl   ACL    @relation(fields: [aclId], references: [id], onDelete: Cascade)
   aclId String
+}
+
+model Pin {
+  id String @id @default(uuid())
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String
+
+  target   String // 'document', 'entry', 'password'
+  targetId String
 }

@@ -2,12 +2,15 @@ import {Outlet, useMatches, useRouteLoaderData} from '@remix-run/react'
 import {invariant} from '@arcath/utils'
 
 import {Header} from '~/lib/components/header'
+import {useNotify} from '~/lib/hooks/use-notify'
 
 const Documents = () => {
   const matches = useMatches()
   const documentData = useRouteLoaderData<
     {document: {body: string}} | undefined
   >('routes/app.documents.$document._index')
+
+  const {notify} = useNotify()
 
   const isProcess = !!(
     documentData && documentData.document.body.match(/- \[ \]/g)
@@ -49,6 +52,48 @@ const Documents = () => {
             link: `/app/documents/${params.document}/edit`,
             label: 'Edit Document',
             className: 'bg-info'
+          },
+          {
+            link: '#',
+            label: '📌',
+            className: 'bg-info',
+            action: async () => {
+              const response = await fetch('/api/pin', {
+                method: 'POST',
+                body: JSON.stringify({
+                  target: 'documents',
+                  targetId: params.document
+                })
+              })
+
+              const {result} = await response.json()
+
+              if (!result) {
+                notify({
+                  title: 'Error',
+                  type: 'danger',
+                  message: 'Unable to pin/unpin'
+                })
+
+                return
+              }
+
+              if (result === 'remove') {
+                notify({
+                  title: 'Pin Removed',
+                  type: 'info',
+                  message: 'Document un pinned.'
+                })
+
+                return
+              }
+
+              notify({
+                title: 'Pin Added',
+                type: 'success',
+                message: 'Document pinned.'
+              })
+            }
           }
         ]
       default:

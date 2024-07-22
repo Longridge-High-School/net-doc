@@ -7,7 +7,12 @@ export const Header = ({
   actions
 }: {
   title: string
-  actions?: Array<{link: string; label: string; className: string}>
+  actions?: Array<{
+    link: string
+    label: string
+    className: string
+    action?: () => void
+  }>
 }) => {
   const {notify} = useNotify()
   const [, copyToClipboard] = useCopyToClipboard()
@@ -15,9 +20,14 @@ export const Header = ({
   return (
     <header className="border-b border-b-grey-100 pb-2 mb-4">
       <div className="flex gap-2 float-right">
-        {actions?.map(({link, label, className}, i) => {
+        {actions?.map(({link, label, className, action}, i) => {
           return (
-            <LinkButton key={i} to={link} className={className}>
+            <LinkButton
+              key={i}
+              to={link}
+              className={className}
+              onClick={action}
+            >
               {label}
             </LinkButton>
           )

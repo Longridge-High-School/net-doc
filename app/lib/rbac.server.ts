@@ -20,6 +20,26 @@ export const {can} = canCant<'guest' | 'reader' | 'writer' | 'admin'>({
       'dashboard',
       'search',
       'user:self',
+      'pin:create',
+      {
+        name: 'pin:*',
+        when: async ({
+          user,
+          targetId
+        }: {
+          user: SessionUser
+          targetId: string
+        }) => {
+          const prisma = getPrisma()
+
+          const pin = await prisma.pin.findFirstOrThrow({
+            where: {id: targetId},
+            select: {userId: true, id: true}
+          })
+
+          return pin.userId === user.id
+        }
+      },
       {
         name: 'user:*',
         when: async ({user, targetId}) => {
