@@ -35,7 +35,7 @@ export const userForTest = async ({
   return {user, password, dispose}
 }
 
-export const postBody = (body: Object) => {
+export const postBody = (body: object) => {
   return keys(body).reduce((bodyString, key) => {
     if (bodyString !== '') {
       bodyString = `${bodyString}&`

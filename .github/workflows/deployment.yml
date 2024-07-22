@@ -174,7 +174,7 @@ jobs:
             'prisma/schema.prisma') }}
 
       - name: 🎨 Create Database
-        run: npm run test:db:create
+        run: npx prisma migrate dev
 
       - name: 🧪 Test
         run: npm test
