@@ -15,6 +15,8 @@ export const userForTest = async ({
 }: {
   role: 'reader' | 'writer' | 'admin'
 }) => {
+  let sessionId: string | null = null
+
   const prisma = getPrisma()
 
   const password = faker.string.alphanumeric()
@@ -32,7 +34,31 @@ export const userForTest = async ({
     await prisma.user.delete({where: {id: user.id}})
   }
 
-  return {user, password, dispose}
+  const getSession = async () => {
+    if (sessionId !== null) {
+      return prisma.session.findFirstOrThrow({where: {id: sessionId}})
+    }
+
+    const session = await prisma.session.create({
+      data: {userId: user.id, ip: '0.0.0.0'}
+    })
+
+    sessionId = session.id
+
+    return session
+  }
+
+  const sessionHeader = async () => {
+    const session = await getSession()
+
+    const headers = new Headers()
+
+    headers.set('Cookie', `session=${session.id}`)
+
+    return headers
+  }
+
+  return {user, password, dispose, getSession, sessionHeader}
 }
 
 export const postBody = (body: object) => {
