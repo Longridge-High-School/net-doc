@@ -12,6 +12,7 @@
     "docker": "prisma migrate deploy && prisma generate && prisma db seed && npm run start",
     "prettier": "prettier app --check --end-of-line auto",
     "test": "env-cmd -f .test.env vitest",
+    "test:ci": "vitest",
     "test:db:create": "env-cmd -f .test.env npx prisma migrate dev"
   },
   "dependencies": {

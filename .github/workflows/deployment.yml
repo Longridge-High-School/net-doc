@@ -181,7 +181,7 @@ jobs:
       - name: 🧪 Test
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
-        run: npm test
+        run: npm run test:ci
 
   build:
     name: 🐳 Build
