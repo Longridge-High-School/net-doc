@@ -34,7 +34,7 @@ export const pinnedItemsBox: DashboardBoxFn<PinsData> = {
     <div>
       <i>Pins has no options</i>
       <input type="hidden" name={id} value="{}" />
-      <input type="hidden" name={`${id}-type`} value="stats" />
+      <input type="hidden" name={`${id}-type`} value="pinnedItems" />
     </div>
   )
 }
