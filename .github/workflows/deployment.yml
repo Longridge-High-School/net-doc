@@ -174,9 +174,13 @@ jobs:
             'prisma/schema.prisma') }}
 
       - name: 🎨 Create Database
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
         run: npx prisma migrate dev
 
       - name: 🧪 Test
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
         run: npm test
 
   build:
