@@ -17,6 +17,7 @@ import {Input, Label} from '~/lib/components/input'
 import {getPrisma} from '~/lib/prisma.server'
 import {hashPassword} from '~/lib/user.server'
 import {FlashMessage} from '~/lib/components/flash'
+import {formatAsDateTime} from '~/lib/utils/format'
 
 export const loader = async ({request}: LoaderFunctionArgs) => {
   const sessionUser = await ensureUser(request, 'user:self', {})
@@ -25,7 +26,12 @@ export const loader = async ({request}: LoaderFunctionArgs) => {
 
   const user = await prisma.user.findFirstOrThrow({where: {id: sessionUser.id}})
 
-  return json({user})
+  const sessions = await prisma.session.findMany({
+    where: {userId: user.id},
+    orderBy: {updatedAt: 'desc'}
+  })
+
+  return json({user, sessions, currentSession: sessionUser.sessionId})
 }
 
 export const meta: MetaFunction = () => {
@@ -71,7 +77,7 @@ export const action: ActionFunction = async ({request}) => {
 }
 
 const User = () => {
-  const {user} = useLoaderData<typeof loader>()
+  const {user, sessions, currentSession} = useLoaderData<typeof loader>()
   const queryClient = useQueryClient()
   const {notify} = useNotify()
   const data = useActionData<typeof action>()
@@ -127,6 +133,39 @@ const User = () => {
               </Label>
               <Button className="bg-success">Update Account</Button>
             </form>
+          </div>
+          <div className="entry mt-4">
+            <h2>Sessions</h2>
+            {sessions.map(({id, ip, updatedAt}) => {
+              return (
+                <div key={id} className="mt-2 block">
+                  {ip}{' '}
+                  {id === currentSession ? (
+                    '(current)'
+                  ) : (
+                    <button
+                      onClick={async () => {
+                        await fetch(`/api/session/${id}/delete`, {
+                          method: 'post'
+                        })
+                        notify({
+                          title: 'Session Deleted',
+                          type: 'success',
+                          message:
+                            'Session has been deleted, anyone using it will have been logged out.'
+                        })
+                      }}
+                    >
+                      🗑️
+                    </button>
+                  )}
+                  <br />
+                  <span className="text-sm text-gray-400">
+                    {formatAsDateTime(updatedAt)}
+                  </span>
+                </div>
+              )
+            })}
           </div>
         </div>
         <Outlet />

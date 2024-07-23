@@ -47,4 +47,29 @@ describe('RBAC', () => {
     reader.dispose()
     readerTwo.dispose()
   })
+
+  test('should apply permissions to sessions', async () => {
+    const reader = await userForTest({role: 'reader'})
+    const readerTwo = await userForTest({role: 'reader'})
+
+    const readerSession = await reader.getSession()
+    const readerTwoSession = await readerTwo.getSession()
+
+    expect(
+      await can(reader.user.role, 'session:delete', {
+        user: reader.user,
+        sessionId: readerSession.id
+      })
+    ).toBeTruthy()
+
+    expect(
+      await can(reader.user.role, 'session:delete', {
+        user: reader.user,
+        sessionId: readerTwoSession.id
+      })
+    ).toBeFalsy()
+
+    await reader.dispose()
+    await readerTwo.dispose()
+  })
 })

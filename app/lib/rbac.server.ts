@@ -146,6 +146,24 @@ export const {can} = canCant<'guest' | 'reader' | 'writer' | 'admin'>({
 
           return result
         }
+      },
+      {
+        name: 'session:delete',
+        when: async ({
+          user,
+          sessionId
+        }: {
+          user: SessionUser
+          sessionId: string
+        }) => {
+          const prisma = getPrisma()
+
+          const session = await prisma.session.findFirstOrThrow({
+            where: {id: sessionId}
+          })
+
+          return session.userId === user.id
+        }
       }
     ]
   },

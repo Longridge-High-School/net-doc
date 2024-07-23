@@ -55,6 +55,7 @@
     "eslint-plugin-jsx-a11y": "^6.9.0",
     "eslint-plugin-react": "^7.35.0",
     "eslint-plugin-react-hooks": "^4.6.2",
+    "is-ip": "^5.0.1",
     "postcss": "^8.4.39",
     "prettier": "^3.3.3",
     "prisma": "^5.17.0",

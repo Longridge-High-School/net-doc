@@ -1,11 +1,19 @@
 import {Links, Meta, Outlet, Scripts, ScrollRestoration} from '@remix-run/react'
 import {QueryClient, QueryClientProvider} from '@tanstack/react-query'
+import {type HeadersFunction} from '@remix-run/node'
 
 import {Notifications} from '~/lib/hooks/use-notify'
 
 import './styles/root.css'
 
 const queryClient = new QueryClient()
+
+export const headers: HeadersFunction = ({loaderHeaders}) => {
+  const headers = {
+    'Server-Timing': loaderHeaders.get('Server-Timing') ?? ''
+  }
+  return headers
+}
 
 export default function App() {
   return (
