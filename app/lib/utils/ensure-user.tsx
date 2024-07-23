@@ -79,11 +79,11 @@ const headerNames = Object.freeze([
 ] as const)
 
 export function getClientIPAddress(request: Request): string {
-  let headers = request.headers
+  const headers = request.headers
 
-  let ipAddress = headerNames
+  const ipAddress = headerNames
     .flatMap(headerName => {
-      let value = headers.get(headerName)
+      const value = headers.get(headerName)
       if (headerName === 'Forwarded') {
         return parseForwardedHeader(value)
       }
@@ -100,7 +100,7 @@ export function getClientIPAddress(request: Request): string {
 
 function parseForwardedHeader(value: string | null): string | null {
   if (!value) return null
-  for (let part of value.split(';')) {
+  for (const part of value.split(';')) {
     if (part.startsWith('for=')) return part.slice(4)
   }
   return null
