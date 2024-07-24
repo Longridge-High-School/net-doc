@@ -1,6 +1,5 @@
 import {Links, Meta, Outlet, Scripts, ScrollRestoration} from '@remix-run/react'
 import {QueryClient, QueryClientProvider} from '@tanstack/react-query'
-import {type HeadersFunction} from '@remix-run/node'
 
 import {Notifications} from '~/lib/hooks/use-notify'
 
