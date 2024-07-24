@@ -1,4 +1,5 @@
 import {isIP} from 'is-ip'
+import {subDays} from 'date-fns'
 
 import {session} from '~/lib/cookies'
 
@@ -48,10 +49,16 @@ export const ensureUser = async (
     data: {ip: clientIp}
   })
 
+  /* clean up */
+
+  await prisma.session.deleteMany({
+    where: {updatedAt: {lt: subDays(new Date(), 8)}}
+  })
+
   return {
     ...cookieSession.user,
     sessionId: cookieSession.id,
-    setCookie: session.serialize(cookieSession.id)
+    setCookie: await session.serialize(cookieSession.id)
   }
 }
 

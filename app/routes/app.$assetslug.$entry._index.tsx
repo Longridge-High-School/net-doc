@@ -1,4 +1,9 @@
-import {type LoaderFunctionArgs, type MetaFunction, json} from '@remix-run/node'
+import {
+  type LoaderFunctionArgs,
+  type MetaFunction,
+  type HeadersArgs,
+  json
+} from '@remix-run/node'
 import {Link, useLoaderData} from '@remix-run/react'
 import {type Entry} from '@prisma/client'
 
@@ -9,67 +14,90 @@ import {FIELDS} from '~/lib/fields/field'
 import {pageTitle} from '~/lib/utils/page-title'
 import {formatAsDateTime} from '~/lib/utils/format'
 import {can} from '~/lib/rbac.server'
+import {createTimings} from '~/lib/utils/timings.server'
 
 export const loader = async ({request, params}: LoaderFunctionArgs) => {
-  const user = await ensureUser(request, 'entry:read', {
-    entryId: params.entry
-  })
+  const {time, headers} = createTimings()
+
+  const user = await time('getUser', 'Get User', () =>
+    ensureUser(request, 'entry:read', {
+      entryId: params.entry
+    })
+  )
 
   const prisma = getPrisma()
 
-  const entry = await prisma.entry.findFirstOrThrow({
-    where: {id: params.entry},
-    include: {
-      asset: true,
-      passwords: {
-        include: {password: {select: {id: true, title: true, username: true}}}
+  const entry = await time('getEntry', 'Get Entry', () =>
+    prisma.entry.findFirstOrThrow({
+      where: {id: params.entry},
+      include: {
+        asset: true,
+        passwords: {
+          include: {password: {select: {id: true, title: true, username: true}}}
+        }
       }
-    }
-  })
+    })
+  )
 
-  const values = await prisma.$queryRaw<
-    Array<{
-      id: string
-      value: string
-      order: number
-      type: string
-      meta: string
-      fieldId: string
-      fieldName: string
-    }>
-  >`SELECT Value.id, Value.value, AssetField."order", Field.type, Field.meta, Value.fieldId, Field.name as fieldName FROM Value
+  const values = await time(
+    'getValues',
+    'Get Values',
+    () => prisma.$queryRaw<
+      Array<{
+        id: string
+        value: string
+        order: number
+        type: string
+        meta: string
+        fieldId: string
+        fieldName: string
+      }>
+    >`SELECT Value.id, Value.value, AssetField."order", Field.type, Field.meta, Value.fieldId, Field.name as fieldName FROM Value
   INNER JOIN Entry ON Entry.Id = Value.entryId
   INNER JOIN Asset on Asset.Id = Entry.assetId
   INNER JOIN AssetField on AssetField.assetId = Asset.id AND AssetField.fieldId = Value.fieldId
   INNER JOIN Field on Field.id = Value.fieldId
   WHERE entryId = ${entry.id}
   ORDER BY AssetField."order" ASC`
+  )
 
-  const relations = await prisma.$queryRaw<
-    Array<Entry & {value: string; slug: string; entryId: string; icon: string}>
-  >`SELECT * FROM Entry 
+  const relations = await time(
+    'getRelations',
+    'Get Relations',
+    () => prisma.$queryRaw<
+      Array<
+        Entry & {value: string; slug: string; entryId: string; icon: string}
+      >
+    >`SELECT * FROM Entry 
   INNER JOIN Value value ON fieldId = (SELECT nameFieldId FROM Asset WHERE Asset.id = entry.assetId) AND entryId = Entry.id 
   INNER JOIN Asset ON Entry.assetId = Asset.id
   WHERE Entry.id IN (SELECT entryId FROM Value WHERE value LIKE ${`%${entry.id}%`}) AND deleted = false`
+  )
 
-  const documents = await prisma.document.findMany({
-    where: {body: {contains: params.entry}}
-  })
+  const documents = await time('getDocuments', 'Get Documents', () =>
+    prisma.document.findMany({
+      where: {body: {contains: params.entry}}
+    })
+  )
 
-  const revisions = await prisma.$queryRaw<
-    Array<{
-      id: string
-      createdAt: string
-      changeNote: string
-      fieldName: string
-      userName: string
-    }>
-  >`SELECT ValueHistory.id, ValueHistory.createdAt, ValueHistory.changeNote, Field.name as fieldName, User.name as userName FROM ValueHistory
+  const revisions = await time(
+    'getRevisions',
+    'Get Revisions',
+    () => prisma.$queryRaw<
+      Array<{
+        id: string
+        createdAt: string
+        changeNote: string
+        fieldName: string
+        userName: string
+      }>
+    >`SELECT ValueHistory.id, ValueHistory.createdAt, ValueHistory.changeNote, Field.name as fieldName, User.name as userName FROM ValueHistory
   INNER JOIN Value on Value.id = ValueHistory.valueId
   INNER JOIN Field on Field.id = Value.fieldId
   INNER JOIN User on User.id = ValueHistory.editedById
   WHERE Value.entryId = ${params.entry}
   ORDER BY ValueHistory.createdAt DESC`
+  )
 
   const name = values.reduce((n, v) => {
     if (n !== '') return n
@@ -81,20 +109,27 @@ export const loader = async ({request, params}: LoaderFunctionArgs) => {
 
   const canEdit = await can(user.role, 'entry:edit', {user, entryId: entry.id})
 
-  return json({
-    user,
-    entry,
-    relations,
-    documents,
-    name,
-    values,
-    revisions,
-    canEdit
-  })
+  return json(
+    {
+      user,
+      entry,
+      relations,
+      documents,
+      name,
+      values,
+      revisions,
+      canEdit
+    },
+    {headers: headers({'Set-Cookie': user.setCookie})}
+  )
 }
 
 export const meta: MetaFunction<typeof loader> = ({data}) => {
   return [{title: pageTitle(data!.entry.asset.singular, data!.name)}]
+}
+
+export const headers = ({loaderHeaders}: HeadersArgs) => {
+  return loaderHeaders
 }
 
 const AssetEntry = () => {

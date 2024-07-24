@@ -21,6 +21,7 @@ export const loader = async ({request, params}: LoaderFunctionArgs) => {
 
   return json({user, asset})
 }
+
 const Asset = () => {
   const {asset} = useLoaderData<typeof loader>()
   const matches = useMatches()

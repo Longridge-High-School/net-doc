@@ -88,7 +88,7 @@ export const loader = async ({request, params}: LoaderFunctionArgs) => {
 
   return json(
     {user, asset, entries, values: indexedBy('lookup', extraValues)},
-    {headers: headers()}
+    {headers: headers({'Set-Cookie': user.setCookie})}
   )
 }
 

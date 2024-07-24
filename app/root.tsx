@@ -8,13 +8,6 @@ import './styles/root.css'
 
 const queryClient = new QueryClient()
 
-export const headers: HeadersFunction = ({loaderHeaders}) => {
-  const headers = {
-    'Server-Timing': loaderHeaders.get('Server-Timing') ?? ''
-  }
-  return headers
-}
-
 export default function App() {
   return (
     <html lang="en">
