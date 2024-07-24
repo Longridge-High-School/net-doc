@@ -136,10 +136,10 @@ const User = () => {
           </div>
           <div className="entry mt-4">
             <h2>Sessions</h2>
-            {sessions.map(({id, ip, updatedAt}) => {
+            {sessions.map(({id, ip, updatedAt, path}) => {
               return (
                 <div key={id} className="mt-2 block">
-                  {ip}{' '}
+                  {ip} ({path}){' '}
                   {id === currentSession ? (
                     '(current)'
                   ) : (

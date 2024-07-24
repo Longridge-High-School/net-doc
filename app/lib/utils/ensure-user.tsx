@@ -46,7 +46,7 @@ export const ensureUser = async (
 
   await prisma.session.update({
     where: {id: cookieSession.id},
-    data: {ip: clientIp}
+    data: {ip: clientIp, path: new URL(request.url).pathname}
   })
 
   /* clean up */
