@@ -3,6 +3,7 @@ import path from 'path'
 import {mkdirp} from 'mkdirp'
 import {format} from 'date-fns'
 import AdmZip from 'adm-zip'
+import cron from 'node-cron'
 
 import {getRedis} from '../app/lib/redis.server.mjs'
 
@@ -35,6 +36,11 @@ const worker = new Worker(
   },
   {connection}
 )
+
+cron.schedule('0 0 0 * * 7', async () => {
+  // Run backups every sunday
+  await queue.add('createBackup', {})
+})
 
 const BACKUPS_DIR = path.join(process.cwd(), 'public', 'backups')
 const UPLOADS_PATH = path.join(process.cwd(), 'public', 'uploads')

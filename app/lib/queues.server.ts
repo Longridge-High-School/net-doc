@@ -5,7 +5,7 @@ import {getRedis} from './redis.server.mjs'
 const jobsQueue = new Queue('main', {connection: getRedis()})
 
 export type Jobs = {
-  createBackup: {}
+  createBackup: Record<string, never>
 }
 
 export type JobName = keyof Jobs

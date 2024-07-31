@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "build": "remix vite:build",
-    "dev": "npm-run-all dev:*",
+    "dev": "npm-run-all -p dev:*",
     "dev:remix": "remix vite:dev --manual",
     "dev:worker": "env-cmd -f .env node ./worker/worker.mjs",
     "lint": "eslint --ignore-path .gitignore --cache --cache-location ./node_modules/.cache/eslint .",
@@ -35,6 +35,7 @@
     "isbot": "^5.1.13",
     "mdx-bundler": "^10.0.2",
     "mkdirp": "^3.0.1",
+    "node-cron": "^3.0.3",
     "npm-run-all": "^4.1.5",
     "qrcode": "^1.5.3",
     "react": "^18.3.1",
