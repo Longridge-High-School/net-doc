@@ -11,3 +11,4 @@ node_modules
 # Net-Doc
 prisma/data/*.db*
 public/uploads
+public/backups

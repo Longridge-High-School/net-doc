@@ -27,6 +27,7 @@ export const loader = async ({request}: LoaderFunctionArgs) => {
     {index: 'field-manager', operation: 'field-manager:list', meta: {}},
     {index: 'user-manager', operation: 'user-manager:list', meta: {}},
     {index: 'acl-manager', operation: 'acl-manager:list', meta: {}},
+    {index: 'system', operation: 'system', meta: {}},
     ...assets.map(({slug}) => {
       return {
         index: `asset:${slug}`,
@@ -72,7 +73,8 @@ const Dashboard = () => {
         {canFromList('asset-manager', cans) ||
         canFromList('field-manager', cans) ||
         canFromList('user-manager', cans) ||
-        canFromList('acl-manager', cans) ? (
+        canFromList('acl-manager', cans) ||
+        canFromList('system', cans) ? (
           <h2 className="text-xl ml-4">System</h2>
         ) : (
           ''
@@ -95,6 +97,11 @@ const Dashboard = () => {
           )}
           {canFromList('user-manager', cans) ? (
             <Link to="/app/user-manager">👤 User Manager</Link>
+          ) : (
+            ''
+          )}
+          {canFromList('system', cans) ? (
+            <Link to="/app/system">⚙️ System</Link>
           ) : (
             ''
           )}
