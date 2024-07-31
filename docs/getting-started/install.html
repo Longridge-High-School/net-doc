@@ -232,9 +232,18 @@ will pull the latest commit to the main branch.</p>
       <span class="pi">-</span> <span class="s">PASSWORD_KEY=YOUR KEY</span>
       <span class="pi">-</span> <span class="s">PASSWORD_SALT=YOUR SALT</span>
       <span class="pi">-</span> <span class="s">PASSWORD_IV=YOUR IV</span>
+      <span class="pi">-</span> <span class="s">DATABASE_URL=file:./data/net-doc.db</span>
     <span class="na">volumes</span><span class="pi">:</span>
       <span class="pi">-</span> <span class="s">./db:/app/prisma/data</span>
       <span class="pi">-</span> <span class="s">./uploads:/app/public/uploads</span>
+      <span class="pi">-</span> <span class="s">./backups:/app/public/backups</span>
+  <span class="na">redis</span><span class="pi">:</span>
+    <span class="na">image</span><span class="pi">:</span> <span class="s">redis:7</span>
+    <span class="na">restart</span><span class="pi">:</span> <span class="s">always</span>
+    <span class="na">volumes</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">./data/redis:/data</span>
+    <span class="na">ports</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">6379:6379</span>
 </code></pre></div></div>
 
 <h3 id="environment-variables">Environment Variables</h3>
@@ -259,6 +268,10 @@ will pull the latest commit to the main branch.</p>
       <td style="text-align: left"><code class="language-plaintext highlighter-rouge">PASSWORD_IV</code></td>
       <td style="text-align: left">The initiation vector for your password encryption. Needs to be a 16 Character HEX Value.</td>
     </tr>
+    <tr>
+      <td style="text-align: left"><code class="language-plaintext highlighter-rouge">DATABASE_URL</code></td>
+      <td style="text-align: left">The file path to your database. Should be <code class="language-plaintext highlighter-rouge">file:./data/something.db</code> so that the data is stored on the host</td>
+    </tr>
   </tbody>
 </table>
 
@@ -279,6 +292,10 @@ will pull the latest commit to the main branch.</p>
     <tr>
       <td style="text-align: left"><code class="language-plaintext highlighter-rouge">/app/public/uploads</code></td>
       <td style="text-align: left"><a href="/docs/fields/attachment">Attachments</a> are uploaded here.</td>
+    </tr>
+    <tr>
+      <td style="text-align: left"><code class="language-plaintext highlighter-rouge">/app/public/backups</code></td>
+      <td style="text-align: left">Contains the generated backup files</td>
     </tr>
   </tbody>
 </table>
