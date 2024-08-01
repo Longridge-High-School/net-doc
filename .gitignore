@@ -12,3 +12,6 @@ node_modules
 prisma/data/*.db*
 public/uploads
 public/backups
+
+# Tests
+/coverage

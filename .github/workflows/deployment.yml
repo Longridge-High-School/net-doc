@@ -184,6 +184,9 @@ jobs:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
         run: npm run test:ci
 
+      - name: 📔 Coverage
+        uses: davelosert/vitest-coverage-report-action@v2
+
   build:
     name: 🐳 Build
     needs: [lint, typecheck, prettier, test]
