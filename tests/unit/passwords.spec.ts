@@ -11,7 +11,7 @@ import {loader as readLoader} from '~/routes/app.passwords.$password._index'
 
 describe('Passwords', () => {
   test('Passwords should be hashed in the database', async () => {
-    const {user, sessionHeader, dispose} = await userForTest({role: 'admin'})
+    const {sessionHeader, dispose} = await userForTest({role: 'admin'})
 
     const prisma = getPrisma()
 

@@ -1,12 +1,11 @@
 import {type LoaderFunctionArgs, redirect} from '@remix-run/node'
 
-import {session} from '~/lib/cookies'
+import {getSession} from '~/lib/cookies'
 
 export const loader = async ({request}: LoaderFunctionArgs) => {
-  const cookieHeader = request.headers.get('Cookie')
-  const cookie = await session.parse(cookieHeader)
+  const session = await getSession(request.headers.get('Cookie'))
 
-  if (!cookie) {
+  if (!session) {
     return redirect('/app/login')
   }
 

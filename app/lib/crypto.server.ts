@@ -18,8 +18,6 @@ export const getCryptoSuite = async () => {
   })
 
   const encrypt = (text: string) => {
-    console.dir(randomBytes(8).toString('hex'))
-
     const cipher = createCipheriv(
       algorithm,
       key,
