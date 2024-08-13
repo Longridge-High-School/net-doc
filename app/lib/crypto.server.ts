@@ -1,4 +1,4 @@
-import {scrypt, randomBytes, createCipheriv, createDecipheriv} from 'crypto'
+import {scrypt, createCipheriv, createDecipheriv} from 'crypto'
 
 export const getCryptoSuite = async () => {
   const algorithm = 'aes-192-cbc'
