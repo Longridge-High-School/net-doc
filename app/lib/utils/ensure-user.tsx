@@ -1,7 +1,7 @@
 import {isIP} from 'is-ip'
 import {subDays} from 'date-fns'
 
-import {session} from '~/lib/cookies'
+import {commitSession, getSession} from '~/lib/cookies'
 
 import {getPrisma} from '../prisma.server'
 import {can} from '../rbac.server'
@@ -12,18 +12,26 @@ export const ensureUser = async (
   meta: object | undefined
 ) => {
   const cookieHeader = request.headers.get('Cookie')
-  const cookie = await session.parse(cookieHeader)
+  const session = await getSession(cookieHeader)
 
   const clientIp = getClientIPAddress(request)
 
-  if (!cookie) {
+  if (!session.data.sessionId) {
     throw new Response('Access Denied', {status: 403})
+  }
+
+  if (
+    !session.data.sessionId.match(
+      /^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$/
+    )
+  ) {
+    throw new Response('Session Parse Failed', {status: 500})
   }
 
   const prisma = getPrisma()
 
   const cookieSession = await prisma.session.findFirst({
-    where: {id: cookie},
+    where: {id: session.data.sessionId},
     include: {user: {select: {id: true, name: true, role: true}}}
   })
 
@@ -58,7 +66,7 @@ export const ensureUser = async (
   return {
     ...cookieSession.user,
     sessionId: cookieSession.id,
-    setCookie: await session.serialize(cookieSession.id)
+    setCookie: await commitSession(session)
   }
 }
 

@@ -164,6 +164,101 @@ export const {can} = canCant<'guest' | 'reader' | 'writer' | 'admin'>({
 
           return session.userId === user.id
         }
+      },
+      'password:list',
+      'password:add',
+      {
+        name: 'password:view',
+        when: async ({
+          user,
+          passwordId
+        }: {
+          user: SessionUser
+          passwordId: string
+        }) => {
+          const prisma = getPrisma()
+
+          const password = await prisma.password.findFirstOrThrow({
+            where: {id: passwordId},
+            include: {acl: {include: {entries: true}}}
+          })
+
+          const result = password.acl.entries.reduce(
+            (r, {target, type, read}) => {
+              if (r) return true
+
+              if (type === 'user' && target !== user.id) return false
+              if (type === 'role' && target !== user.role) return false
+
+              return read
+            },
+            false
+          )
+
+          return result
+        }
+      },
+      {
+        name: 'password:write',
+        when: async ({
+          user,
+          passwordId
+        }: {
+          user: SessionUser
+          passwordId: string
+        }) => {
+          const prisma = getPrisma()
+
+          const password = await prisma.password.findFirstOrThrow({
+            where: {id: passwordId},
+            include: {acl: {include: {entries: true}}}
+          })
+
+          const result = password.acl.entries.reduce(
+            (r, {target, type, write}) => {
+              if (r) return true
+
+              if (type === 'user' && target !== user.id) return false
+              if (type === 'role' && target !== user.role) return false
+
+              return write
+            },
+            false
+          )
+
+          return result
+        }
+      },
+      {
+        name: 'password:delete',
+        when: async ({
+          user,
+          passwordId
+        }: {
+          user: SessionUser
+          passwordId: string
+        }) => {
+          const prisma = getPrisma()
+
+          const password = await prisma.password.findFirstOrThrow({
+            where: {id: passwordId},
+            include: {acl: {include: {entries: true}}}
+          })
+
+          const result = password.acl.entries.reduce(
+            (r, {target, type, delete: del}) => {
+              if (r) return true
+
+              if (type === 'user' && target !== user.id) return false
+              if (type === 'role' && target !== user.role) return false
+
+              return del
+            },
+            false
+          )
+
+          return result
+        }
       }
     ]
   },
@@ -182,7 +277,6 @@ export const {can} = canCant<'guest' | 'reader' | 'writer' | 'admin'>({
       'search',
       'logout',
       'document:*',
-      'password:*',
       'user:*',
       'dashboard:*',
       'process:*',
@@ -211,4 +305,12 @@ export const canList = async (
   })
 
   return indexedBy('index', results)
+}
+
+export const getDefaultACLID = async () => {
+  const prisma = getPrisma()
+
+  const acl = await prisma.aCL.findFirstOrThrow({where: {name: 'Default'}})
+
+  return acl.id
 }

@@ -10,10 +10,22 @@ export const loader = async ({request}: LoaderFunctionArgs) => {
 
   const prisma = getPrisma()
 
-  const passwords = await prisma.password.findMany({
-    select: {id: true, title: true, username: true},
-    orderBy: {title: 'asc'}
-  })
+  const passwords = await prisma.$queryRaw<
+    Array<{id: string; title: string; username: string}>
+  >`SELECT 
+	Password.id, Password.title, Password.username 
+FROM
+	Password
+WHERE 
+	aclId IN (SELECT aclId FROM ACLEntry 
+		WHERE read = true AND (
+			(type = "role" AND target = ${user.role}) 
+			OR 
+			(type = "user" AND target = ${user.id})
+			)
+		)
+ORDER BY
+	Password.title ASC`
 
   return json({user, passwords})
 }

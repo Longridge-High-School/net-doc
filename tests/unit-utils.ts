@@ -1,8 +1,10 @@
 import {faker} from '@faker-js/faker'
-import {keys} from '@arcath/utils'
+import {keys, asyncForEach} from '@arcath/utils'
 
 import {getPrisma} from '~/lib/prisma.server'
 import {hashPassword} from '~/lib/user.server'
+
+import {action as logonAction} from '~/routes/app_.login'
 
 const TEST_APP_URL = 'http://unit.test.app'
 
@@ -33,7 +35,6 @@ export const userForTest = async ({
   const dispose = async () => {
     await prisma.user.delete({where: {id: user.id}})
   }
-
   const getSession = async () => {
     if (sessionId !== null) {
       return prisma.session.findFirstOrThrow({where: {id: sessionId}})
@@ -48,12 +49,27 @@ export const userForTest = async ({
     return session
   }
 
-  const sessionHeader = async () => {
-    const session = await getSession()
+  let sessionCookie: string | null = null
+  const sessionHeader = async (headers = new Headers()) => {
+    if (sessionCookie) {
+      headers.set('Cookie', sessionCookie.split(';')[0])
 
-    const headers = new Headers()
+      return headers
+    }
 
-    headers.set('Cookie', `session=${session.id}`)
+    const response = await logonAction({
+      request: appRequest('/logon', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+        body: postBody({email: user.email, password})
+      }),
+      context: {},
+      params: {}
+    })
+
+    sessionCookie = response.headers.getSetCookie()[0]
+
+    headers.set('Cookie', sessionCookie.split(';')[0])
 
     return headers
   }
@@ -69,4 +85,35 @@ export const postBody = (body: object) => {
 
     return `${bodyString}${key}=${body[key]}`
   }, '')
+}
+
+type ACLDefinition = {
+  [target: string]: {read: boolean; write: boolean; delete: boolean}
+}
+
+export const createACL = async (name: string, definition: ACLDefinition) => {
+  const prisma = getPrisma()
+
+  const acl = await prisma.aCL.create({data: {name}})
+
+  asyncForEach(keys(definition), async typeAndTarget => {
+    const [type, target] = (typeAndTarget as string).split('/')
+
+    const {read, write, delete: del} = definition[typeAndTarget]
+
+    await prisma.aCLEntry.create({
+      data: {
+        aclId: acl.id,
+        type,
+        target,
+        read,
+        write,
+        delete: del
+      }
+    })
+  })
+
+  return {
+    id: acl.id
+  }
 }

@@ -64,6 +64,22 @@ const main = async () => {
     await prisma.entry.updateMany({data: {aclId: acl.id}})
     await prisma.asset.updateMany({data: {aclId: acl.id}})
   }
+
+  const passwordsWithNoACLCount = await prisma.password.count({
+    where: {aclId: ''}
+  })
+
+  if (passwordsWithNoACLCount !== 0) {
+    console.log('Passwords need ACLs')
+    const defaultAcl = await prisma.aCL.findFirstOrThrow({
+      where: {name: 'Default'}
+    })
+
+    await prisma.password.updateMany({
+      where: {aclId: ''},
+      data: {aclId: defaultAcl.id}
+    })
+  }
 }
 
 main()

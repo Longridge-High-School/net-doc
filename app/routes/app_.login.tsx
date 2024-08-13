@@ -17,7 +17,7 @@ import {getPrisma} from '~/lib/prisma.server'
 import {checkPassword} from '~/lib/user.server'
 import {createTimings} from '~/lib/utils/timings.server'
 
-import {session} from '~/lib/cookies'
+import {getSession, commitSession} from '~/lib/cookies'
 
 import {pageTitle} from '~/lib/utils/page-title'
 
@@ -109,9 +109,13 @@ export const action = async ({request}: ActionFunctionArgs) => {
     })
   )
 
+  const session = await getSession(request.headers.get('Cookie'))
+
+  session.set('sessionId', newSession.id)
+
   return redirect('/app', {
     headers: {
-      'Set-Cookie': await session.serialize(newSession.id),
+      'Set-Cookie': await commitSession(session),
       'Server-Timing': getHeader()
     }
   })

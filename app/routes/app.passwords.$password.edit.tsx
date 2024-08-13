@@ -11,12 +11,18 @@ import {invariant} from '@arcath/utils'
 import {ensureUser} from '~/lib/utils/ensure-user'
 import {getPrisma} from '~/lib/prisma.server'
 import {Button} from '~/lib/components/button'
-import {Label, Input, HelperText, TextArea} from '~/lib/components/input'
+import {
+  Label,
+  Input,
+  HelperText,
+  TextArea,
+  Select
+} from '~/lib/components/input'
 import {getCryptoSuite} from '~/lib/crypto.server'
 import {pageTitle} from '~/lib/utils/page-title'
 
 export const loader = async ({request, params}: LoaderFunctionArgs) => {
-  const user = await ensureUser(request, 'password:edit', {
+  const user = await ensureUser(request, 'password:write', {
     passwordId: params.password
   })
 
@@ -28,11 +34,13 @@ export const loader = async ({request, params}: LoaderFunctionArgs) => {
 
   const {decrypt} = await getCryptoSuite()
 
-  return json({user, password, decrypted: decrypt(password.password)})
+  const acls = await prisma.aCL.findMany({orderBy: {name: 'asc'}})
+
+  return json({user, password, decrypted: decrypt(password.password), acls})
 }
 
 export const action = async ({request, params}: ActionFunctionArgs) => {
-  const user = await ensureUser(request, 'password:edit', {
+  const user = await ensureUser(request, 'password:write', {
     passwordId: params.password
   })
 
@@ -46,9 +54,11 @@ export const action = async ({request, params}: ActionFunctionArgs) => {
   const username = formData.get('username') as string | undefined
   const password = formData.get('password') as string | undefined
   const notes = formData.get('notes') as string | undefined
+  const acl = formData.get('acl') as string | undefined
 
   invariant(title)
   invariant(password)
+  invariant(acl)
 
   const dbPassword = await prisma.password.findFirstOrThrow({
     where: {id: params.password}
@@ -71,7 +81,8 @@ export const action = async ({request, params}: ActionFunctionArgs) => {
       title,
       username: username ? username : '',
       notes: notes ? notes : '',
-      password: encrypt(password)
+      password: encrypt(password),
+      aclId: acl
     }
   })
 
@@ -83,7 +94,7 @@ export const meta: MetaFunction<typeof loader> = ({data}) => {
 }
 
 const PasswordEdit = () => {
-  const {password, decrypted} = useLoaderData<typeof loader>()
+  const {password, decrypted, acls} = useLoaderData<typeof loader>()
 
   return (
     <div className="entry">
@@ -112,6 +123,18 @@ const PasswordEdit = () => {
             defaultValue={password.notes}
           />
           <HelperText>Any notes for the password.</HelperText>
+        </Label>
+        <Label>
+          ACL
+          <Select name="acl" defaultValue={password.aclId}>
+            {acls.map(({id, name}) => {
+              return (
+                <option key={id} value={id}>
+                  {name}
+                </option>
+              )
+            })}
+          </Select>
         </Label>
         <Button className="bg-success">Edit Password</Button>
       </form>

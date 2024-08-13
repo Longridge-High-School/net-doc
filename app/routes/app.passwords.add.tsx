@@ -5,20 +5,34 @@ import {
   json,
   redirect
 } from '@remix-run/node'
+import {useLoaderData} from '@remix-run/react'
 import {invariant} from '@arcath/utils'
 
 import {ensureUser} from '~/lib/utils/ensure-user'
 import {getPrisma} from '~/lib/prisma.server'
 import {Button} from '~/lib/components/button'
-import {Label, Input, HelperText, TextArea} from '~/lib/components/input'
+import {
+  Label,
+  Input,
+  HelperText,
+  TextArea,
+  Select
+} from '~/lib/components/input'
 import {pageTitle} from '~/lib/utils/page-title'
 
 import {getCryptoSuite} from '~/lib/crypto.server'
+import {getDefaultACLID} from '~/lib/rbac.server'
 
 export const loader = async ({request}: LoaderFunctionArgs) => {
   const user = await ensureUser(request, 'password:add', {})
 
-  return json({user})
+  const prisma = getPrisma()
+
+  const acls = await prisma.aCL.findMany({orderBy: {name: 'asc'}})
+
+  const defaultAclId = await getDefaultACLID()
+
+  return json({user, acls, defaultAclId})
 }
 
 export const action = async ({request}: ActionFunctionArgs) => {
@@ -33,16 +47,19 @@ export const action = async ({request}: ActionFunctionArgs) => {
   const username = formData.get('username') as string | undefined
   const password = formData.get('password') as string | undefined
   const notes = formData.get('notes') as string | undefined
+  const acl = formData.get('acl') as string | undefined
 
   invariant(title)
   invariant(password)
+  invariant(acl)
 
   const newPassword = await prisma.password.create({
     data: {
       title,
       username: username ? username : '',
       password: encrypt(password),
-      notes: notes ? notes : ''
+      notes: notes ? notes : '',
+      aclId: acl
     }
   })
 
@@ -54,6 +71,8 @@ export const meta: MetaFunction = () => {
 }
 
 const PasswordAdd = () => {
+  const {acls, defaultAclId} = useLoaderData<typeof loader>()
+
   return (
     <div className="entry">
       <h2>Add Password</h2>
@@ -77,6 +96,18 @@ const PasswordAdd = () => {
           Notes
           <TextArea name="notes" className="min-h-[25vh]" />
           <HelperText>Any notes for the password.</HelperText>
+        </Label>
+        <Label>
+          ACL
+          <Select name="acl" defaultValue={defaultAclId}>
+            {acls.map(({id, name}) => {
+              return (
+                <option key={id} value={id}>
+                  {name}
+                </option>
+              )
+            })}
+          </Select>
         </Label>
         <Button className="bg-success">Add Password</Button>
       </form>

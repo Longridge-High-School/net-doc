@@ -160,6 +160,9 @@ model Password {
   entries EntryPassword[]
   views   PasswordView[]
 
+  acl   ACL    @relation(fields: [aclId], references: [id])
+  aclId String @default("")
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -222,7 +225,8 @@ model ACL {
   id   String @id @default(uuid())
   name String
 
-  entries ACLEntry[]
+  entries   ACLEntry[]
+  passwords Password[]
 
   assets       Asset[]
   assetEntries Entry[]
