@@ -193,6 +193,10 @@ const MetaComponent: Field['metaComponent'] = ({meta}) => {
 }
 
 const ListComponent: Field['listComponent'] = ({value, title, meta}) => {
+  if (value === '') {
+    return <i>None</i>
+  }
+
   const {isPending, error, data} = useQuery<{
     entries: Array<{entryId: string; value: string}>
     asset: {slug: string; icon: string}
