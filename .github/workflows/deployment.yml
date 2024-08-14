@@ -182,6 +182,9 @@ jobs:
       - name: 🧪 Test
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          PASSWORD_IV: ${{ secrets.PASSWORD_IV }}
+          PASSWORD_KEY: ${{ secrets.PASSWORD_KEY }}
+          PASSWORD_SALT: ${{ secrets.PASSWORD_SALT }}
         run: npm run test:ci
 
       - name: 📔 Coverage
