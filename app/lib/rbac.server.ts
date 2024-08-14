@@ -259,6 +259,101 @@ export const {can} = canCant<'guest' | 'reader' | 'writer' | 'admin'>({
 
           return result
         }
+      },
+      'document:list',
+      'document:add',
+      {
+        name: 'document:view',
+        when: async ({
+          user,
+          documentId
+        }: {
+          user: SessionUser
+          documentId: string
+        }) => {
+          const prisma = getPrisma()
+
+          const document = await prisma.document.findFirstOrThrow({
+            where: {id: documentId},
+            include: {acl: {include: {entries: true}}}
+          })
+
+          const result = document.acl.entries.reduce(
+            (r, {target, type, read}) => {
+              if (r) return true
+
+              if (type === 'user' && target !== user.id) return false
+              if (type === 'role' && target !== user.role) return false
+
+              return read
+            },
+            false
+          )
+
+          return result
+        }
+      },
+      {
+        name: 'document:write',
+        when: async ({
+          user,
+          documentId
+        }: {
+          user: SessionUser
+          documentId: string
+        }) => {
+          const prisma = getPrisma()
+
+          const document = await prisma.document.findFirstOrThrow({
+            where: {id: documentId},
+            include: {acl: {include: {entries: true}}}
+          })
+
+          const result = document.acl.entries.reduce(
+            (r, {target, type, write}) => {
+              if (r) return true
+
+              if (type === 'user' && target !== user.id) return false
+              if (type === 'role' && target !== user.role) return false
+
+              return write
+            },
+            false
+          )
+
+          return result
+        }
+      },
+      {
+        name: 'document:delete',
+        when: async ({
+          user,
+          documentId
+        }: {
+          user: SessionUser
+          documentId: string
+        }) => {
+          const prisma = getPrisma()
+
+          const document = await prisma.document.findFirstOrThrow({
+            where: {id: documentId},
+            include: {acl: {include: {entries: true}}}
+          })
+
+          const result = document.acl.entries.reduce(
+            (r, {target, type, delete: del}) => {
+              if (r) return true
+
+              if (type === 'user' && target !== user.id) return false
+              if (type === 'role' && target !== user.role) return false
+
+              return del
+            },
+            false
+          )
+
+          return result
+        }
       }
     ]
   },
@@ -276,7 +371,6 @@ export const {can} = canCant<'guest' | 'reader' | 'writer' | 'admin'>({
       'dashboard',
       'search',
       'logout',
-      'document:*',
       'user:*',
       'dashboard:*',
       'process:*',

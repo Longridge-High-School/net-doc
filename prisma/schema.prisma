@@ -131,6 +131,9 @@ model Document {
 
   history DocumentHistory[]
 
+  acl   ACL    @relation(fields: [aclId], references: [id])
+  aclId String @default("")
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -227,6 +230,7 @@ model ACL {
 
   entries   ACLEntry[]
   passwords Password[]
+  documents Document[]
 
   assets       Asset[]
   assetEntries Entry[]

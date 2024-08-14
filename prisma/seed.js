@@ -80,6 +80,22 @@ const main = async () => {
       data: {aclId: defaultAcl.id}
     })
   }
+
+  const documentsWithNoACLCount = await prisma.document.count({
+    where: {aclId: ''}
+  })
+
+  if (documentsWithNoACLCount !== 0) {
+    console.log('Documents need ACLs')
+    const defaultAcl = await prisma.aCL.findFirstOrThrow({
+      where: {name: 'Default'}
+    })
+
+    await prisma.document.updateMany({
+      where: {aclId: ''},
+      data: {aclId: defaultAcl.id}
+    })
+  }
 }
 
 main()

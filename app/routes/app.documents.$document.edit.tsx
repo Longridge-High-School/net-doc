@@ -15,7 +15,7 @@ import {Label, Input, HelperText, TextArea} from '~/lib/components/input'
 import {pageTitle} from '~/lib/utils/page-title'
 
 export const loader = async ({request, params}: LoaderFunctionArgs) => {
-  const user = await ensureUser(request, 'document:edit', {
+  const user = await ensureUser(request, 'document:write', {
     documentId: params.document
   })
 
@@ -29,7 +29,7 @@ export const loader = async ({request, params}: LoaderFunctionArgs) => {
 }
 
 export const action = async ({request, params}: ActionFunctionArgs) => {
-  const user = await ensureUser(request, 'document:edit', {
+  const user = await ensureUser(request, 'document:write', {
     documentId: params.document
   })
 
@@ -39,9 +39,11 @@ export const action = async ({request, params}: ActionFunctionArgs) => {
 
   const title = formData.get('title') as string | undefined
   const body = formData.get('body') as string | undefined
+  const acl = formData.get('acl') as string | undefined
 
   invariant(title)
   invariant(body)
+  invariant(acl)
 
   const document = await prisma.document.findFirstOrThrow({
     where: {id: params.document}
@@ -58,7 +60,7 @@ export const action = async ({request, params}: ActionFunctionArgs) => {
 
   const updatedDocument = await prisma.document.update({
     where: {id: params.document},
-    data: {title, body}
+    data: {title, body, aclId: acl}
   })
 
   return redirect(`/app/documents/${updatedDocument.id}`)

@@ -28,11 +28,15 @@ export const action = async ({request}: ActionFunctionArgs) => {
 
   const title = formData.get('title') as string | undefined
   const body = formData.get('body') as string | undefined
+  const acl = formData.get('acl') as string | undefined
 
   invariant(title)
   invariant(body)
+  invariant(acl)
 
-  const document = await prisma.document.create({data: {title, body}})
+  const document = await prisma.document.create({
+    data: {title, body, aclId: acl}
+  })
 
   return redirect(`/app/documents/${document.id}`)
 }
