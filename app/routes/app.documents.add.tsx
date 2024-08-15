@@ -5,18 +5,32 @@ import {
   json,
   redirect
 } from '@remix-run/node'
+import {useLoaderData} from '@remix-run/react'
 import {invariant} from '@arcath/utils'
 
 import {ensureUser} from '~/lib/utils/ensure-user'
 import {getPrisma} from '~/lib/prisma.server'
 import {Button} from '~/lib/components/button'
-import {Label, Input, HelperText, TextArea} from '~/lib/components/input'
+import {
+  Label,
+  Input,
+  HelperText,
+  TextArea,
+  Select
+} from '~/lib/components/input'
 import {pageTitle} from '~/lib/utils/page-title'
+import {getDefaultACLID} from '~/lib/rbac.server'
 
 export const loader = async ({request}: LoaderFunctionArgs) => {
   const user = await ensureUser(request, 'document:add', {})
 
-  return json({user})
+  const prisma = getPrisma()
+
+  const acls = await prisma.aCL.findMany({orderBy: {name: 'asc'}})
+
+  const defaultAclId = await getDefaultACLID()
+
+  return json({user, acls, defaultAclId})
 }
 
 export const action = async ({request}: ActionFunctionArgs) => {
@@ -46,6 +60,8 @@ export const meta: MetaFunction = () => {
 }
 
 const DocumentAdd = () => {
+  const {acls, defaultAclId} = useLoaderData<typeof loader>()
+
   return (
     <div className="entry">
       <h2>Add Document</h2>
@@ -59,6 +75,18 @@ const DocumentAdd = () => {
           Body
           <TextArea name="body" className="min-h-[50vh]" />
           <HelperText>Document body in Markdown</HelperText>
+        </Label>
+        <Label>
+          ACL
+          <Select name="acl" defaultValue={defaultAclId}>
+            {acls.map(({id, name}) => {
+              return (
+                <option key={id} value={id}>
+                  {name}
+                </option>
+              )
+            })}
+          </Select>
         </Label>
         <Button className="bg-success">Add Document</Button>
       </form>

@@ -11,7 +11,13 @@ import {invariant} from '@arcath/utils'
 import {ensureUser} from '~/lib/utils/ensure-user'
 import {getPrisma} from '~/lib/prisma.server'
 import {Button} from '~/lib/components/button'
-import {Label, Input, HelperText, TextArea} from '~/lib/components/input'
+import {
+  Label,
+  Input,
+  HelperText,
+  TextArea,
+  Select
+} from '~/lib/components/input'
 import {pageTitle} from '~/lib/utils/page-title'
 
 export const loader = async ({request, params}: LoaderFunctionArgs) => {
@@ -25,7 +31,9 @@ export const loader = async ({request, params}: LoaderFunctionArgs) => {
     where: {id: params.document}
   })
 
-  return json({user, document})
+  const acls = await prisma.aCL.findMany({orderBy: {name: 'asc'}})
+
+  return json({user, document, acls})
 }
 
 export const action = async ({request, params}: ActionFunctionArgs) => {
@@ -71,7 +79,7 @@ export const meta: MetaFunction<typeof loader> = ({data}) => {
 }
 
 const DocumentEdit = () => {
-  const {document} = useLoaderData<typeof loader>()
+  const {document, acls} = useLoaderData<typeof loader>()
 
   return (
     <div className="entry">
@@ -90,6 +98,18 @@ const DocumentEdit = () => {
             defaultValue={document.body}
           />
           <HelperText>Document body in Markdown</HelperText>
+        </Label>
+        <Label>
+          ACL
+          <Select name="acl" defaultValue={document.aclId}>
+            {acls.map(({id, name}) => {
+              return (
+                <option key={id} value={id}>
+                  {name}
+                </option>
+              )
+            })}
+          </Select>
         </Label>
         <Button className="bg-success">Edit Document</Button>
       </form>
