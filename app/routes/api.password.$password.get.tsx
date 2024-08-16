@@ -9,7 +9,7 @@ export const loader = async ({request, params}: LoaderFunctionArgs) => {
   const {time, headers} = createTimings()
 
   const user = await time('getUser', 'Get User', () =>
-    ensureUser(request, 'password:get', {
+    ensureUser(request, 'password:view', {
       passwordId: params.password
     })
   )
