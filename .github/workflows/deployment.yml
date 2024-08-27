@@ -82,6 +82,8 @@ jobs:
             'prisma/schema.prisma') }}
 
       - name: ⁉️ Generate Typed SQL
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
         run: npx prisma generate --sql
 
       - name: 🔬 Lint
@@ -116,6 +118,8 @@ jobs:
             'prisma/schema.prisma') }}
 
       - name: ⁉️ Generate Typed SQL
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
         run: npx prisma generate --sql
 
       - name: 🔎 Type check
@@ -186,6 +190,8 @@ jobs:
         run: npx prisma migrate dev
 
       - name: ⁉️ Generate Typed SQL
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
         run: npx prisma generate --sql
 
       - name: 🧪 Test
