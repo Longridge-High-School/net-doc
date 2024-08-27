@@ -81,6 +81,11 @@ jobs:
             node-modules-${{ hashFiles('package-lock.json',
             'prisma/schema.prisma') }}
 
+      - name: 🎨 Create Database
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        run: npx prisma migrate dev
+
       - name: ⁉️ Generate Typed SQL
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
@@ -116,6 +121,11 @@ jobs:
           key:
             node-modules-${{ hashFiles('package-lock.json',
             'prisma/schema.prisma') }}
+
+      - name: 🎨 Create Database
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        run: npx prisma migrate dev
 
       - name: ⁉️ Generate Typed SQL
         env:
