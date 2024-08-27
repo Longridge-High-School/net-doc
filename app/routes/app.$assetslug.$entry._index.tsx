@@ -5,7 +5,11 @@ import {
   json
 } from '@remix-run/node'
 import {Link, useLoaderData} from '@remix-run/react'
-import {type Entry} from '@prisma/client'
+import {
+  getEntryValues,
+  getEntryRevisions,
+  getEntryRelations
+} from '@prisma/client/sql'
 
 import {ensureUser} from '~/lib/utils/ensure-user'
 import {getPrisma} from '~/lib/prisma.server'
@@ -39,39 +43,14 @@ export const loader = async ({request, params}: LoaderFunctionArgs) => {
     })
   )
 
-  const values = await time(
-    'getValues',
-    'Get Values',
-    () => prisma.$queryRaw<
-      Array<{
-        id: string
-        value: string
-        order: number
-        type: string
-        meta: string
-        fieldId: string
-        fieldName: string
-      }>
-    >`SELECT Value.id, Value.value, AssetField."order", Field.type, Field.meta, Value.fieldId, Field.name as fieldName FROM Value
-  INNER JOIN Entry ON Entry.Id = Value.entryId
-  INNER JOIN Asset on Asset.Id = Entry.assetId
-  INNER JOIN AssetField on AssetField.assetId = Asset.id AND AssetField.fieldId = Value.fieldId
-  INNER JOIN Field on Field.id = Value.fieldId
-  WHERE entryId = ${entry.id}
-  ORDER BY AssetField."order" ASC`
+  const values = await time('getValues', 'Get Values', () =>
+    prisma.$queryRawTyped(getEntryValues(entry.id))
   )
 
-  const relations = await time(
-    'getRelations',
-    'Get Relations',
-    () => prisma.$queryRaw<
-      Array<
-        Entry & {value: string; slug: string; entryId: string; icon: string}
-      >
-    >`SELECT * FROM Entry 
-  INNER JOIN Value value ON fieldId = (SELECT nameFieldId FROM Asset WHERE Asset.id = entry.assetId) AND entryId = Entry.id 
-  INNER JOIN Asset ON Entry.assetId = Asset.id
-  WHERE Entry.id IN (SELECT entryId FROM Value WHERE value LIKE ${`%${entry.id}%`}) AND deleted = false`
+  const relations = await time('getRelations', 'Get Relations', () =>
+    prisma.$queryRawTyped(
+      getEntryRelations(`%${entry.id}%`, user.role, user.id)
+    )
   )
 
   const documents = await time('getDocuments', 'Get Documents', () =>
@@ -80,23 +59,8 @@ export const loader = async ({request, params}: LoaderFunctionArgs) => {
     })
   )
 
-  const revisions = await time(
-    'getRevisions',
-    'Get Revisions',
-    () => prisma.$queryRaw<
-      Array<{
-        id: string
-        createdAt: string
-        changeNote: string
-        fieldName: string
-        userName: string
-      }>
-    >`SELECT ValueHistory.id, ValueHistory.createdAt, ValueHistory.changeNote, Field.name as fieldName, User.name as userName FROM ValueHistory
-  INNER JOIN Value on Value.id = ValueHistory.valueId
-  INNER JOIN Field on Field.id = Value.fieldId
-  INNER JOIN User on User.id = ValueHistory.editedById
-  WHERE Value.entryId = ${params.entry}
-  ORDER BY ValueHistory.createdAt DESC`
+  const revisions = await time('getRevisions', 'Get Revisions', () =>
+    prisma.$queryRawTyped(getEntryRevisions(entry.id))
   )
 
   const name = values.reduce((n, v) => {
@@ -164,11 +128,11 @@ const AssetEntry = () => {
         <div className="flex flex-wrap gap-2">
           {relations.length === 0
             ? 'No Linked Entries'
-            : relations.map(({entryId, value, slug, icon}) => {
+            : relations.map(({id, value, slug, icon}) => {
                 return (
                   <Link
-                    key={entryId}
-                    to={`/app/${slug}/${entryId}`}
+                    key={id}
+                    to={`/app/${slug}/${id}`}
                     className="bg-gray-300 p-2 rounded"
                   >
                     {icon} {value}
