@@ -81,6 +81,9 @@ jobs:
             node-modules-${{ hashFiles('package-lock.json',
             'prisma/schema.prisma') }}
 
+      - name: ⁉️ Generate Typed SQL
+        run: npx prisma generate --sql
+
       - name: 🔬 Lint
         run: npm run lint
 
@@ -111,6 +114,9 @@ jobs:
           key:
             node-modules-${{ hashFiles('package-lock.json',
             'prisma/schema.prisma') }}
+
+      - name: ⁉️ Generate Typed SQL
+        run: npx prisma generate --sql
 
       - name: 🔎 Type check
         run: npm run typecheck
@@ -178,6 +184,9 @@ jobs:
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
         run: npx prisma migrate dev
+
+      - name: ⁉️ Generate Typed SQL
+        run: npx prisma generate --sql
 
       - name: 🧪 Test
         env:

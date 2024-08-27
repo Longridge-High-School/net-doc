@@ -12,7 +12,7 @@
     "start:remix": "remix-serve ./build/server/index.js",
     "start:worker": "node ./worker/worker.mjs",
     "typecheck": "tsc",
-    "docker": "prisma migrate deploy && prisma generate && prisma db seed && npm-run-all -p start:*",
+    "docker": "prisma migrate deploy && prisma generate --sql && prisma db seed && npm-run-all -p start:*",
     "prettier": "prettier app --check --end-of-line auto",
     "test": "env-cmd -f .test.env vitest",
     "test:coverage": "env-cmd -f .test.env vitest run --coverage",
