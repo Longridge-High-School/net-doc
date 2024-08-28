@@ -6,6 +6,11 @@ import {
 } from '@remix-run/node'
 import {Link, useActionData} from '@remix-run/react'
 import {invariant} from '@arcath/utils'
+import {
+  searchEntries,
+  searchDocuments,
+  searchPasswords
+} from '@prisma/client/sql'
 
 import {ensureUser} from '~/lib/utils/ensure-user'
 import {getPrisma} from '~/lib/prisma.server'
@@ -20,7 +25,7 @@ export const loader = async ({request}: LoaderFunctionArgs) => {
 }
 
 export const action = async ({request}: ActionFunctionArgs) => {
-  await ensureUser(request, 'search', {})
+  const user = await ensureUser(request, 'search', {})
 
   const formData = await request.formData()
 
@@ -30,33 +35,23 @@ export const action = async ({request}: ActionFunctionArgs) => {
 
   const prisma = getPrisma()
 
-  const entryResults = await prisma.$queryRaw<
-    Array<{label: string; link: string}>
-  >`SELECT Asset.icon || " " || NameValue.value as label, "/app/" || Asset.slug || "/" || Entry.id as link FROM Value 
-  INNER JOIN Entry ON Entry.id = Value.entryId
-  INNER JOIN Asset ON Asset.id = Entry.assetId
-  INNER JOIN Value NameValue ON NameValue.entryId = Entry.id AND NameValue.fieldId = Asset.nameFieldId
-  WHERE lower(Value.value) LIKE lower(${`%${query}%`})
-  GROUP BY Value.entryId
-  ORDER BY label ASC`
+  const entryResults = await prisma.$queryRawTyped(
+    searchEntries(`%${query}%`, user.role, user.id)
+  )
 
-  const passwordResults = await prisma.$queryRaw<
-    Array<{label: string; link: string}>
-  >`SELECT "🔐" || " " || Password.title as label, "/app/passwords/" || Password.id as link FROM Password
-  WHERE lower(Password.notes) LIKE lower(${`%${query}%`}) OR Password.title LIKE lower(${`%${query}%`})
-  ORDER BY Password.title ASC`
+  const passwordResults = await prisma.$queryRawTyped(
+    searchPasswords(`%${query}%`, user.role, user.id)
+  )
 
-  const documentResults = await prisma.$queryRaw<
-    Array<{label: string; link: string}>
-  >`SELECT "📰" || " " || Document.title as label, "/app/documents/" || Document.id as link FROM Document
-  WHERE lower(Document.body) LIKE lower(${`%${query}%`}) OR lower(Document.title) LIKE lower(${`%${query}%`})
-  ORDER BY Document.title ASC`
+  const documentResults = await prisma.$queryRawTyped(
+    searchDocuments(`%${query}%`, user.role, user.id)
+  )
 
   const results = [
     ...entryResults,
     ...passwordResults,
     ...documentResults
-  ].sort((a, b) => a.label.localeCompare(b.label))
+  ].sort((a, b) => (a.label ?? '').localeCompare(b.label ?? ''))
 
   return json({results})
 }

@@ -1,4 +1,5 @@
 import {canCant} from 'cancant'
+import {getEntryAcl, getAssetAcl} from '@prisma/client/sql'
 
 import {getPrisma} from './prisma.server'
 import {asyncMap, indexedBy} from '@arcath/utils'
@@ -59,8 +60,9 @@ export const {can} = canCant<'guest' | 'reader' | 'writer' | 'admin'>({
         }) => {
           const prisma = getPrisma()
 
-          const aclEntries: Array<{read: boolean}> =
-            await prisma.$queryRaw`SELECT read FROM ACLEntry WHERE aclId = (SELECT aclId FROM Asset WHERE slug = ${assetSlug} OR id = ${asset}) AND (target = ${user.role} OR target = ${user.id})`
+          const aclEntries = await prisma.$queryRawTyped(
+            getAssetAcl(assetSlug ?? '', asset ?? '', user.role, user.id)
+          )
 
           const result = aclEntries.reduce((r, {read}) => {
             if (r) return true
@@ -84,8 +86,9 @@ export const {can} = canCant<'guest' | 'reader' | 'writer' | 'admin'>({
         }) => {
           const prisma = getPrisma()
 
-          const aclEntries: Array<{write: boolean}> =
-            await prisma.$queryRaw`SELECT write FROM ACLEntry WHERE aclId = (SELECT aclId FROM Asset WHERE slug = ${assetSlug} OR id = ${asset}) AND (target = ${user.role} OR target = ${user.id})`
+          const aclEntries = await prisma.$queryRawTyped(
+            getAssetAcl(assetSlug ?? '', asset ?? '', user.role, user.id)
+          )
 
           const result = aclEntries.reduce((r, {write}) => {
             if (r) return true
@@ -101,8 +104,9 @@ export const {can} = canCant<'guest' | 'reader' | 'writer' | 'admin'>({
         when: async ({user, entryId}: {user: SessionUser; entryId: string}) => {
           const prisma = getPrisma()
 
-          const aclEntries: Array<{read: boolean}> =
-            await prisma.$queryRaw`SELECT read FROM ACLEntry WHERE aclId = (SELECT aclId FROM Entry WHERE id = ${entryId}) AND (target = ${user.role} OR target = ${user.id})`
+          const aclEntries = await prisma.$queryRawTyped(
+            getEntryAcl(entryId, user.role, user.id)
+          )
 
           const result = aclEntries.reduce((r, {read}) => {
             if (r) return true
@@ -118,8 +122,9 @@ export const {can} = canCant<'guest' | 'reader' | 'writer' | 'admin'>({
         when: async ({user, entryId}: {user: SessionUser; entryId: string}) => {
           const prisma = getPrisma()
 
-          const aclEntries: Array<{write: boolean}> =
-            await prisma.$queryRaw`SELECT write FROM ACLEntry WHERE aclId = (SELECT aclId FROM Entry WHERE id = ${entryId}) AND (target = ${user.role} OR target = ${user.id})`
+          const aclEntries = await prisma.$queryRawTyped(
+            getEntryAcl(entryId, user.role, user.id)
+          )
 
           const result = aclEntries.reduce((r, {write}) => {
             if (r) return true
@@ -135,8 +140,9 @@ export const {can} = canCant<'guest' | 'reader' | 'writer' | 'admin'>({
         when: async ({user, entryId}: {user: SessionUser; entryId: string}) => {
           const prisma = getPrisma()
 
-          const aclEntries: Array<{delete: boolean}> =
-            await prisma.$queryRaw`SELECT "delete" FROM ACLEntry WHERE aclId = (SELECT aclId FROM Entry WHERE id = ${entryId}) AND (target = ${user.role} OR target = ${user.id})`
+          const aclEntries = await prisma.$queryRawTyped(
+            getEntryAcl(entryId, user.role, user.id)
+          )
 
           const result = aclEntries.reduce((r, {delete: del}) => {
             if (r) return true
