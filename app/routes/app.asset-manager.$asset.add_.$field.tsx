@@ -38,7 +38,11 @@ export const action = async ({request, params}: ActionFunctionArgs) => {
   invariant(helper)
   invariant(order)
 
-  await prisma.assetField.create({
+  const fieldCount = await prisma.assetField.count({
+    where: {assetId: params.asset!}
+  })
+
+  const newField = await prisma.assetField.create({
     data: {
       assetId: params.asset!,
       fieldId: params.field!,
@@ -47,6 +51,13 @@ export const action = async ({request, params}: ActionFunctionArgs) => {
       displayOnTable: displayOnTable === 'on'
     }
   })
+
+  if (fieldCount === 0) {
+    await prisma.asset.update({
+      where: {id: params.asset!},
+      data: {nameFieldId: newField.fieldId, sortFieldId: newField.fieldId}
+    })
+  }
 
   return redirect(`/app/asset-manager/${params.asset}`)
 }
