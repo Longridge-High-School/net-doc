@@ -38,7 +38,12 @@ const viewComponent = ({value, title}: {value: string; title: string}) => {
   return (
     <div className="mb-4">
       <div className="mb-4 font-bold block">{title}</div>
-      <a href={target} className="bg-gray-300 p-2 rounded" target="_blank">
+      <a
+        href={target}
+        className="bg-gray-300 p-2 rounded"
+        target="_blank"
+        rel="noreferrer"
+      >
         {linkTitle} 📤
       </a>
     </div>
@@ -51,7 +56,12 @@ const listComponent = ({value}: {value: string; title: string}) => {
   const {title: linkTitle, target} = JSON.parse(value)
 
   return (
-    <a href={target} className="bg-gray-300 p-2 rounded" target="_blank">
+    <a
+      href={target}
+      className="bg-gray-300 p-2 rounded"
+      target="_blank"
+      rel="noreferrer"
+    >
       {linkTitle} 📤
     </a>
   )
