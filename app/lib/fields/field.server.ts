@@ -1,6 +1,7 @@
 import {attachmentFieldHandlers} from './attachment.server'
 import {dateFieldHandlers} from './date.server'
 import {imageFieldHandlers} from './image.server'
+import {linkFieldHandlers} from './link.server'
 import {markdownFieldHandlers} from './markdown.server'
 import {relationFieldHandlers} from './relation.server'
 import {selectFieldHandlers} from './select.server'
@@ -20,6 +21,7 @@ export const FIELD_HANDLERS: {[type: string]: FieldHandlers} = {
   attachment: attachmentFieldHandlers,
   date: dateFieldHandlers,
   image: imageFieldHandlers,
+  link: linkFieldHandlers,
   markdown: markdownFieldHandlers,
   relation: relationFieldHandlers,
   select: selectFieldHandlers,

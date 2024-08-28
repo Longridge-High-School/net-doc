@@ -118,7 +118,7 @@ const ViewComponent: Field['viewComponent'] = ({value, title, meta}) => {
   if (isPending) {
     return (
       <p className="mb-4">
-        <h5 className="mb-2 font-bold">{title}</h5>
+        <span className="mb-2 font-bold">{title}</span>
         Loading...
       </p>
     )
@@ -127,7 +127,7 @@ const ViewComponent: Field['viewComponent'] = ({value, title, meta}) => {
   if (error) {
     return (
       <p className="mb-4">
-        <h5 className="mb-2 font-bold">{title}</h5>
+        <span className="mb-2 font-bold">{title}</span>
         Could not load relation
       </p>
     )

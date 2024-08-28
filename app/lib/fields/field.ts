@@ -1,6 +1,7 @@
 import {attachmentField} from './attachment'
 import {dateField} from './date'
 import {imageField} from './image'
+import {linkField} from './link'
 import {markdownField} from './markdown'
 import {relationField} from './relation'
 import {selectField} from './select'
@@ -51,13 +52,15 @@ export const FIELD_TYPES = [
   'relation',
   'markdown',
   'date',
-  'image'
+  'image',
+  'link'
 ] as const
 
 export const FIELDS: {[type: string]: Field} = {
   attachment: attachmentField,
   date: dateField,
   image: imageField,
+  link: linkField,
   markdown: markdownField,
   relation: relationField,
   select: selectField,
