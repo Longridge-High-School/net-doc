@@ -166,10 +166,10 @@ export const ErrorBoundary = () => {
       <div className="bg-white rounded-xl shadow-xl p-2">
         <p className="mb-4">Something went wrong.</p>
         <div className="rounded-xl bg-gray-200 p-2">
-          {error ? (error as any).message! : ''}
+          {error ? (error as {message: string}).message! : ''}
         </div>
         <div className="bg-gray-100 mt-4 rounded-xl p-2">
-          {error ? (error as any).stack! : ''}
+          {error ? (error as {stack: string}).stack! : ''}
         </div>
       </div>
     </div>
