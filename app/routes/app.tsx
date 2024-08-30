@@ -158,5 +158,20 @@ export const ErrorBoundary = () => {
     }
   }
 
-  return <div>ERROR</div>
+  console.dir({error})
+
+  return (
+    <div className="w-96 m-auto mt-32">
+      <h1 className="text-4xl text-center mb-8 text-danger">Error</h1>
+      <div className="bg-white rounded-xl shadow-xl p-2">
+        <p className="mb-4">Something went wrong.</p>
+        <div className="rounded-xl bg-gray-200 p-2">
+          {error ? (error as any).message! : ''}
+        </div>
+        <div className="bg-gray-100 mt-4 rounded-xl p-2">
+          {error ? (error as any).stack! : ''}
+        </div>
+      </div>
+    </div>
+  )
 }
