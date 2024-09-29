@@ -9,6 +9,7 @@ services:
       - PASSWORD_KEY=YOUR KEY
       - PASSWORD_SALT=YOUR SALT
       - PASSWORD_IV=YOUR IV
+      - DATABASE_URL=file:./data/net-doc.db
     volumes:
       - ./db:/app/prisma/data
       - ./uploads:/app/public/uploads
