@@ -1,5 +1,6 @@
 import {type LoaderFunctionArgs, type MetaFunction, json} from '@remix-run/node'
 import {useLoaderData, Link} from '@remix-run/react'
+import {getProcesses} from '@prisma/client/sql'
 
 import {ensureUser} from '~/lib/utils/ensure-user'
 import {getPrisma} from '~/lib/prisma.server'
@@ -11,9 +12,9 @@ export const loader = async ({request}: LoaderFunctionArgs) => {
 
   const prisma = getPrisma()
 
-  const processes = await prisma.process.findMany({
-    orderBy: [{complete: 'asc'}, {title: 'asc'}]
-  })
+  const processes = await prisma.$queryRawTyped(
+    getProcesses(user.role, user.id)
+  )
 
   return json({user, processes})
 }

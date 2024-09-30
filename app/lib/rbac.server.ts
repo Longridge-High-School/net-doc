@@ -360,6 +360,101 @@ export const {can} = canCant<'guest' | 'reader' | 'writer' | 'admin'>({
 
           return result
         }
+      },
+      'process:list',
+      'process:add',
+      {
+        name: 'process:view',
+        when: async ({
+          user,
+          processId
+        }: {
+          user: SessionUser
+          processId: string
+        }) => {
+          const prisma = getPrisma()
+
+          const process = await prisma.process.findFirstOrThrow({
+            where: {id: processId},
+            include: {acl: {include: {entries: true}}}
+          })
+
+          const result = process.acl.entries.reduce(
+            (r, {target, type, read}) => {
+              if (r) return true
+
+              if (type === 'user' && target !== user.id) return false
+              if (type === 'role' && target !== user.role) return false
+
+              return read
+            },
+            false
+          )
+
+          return result
+        }
+      },
+      {
+        name: 'process:write',
+        when: async ({
+          user,
+          processId
+        }: {
+          user: SessionUser
+          processId: string
+        }) => {
+          const prisma = getPrisma()
+
+          const process = await prisma.process.findFirstOrThrow({
+            where: {id: processId},
+            include: {acl: {include: {entries: true}}}
+          })
+
+          const result = process.acl.entries.reduce(
+            (r, {target, type, write}) => {
+              if (r) return true
+
+              if (type === 'user' && target !== user.id) return false
+              if (type === 'role' && target !== user.role) return false
+
+              return write
+            },
+            false
+          )
+
+          return result
+        }
+      },
+      {
+        name: 'process:delete',
+        when: async ({
+          user,
+          processId
+        }: {
+          user: SessionUser
+          processId: string
+        }) => {
+          const prisma = getPrisma()
+
+          const process = await prisma.process.findFirstOrThrow({
+            where: {id: processId},
+            include: {acl: {include: {entries: true}}}
+          })
+
+          const result = process.acl.entries.reduce(
+            (r, {target, type, delete: del}) => {
+              if (r) return true
+
+              if (type === 'user' && target !== user.id) return false
+              if (type === 'role' && target !== user.role) return false
+
+              return del
+            },
+            false
+          )
+
+          return result
+        }
       }
     ]
   },

@@ -15,7 +15,7 @@ import {Label, Input, HelperText, TextArea} from '~/lib/components/input'
 import {pageTitle} from '~/lib/utils/page-title'
 
 export const loader = async ({request, params}: LoaderFunctionArgs) => {
-  const user = await ensureUser(request, 'process:edit', {
+  const user = await ensureUser(request, 'process:write', {
     processId: params.process
   })
 
@@ -29,7 +29,7 @@ export const loader = async ({request, params}: LoaderFunctionArgs) => {
 }
 
 export const action = async ({request, params}: ActionFunctionArgs) => {
-  await ensureUser(request, 'process:edit', {
+  await ensureUser(request, 'process:write', {
     processId: params.process
   })
 

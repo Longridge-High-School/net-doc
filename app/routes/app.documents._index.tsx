@@ -1,5 +1,6 @@
 import {type LoaderFunctionArgs, type MetaFunction, json} from '@remix-run/node'
 import {useLoaderData, Link} from '@remix-run/react'
+import {getDocuments} from '@prisma/client/sql'
 
 import {ensureUser} from '~/lib/utils/ensure-user'
 import {getPrisma} from '~/lib/prisma.server'
@@ -11,23 +12,9 @@ export const loader = async ({request}: LoaderFunctionArgs) => {
 
   const prisma = getPrisma()
 
-  //const documents = await prisma.document.findMany({orderBy: {title: 'asc'}})
-  const documents = await prisma.$queryRaw<
-    Array<{id: string; title: string; updatedAt: string}>
-  >`SELECT 
-Document.id, Document.title, Document.updatedAt
-FROM
-Document
-WHERE 
-aclId IN (SELECT aclId FROM ACLEntry 
-  WHERE read = true AND (
-    (type = "role" AND target = ${user.role}) 
-    OR 
-    (type = "user" AND target = ${user.id})
-    )
+  const documents = await prisma.$queryRawTyped(
+    getDocuments(user.role, user.id)
   )
-ORDER BY
-Document.title ASC`
 
   return json({user, documents})
 }

@@ -4,7 +4,7 @@ import {ensureUser} from '~/lib/utils/ensure-user'
 import {getPrisma} from '~/lib/prisma.server'
 
 export const loader = async ({request, params}: LoaderFunctionArgs) => {
-  await ensureUser(request, 'process:view', {
+  await ensureUser(request, 'process:write', {
     processId: params.process
   })
 

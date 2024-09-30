@@ -96,6 +96,22 @@ const main = async () => {
       data: {aclId: defaultAcl.id}
     })
   }
+
+  const processesWithNoACLCount = await prisma.process.count({
+    where: {aclId: ''}
+  })
+
+  if (processesWithNoACLCount !== 0) {
+    console.log('Processes need ACLs')
+    const defaultAcl = await prisma.aCL.findFirstOrThrow({
+      where: {name: 'Default'}
+    })
+
+    await prisma.process.updateMany({
+      where: {aclId: ''},
+      data: {aclId: defaultAcl.id}
+    })
+  }
 }
 
 main()
