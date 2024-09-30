@@ -26,6 +26,7 @@ model Asset {
   entries     Entry[]
   sortFieldId String       @default("")
   sortOrder   String       @default("ASC")
+  sidebar     Boolean      @default(true)
 
   acl   ACL    @relation(fields: [aclId], references: [id])
   aclId String @default("")

@@ -10,7 +10,13 @@ import {invariant} from '@arcath/utils'
 import {ensureUser} from '~/lib/utils/ensure-user'
 import {getPrisma} from '~/lib/prisma.server'
 import {Button} from '~/lib/components/button'
-import {Label, Input, HelperText, Select} from '~/lib/components/input'
+import {
+  Label,
+  Input,
+  HelperText,
+  Select,
+  Checkbox
+} from '~/lib/components/input'
 export const loader = async ({request, params}: LoaderFunctionArgs) => {
   const user = await ensureUser(request, 'asset-manager:edit', {
     assetId: params.asset
@@ -44,6 +50,7 @@ export const action = async ({request, params}: ActionFunctionArgs) => {
   const sortOrder = formData.get('sortorder') as ('ASC' | 'DESC') | undefined
   const icon = formData.get('icon') as string | undefined
   const acl = formData.get('acl') as string | undefined
+  const sidebar = formData.get('sidebar') as string | undefined
 
   invariant(name)
   invariant(slug)
@@ -80,7 +87,8 @@ export const action = async ({request, params}: ActionFunctionArgs) => {
       nameFieldId,
       aclId: acl,
       sortFieldId,
-      sortOrder
+      sortOrder,
+      sidebar: !!sidebar
     }
   })
 
@@ -174,6 +182,13 @@ const AssetManagerAsset = () => {
           <HelperText>
             Change the ACL for this asset, new entries under this asset, and any
             entries using the current ACL.
+          </HelperText>
+        </Label>
+        <Label>
+          Show on Sidebar?
+          <Checkbox defaultChecked={asset.sidebar} name="sidebar" />
+          <HelperText>
+            If you disable this the asset will not show on the sidebar.
           </HelperText>
         </Label>
         <Button className="bg-success">Update Asset</Button>

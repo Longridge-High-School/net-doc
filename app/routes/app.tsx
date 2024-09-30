@@ -20,7 +20,10 @@ export const loader = async ({request}: LoaderFunctionArgs) => {
 
   const prisma = getPrisma()
 
-  const assets = await prisma.asset.findMany({orderBy: {name: 'asc'}})
+  const assets = await prisma.asset.findMany({
+    where: {sidebar: true},
+    orderBy: {name: 'asc'}
+  })
 
   const cans = await canList(user, [
     {index: 'asset-manager', operation: 'asset-manager:list', meta: {}},
