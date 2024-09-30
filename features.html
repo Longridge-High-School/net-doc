@@ -1,26 +1,40 @@
-<!DOCTYPE html>
+<!doctype html>
 
 
 
 
 <html
- dir="ltr"
- lang="en"
- >
-  <head>
+    dir="ltr"
+    lang="en"
+    class="  theme-light "
+>
+    <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="theme-color" content=#ffffff>
+    <meta name="theme-color" content="#ffffff">
     <link rel="stylesheet" href="/net-doc/assets/css/app.css">
-    <link rel="shortcut icon" type="image/png"
-           href="/net-doc/favicon.png" 
-    />
+    <link
+        rel="shortcut icon"
+        type="image/png"
+        
+            href="/net-doc/favicon.png"
+        
+    >
     <script defer src="https://unpkg.com/alpinejs@3.9.0/dist/cdn.min.js"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css">
+    <script
+        src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js"
+    ></script>
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+        integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+        crossorigin="anonymous"
+        referrerpolicy="no-referrer"
+    >
     
     <!-- Begin Jekyll SEO tag v2.8.0 -->
 <title>Features | Net-Doc</title>
-<meta name="generator" content="Jekyll v4.3.3" />
+<meta name="generator" content="Jekyll v4.3.4" />
 <meta property="og:title" content="Features" />
 <meta property="og:locale" content="en_US" />
 <meta property="og:site_name" content="Net-Doc" />
@@ -31,16 +45,29 @@
 {"@context":"https://schema.org","@type":"WebPage","headline":"Features","url":"/net-doc/features.html"}</script>
 <!-- End Jekyll SEO tag -->
 
-    <!-- head scripts --></head>
+    <!-- head scripts -->
+</head>
 
-  <body>
-    <nav class="navbar is-primary " x-data="{ openNav: false }">
+    <body>
+        
+        <nav
+    class="navbar is-primary "
+    x-data="{ openNav: false }"
+>
     <div class="container">
         <div class="navbar-brand">
             <a href="/net-doc/" class="navbar-item">
                 Net-Doc
             </a>
-            <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navMenu" :class="{ 'is-active': openNav }" x-on:click="openNav = !openNav">
+            <a
+                role="button"
+                class="navbar-burger burger"
+                aria-label="menu"
+                aria-expanded="false"
+                data-target="navMenu"
+                :class="{ 'is-active': openNav }"
+                x-on:click="openNav = !openNav"
+            >
                 <span aria-hidden="true"></span>
                 <span aria-hidden="true"></span>
                 <span aria-hidden="true"></span>
@@ -50,28 +77,36 @@
             <div class="navbar-start">
                 <a href="/net-doc/" class="navbar-item ">Home</a>
                 
-                
                     
-                    <a href="/net-doc/features.html" class="navbar-item is-active">Features</a>
+                        
+                            <a
+                                href="/net-doc/features.html"
+                                class="navbar-item is-active"
+                            >Features</a>
+                        
                     
-                
+                        
+                            <a
+                                href="/net-doc/docs/getting-started/install"
+                                class="navbar-item "
+                            >Documentation</a>
+                        
                     
-                    <a href="/net-doc/docs/" class="navbar-item ">Documentation</a>
-                    
-                
                 
             </div>
 
             <div class="navbar-end">
                 
             </div>
-
         </div>
     </div>
 </nav>
 
+        
+            <section
+    class="hero  is-medium  is-bold is-primary"
     
-        <section class="hero  is-medium  is-bold is-primary" >
+>
     <div class="hero-body ">
         <div class="container">
             <h1 class="title is-2">Features</h1>
@@ -80,8 +115,9 @@
         </div>
     </div>
 </section>
-    
-    
+
+        
+        
     
     <section class="hero  is-medium  is-light">
         <div class="hero-body">
@@ -90,20 +126,22 @@
                     
                         <div class="column is-4 has-text-centered">
                             
-                            <div class="icon callout-icon">
-                            
-                                <i class="fas fa-file fa-4x"></i>
-                            
-                            </div>
+                                <div class="icon callout-icon">
+                                    
+                                        <i class="fas fa-file fa-4x"></i>
+                                    
+                                </div>
                             
                             <p class="title is-5">Documents</p>
                             <p class="subtitle is-5">MDX backed documents store.</p>
+
                             
-                            
-                            <div class="content">
-                                <p>Write rich, interactive, linked documents using MDX.<br />
+                                <div class="my-4">
+                                    <div class="content">
+                                        <p>Write rich, interactive, linked documents using MDX.<br />
 </p>
-                            </div>
+                                    </div>
+                                </div>
                             
 
                             
@@ -111,20 +149,22 @@
                     
                         <div class="column is-4 has-text-centered">
                             
-                            <div class="icon callout-icon">
-                            
-                                <i class="fas fa-shapes fa-4x"></i>
-                            
-                            </div>
+                                <div class="icon callout-icon">
+                                    
+                                        <i class="fas fa-shapes fa-4x"></i>
+                                    
+                                </div>
                             
                             <p class="title is-5">Fields & Assets</p>
                             <p class="subtitle is-5">Your fields, your assets, your way.</p>
+
                             
-                            
-                            <div class="content">
-                                <p>Build assets from your own fields to describe your documentations structure.<br />
+                                <div class="my-4">
+                                    <div class="content">
+                                        <p>Build assets from your own fields to describe your documentations structure.<br />
 </p>
-                            </div>
+                                    </div>
+                                </div>
                             
 
                             
@@ -132,20 +172,22 @@
                     
                         <div class="column is-4 has-text-centered">
                             
-                            <div class="icon callout-icon">
-                            
-                                <i class="fas fa-key fa-4x"></i>
-                            
-                            </div>
+                                <div class="icon callout-icon">
+                                    
+                                        <i class="fas fa-key fa-4x"></i>
+                                    
+                                </div>
                             
                             <p class="title is-5">Passwords</p>
                             <p class="subtitle is-5">Secure password storage within the database.</p>
+
                             
-                            
-                            <div class="content">
-                                <p>Safely store your passwords with revision and view history.<br />
+                                <div class="my-4">
+                                    <div class="content">
+                                        <p>Safely store your passwords with revision and view history.<br />
 </p>
-                            </div>
+                                    </div>
+                                </div>
                             
 
                             
@@ -153,20 +195,22 @@
                     
                         <div class="column is-4 has-text-centered">
                             
-                            <div class="icon callout-icon">
-                            
-                                <i class="fas fa-user-shield fa-4x"></i>
-                            
-                            </div>
+                                <div class="icon callout-icon">
+                                    
+                                        <i class="fas fa-user-shield fa-4x"></i>
+                                    
+                                </div>
                             
                             <p class="title is-5">Access Control</p>
                             <p class="subtitle is-5">Control who can see/edit/delete any asset or entry.</p>
+
                             
-                            
-                            <div class="content">
-                                <p>Build your own Access Control Lists and assign them to Assets and Entries.<br />
+                                <div class="my-4">
+                                    <div class="content">
+                                        <p>Build your own Access Control Lists and assign them to Assets and Entries.<br />
 </p>
-                            </div>
+                                    </div>
+                                </div>
                             
 
                             
@@ -178,18 +222,20 @@
     </section>
 
 
+        <section class="section">
+            <div class="container">
+                <div class="columns is-multiline">
+                    
+                    <div class="column is-12">
+                        
 
-    <section class="section">
-        <div class="container">
-            <div class="columns is-multiline">
-                
-                <div class="column is-12">
-                    
-                    
+                        
 
-                    
-                    
-                    
+                        
+
+                        
+
+                        
 <div class="content">
     <h1 id="features">Features</h1>
 
@@ -199,16 +245,19 @@ setup all the <a href="/net-doc/docs/concepts/fields">fields</a> and
 <a href="/net-doc/docs/concepts/entries">entries</a>.</p>
 
 </div>
+
+                    </div>
+                    
                 </div>
-                
             </div>
-        </div>
-    </section>
-    
-        <footer class="footer">
+        </section>
+        
+            <footer class="footer">
     <div class="container">
         
+
         
+
 
         <div class="content is-small has-text-centered">
             <p class="">Theme built by <a href="https://www.csrhymes.com">C.S. Rhymes</a></p>
@@ -216,6 +265,7 @@ setup all the <a href="/net-doc/docs/concepts/fields">fields</a> and
     </div>
 </footer>
 
-    
-    <script src="/net-doc/assets/js/app.js" type="text/javascript"></script><!-- footer scripts --></body>
+        
+        <script src="/net-doc/assets/js/app.js" type="text/javascript"></script><!-- footer scripts -->
+</body>
 </html>
