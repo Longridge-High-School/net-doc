@@ -9,6 +9,7 @@ import {buildMDXBundle} from '~/lib/mdx.server'
 import {MDXComponent} from '~/lib/mdx'
 import {formatAsDateTime} from '~/lib/utils/format'
 import {pageTitle} from '~/lib/utils/page-title'
+import {useNotify} from '~/lib/hooks/use-notify'
 
 export const loader = async ({request, params}: LoaderFunctionArgs) => {
   const user = await ensureUser(request, 'password:view', {
@@ -43,6 +44,7 @@ export const meta: MetaFunction<typeof loader> = ({data}) => {
 const AssetManagerAsset = () => {
   const {password, code} = useLoaderData<typeof loader>()
   const [passwordOpen, setPasswordOpen] = useState(false)
+  const {notify} = useNotify()
 
   const {data, refetch, isPending} = useQuery({
     enabled: false,
@@ -70,7 +72,21 @@ const AssetManagerAsset = () => {
           <b>Password</b>
           <br />
           {passwordOpen ? (
-            <span>{isPending ? '⌛' : data}</span>
+            <span>
+              {isPending ? '⌛' : data}{' '}
+              <button
+                onClick={() => {
+                  navigator.clipboard.writeText(data)
+                  notify({
+                    title: 'Copied',
+                    message: 'Copied password to the clipboard',
+                    type: 'success'
+                  })
+                }}
+              >
+                📋
+              </button>
+            </span>
           ) : (
             <button
               onClick={() => {
