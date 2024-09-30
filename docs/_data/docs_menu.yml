@@ -12,6 +12,8 @@
       link: /docs/concepts/entries
     - name: Fields
       link: /docs/concepts/fields
+    - name: Passwords
+      link: /docs/concepts/passwords
 - label: Fields
   items:
     - name: Attachment
