@@ -48,6 +48,7 @@ model AssetField {
   order          Int
   helperText     String  @default("")
   displayOnTable Boolean @default(false)
+  hidden         Boolean @default(false)
 
   asset   Asset  @relation(fields: [assetId], references: [id], onDelete: Cascade)
   assetId String

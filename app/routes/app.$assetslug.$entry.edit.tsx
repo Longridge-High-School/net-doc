@@ -28,7 +28,15 @@ export const loader = async ({request, params}: LoaderFunctionArgs) => {
   const entry = await prisma.entry.findFirstOrThrow({
     where: {id: params.entry},
     include: {
-      asset: {include: {assetFields: {include: {field: true}}}},
+      asset: {
+        include: {
+          assetFields: {
+            where: {hidden: false},
+            include: {field: true},
+            orderBy: {order: 'asc'}
+          }
+        }
+      },
       values: {include: {field: true}}
     }
   })

@@ -38,6 +38,7 @@ export const action = async ({request, params}: ActionFunctionArgs) => {
   const helper = formData.get('helper') as string | undefined
   const order = formData.get('order') as string | undefined
   const displayOnTable = formData.get('displayontable') as null | 'on'
+  const hidden = formData.get('hidden') as null | 'on'
 
   invariant(helper)
   invariant(order)
@@ -47,7 +48,8 @@ export const action = async ({request, params}: ActionFunctionArgs) => {
     data: {
       helperText: helper,
       order: parseInt(order),
-      displayOnTable: displayOnTable === 'on'
+      displayOnTable: displayOnTable === 'on',
+      hidden: hidden === 'on'
     }
   })
 
@@ -98,6 +100,13 @@ const AssetManagerAddFieldToAsset = () => {
           <HelperText>
             Should this field be displayed on the table? (do not set to yes for
             the name field).
+          </HelperText>
+        </Label>
+        <Label>
+          Hidden?
+          <Checkbox name="hidden" defaultChecked={assetField.hidden} />
+          <HelperText>
+            Hide this field from the display (not revisions) and forms.
           </HelperText>
         </Label>
         <Button className="bg-success">Update Field</Button>
