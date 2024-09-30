@@ -1,6 +1,7 @@
 title: Net-Doc
 
 theme: bulma-clean-theme
+force_theme: light
 
 baseurl: /net-doc
 hide_share_buttons: true
