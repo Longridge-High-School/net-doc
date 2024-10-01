@@ -152,6 +152,11 @@
                 </li>
             
                 <li>
+                    <a href="/net-doc/docs/concepts/documents" class="">Documents</a>
+                    
+                </li>
+            
+                <li>
                     <a href="/net-doc/docs/concepts/entries" class="">Entries</a>
                     
                 </li>
@@ -163,6 +168,11 @@
             
                 <li>
                     <a href="/net-doc/docs/concepts/passwords" class="">Passwords</a>
+                    
+                </li>
+            
+                <li>
+                    <a href="/net-doc/docs/concepts/processes" class="">Processes</a>
                     
                 </li>
             
@@ -216,6 +226,26 @@
                     
                 </li>
             
+                <li>
+                    <a href="/net-doc/docs/dashboard-boxes/pinned-items" class="">Pinned Items</a>
+                    
+                </li>
+            
+                <li>
+                    <a href="/net-doc/docs/dashboard-boxes/recent-changes" class="">Recent Changes</a>
+                    
+                </li>
+            
+                <li>
+                    <a href="/net-doc/docs/dashboard-boxes/recent-documents" class="">Recent Documents</a>
+                    
+                </li>
+            
+                <li>
+                    <a href="/net-doc/docs/dashboard-boxes/stats" class="">Stats</a>
+                    
+                </li>
+            
         </ul>
     
 </aside>
@@ -244,8 +274,10 @@
       <li><a href="#asset-register-fields">Asset Register fields</a></li>
       <li><a href="#creating-the-asset-register-asset">Creating the Asset Register asset</a></li>
       <li><a href="#windows-computer">Windows Computer</a></li>
+      <li><a href="#chromeos-device">ChromeOS Device</a></li>
     </ul>
   </li>
+  <li><a href="#adding-data">Adding Data</a></li>
 </ul>
     </div>
 </div>
@@ -444,7 +476,7 @@ relations come into play.</p>
   </thead>
   <tbody>
     <tr>
-      <td style="text-align: left">Hostname</td>
+      <td style="text-align: left">Device Name</td>
       <td style="text-align: left">Hostname field for any device on the network.</td>
       <td style="text-align: center">text</td>
       <td style="text-align: left"> </td>
@@ -467,7 +499,214 @@ relations come into play.</p>
   </tbody>
 </table>
 
-<p>As with the asset register create a new asset using these feilds.</p>
+<p>As with the asset register create a new asset using these feilds and these
+settings:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left"> </th>
+      <th style="text-align: left"> </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left">Name</td>
+      <td style="text-align: left">Windows Computer</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Slug</td>
+      <td style="text-align: left">windows-computer</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Singular</td>
+      <td style="text-align: left">Computer</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Plural</td>
+      <td style="text-align: left">Computers</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">ACL</td>
+      <td style="text-align: left">Default</td>
+    </tr>
+  </tbody>
+</table>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left">Field</th>
+      <th style="text-align: left">Helper Text</th>
+      <th style="text-align: center">Order</th>
+      <th style="text-align: center">Display on Table</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left">Device Name</td>
+      <td style="text-align: left">The computers hostname</td>
+      <td style="text-align: center">1</td>
+      <td style="text-align: center"><code class="language-plaintext highlighter-rouge">no</code></td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Asset</td>
+      <td style="text-align: left">The Asset Register tag for this computer.</td>
+      <td style="text-align: center">2</td>
+      <td style="text-align: center"><code class="language-plaintext highlighter-rouge">no</code></td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Operating System</td>
+      <td style="text-align: left">The operating system on the computer</td>
+      <td style="text-align: center">3</td>
+      <td style="text-align: center"><code class="language-plaintext highlighter-rouge">no</code></td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Edit the asset once you have added all the fields with these settings:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left"> </th>
+      <th style="text-align: left"> </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left">Icon</td>
+      <td style="text-align: left">🖥️</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Name Field</td>
+      <td style="text-align: left">Device Name</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Sort Field</td>
+      <td style="text-align: left">Device Name</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="chromeos-device">ChromeOS Device</h3>
+
+<p>As with Windows Computers we need to create a new asset, but this time we
+already have all the fields we need. The only change needed is to edit the
+<code class="language-plaintext highlighter-rouge">Operating System</code> field to have <code class="language-plaintext highlighter-rouge">ChromeOS</code> as an additional option.</p>
+
+<p>Follow the same procedure as the Windows Computers to create teh asset with
+these settings:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left"> </th>
+      <th style="text-align: left"> </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left">Name</td>
+      <td style="text-align: left">ChromeOS Device</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Slug</td>
+      <td style="text-align: left">chromeos-device</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Singular</td>
+      <td style="text-align: left">ChromeOS Device</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Plural</td>
+      <td style="text-align: left">ChromeOS Devices</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">ACL</td>
+      <td style="text-align: left">Default</td>
+    </tr>
+  </tbody>
+</table>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left">Field</th>
+      <th style="text-align: left">Helper Text</th>
+      <th style="text-align: center">Order</th>
+      <th style="text-align: center">Display on Table</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left">Device Name</td>
+      <td style="text-align: left">The chromebooks hostname</td>
+      <td style="text-align: center">1</td>
+      <td style="text-align: center"><code class="language-plaintext highlighter-rouge">no</code></td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Asset</td>
+      <td style="text-align: left">The Asset Register tag for this chromebook.</td>
+      <td style="text-align: center">2</td>
+      <td style="text-align: center"><code class="language-plaintext highlighter-rouge">no</code></td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Operating System</td>
+      <td style="text-align: left">The OS of the Chromebook.</td>
+      <td style="text-align: center">3</td>
+      <td style="text-align: center"><code class="language-plaintext highlighter-rouge">no</code></td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Edit the asset once you have added all the fields with these settings:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left"> </th>
+      <th style="text-align: left"> </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left">Icon</td>
+      <td style="text-align: left">💻</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Name Field</td>
+      <td style="text-align: left">Device Name</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Sort Field</td>
+      <td style="text-align: left">Device Name</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="adding-data">Adding Data</h2>
+
+<p>Its now possible to add data to Net-Doc!</p>
+
+<p>Lets say there is a Windows Computer on the network called <code class="language-plaintext highlighter-rouge">Desktop-456</code>. It’s a
+<code class="language-plaintext highlighter-rouge">HP EliteDesk 800 G4</code>, serial number <code class="language-plaintext highlighter-rouge">CND123456</code>, Asset Tag <code class="language-plaintext highlighter-rouge">ND00123</code>, in the
+<code class="language-plaintext highlighter-rouge">Main Office</code>, and running <code class="language-plaintext highlighter-rouge">Windows 11</code>.</p>
+
+<p>From the sidebar select the newly created <em>Asset Register</em> and hit <em>Add Asset</em>
+at the top right.</p>
+
+<p>The new Asset needs the <em>Asset Tag</em> <code class="language-plaintext highlighter-rouge">ND00123</code>, the <em>Make/Model</em> of
+<code class="language-plaintext highlighter-rouge">HP EliteDesk 800 G4</code>, <em>serial number</em> of <code class="language-plaintext highlighter-rouge">CND123456</code> and the <em>location</em> of
+<code class="language-plaintext highlighter-rouge">Main Office</code>.</p>
+
+<p>Now head to the <em>Windows Computer</em> asset and hit <em>Add Asset</em> again.</p>
+
+<p>This time the <em>device name</em> is <code class="language-plaintext highlighter-rouge">Desktop-456</code> and the <em>operating system</em> is
+<code class="language-plaintext highlighter-rouge">Windows 11</code>. In the <em>Asset</em> field search for the Asset tag <code class="language-plaintext highlighter-rouge">ND00132</code>. Setting
+this will link the two assets. The Windows Computer will have an value in its
+entry that links to the Asset Register Entry. The Asset Register will have a
+linked asset in sidebar to the Windows Computer.</p>
 
 </div>
 

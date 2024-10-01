@@ -152,6 +152,11 @@
                 </li>
             
                 <li>
+                    <a href="/net-doc/docs/concepts/documents" class="">Documents</a>
+                    
+                </li>
+            
+                <li>
                     <a href="/net-doc/docs/concepts/entries" class="">Entries</a>
                     
                 </li>
@@ -163,6 +168,11 @@
             
                 <li>
                     <a href="/net-doc/docs/concepts/passwords" class="">Passwords</a>
+                    
+                </li>
+            
+                <li>
+                    <a href="/net-doc/docs/concepts/processes" class="">Processes</a>
                     
                 </li>
             
@@ -216,6 +226,26 @@
                     
                 </li>
             
+                <li>
+                    <a href="/net-doc/docs/dashboard-boxes/pinned-items" class="">Pinned Items</a>
+                    
+                </li>
+            
+                <li>
+                    <a href="/net-doc/docs/dashboard-boxes/recent-changes" class="">Recent Changes</a>
+                    
+                </li>
+            
+                <li>
+                    <a href="/net-doc/docs/dashboard-boxes/recent-documents" class="">Recent Documents</a>
+                    
+                </li>
+            
+                <li>
+                    <a href="/net-doc/docs/dashboard-boxes/stats" class="">Stats</a>
+                    
+                </li>
+            
         </ul>
     
 </aside>
@@ -245,6 +275,7 @@
       <li><a href="#volumes">Volumes</a></li>
     </ul>
   </li>
+  <li><a href="#launching">Launching</a></li>
 </ul>
     </div>
 </div>
@@ -341,6 +372,28 @@ will pull the latest commit to the main branch.</p>
     </tr>
   </tbody>
 </table>
+
+<h2 id="launching">Launching</h2>
+
+<p>With the <code class="language-plaintext highlighter-rouge">docker-compose.yml</code> in a folder with the paths updated you can then
+pull the images.</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker compose pull
+</code></pre></div></div>
+
+<p>Once the images are pulled you can launch net-doc by running:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker compose up <span class="nt">-d</span>
+</code></pre></div></div>
+
+<p>This will create a new docker container running the Net-Doc image, and the redis
+image.</p>
+
+<p>Every time Net-Doc starts up it runs all the
+<a href="https://github.com/Longridge-High-School/net-doc/tree/main/prisma/migrations">prisma migrations</a>
+to intially create the database and keep it in sync. The same process also runs
+the seed command which will update any data in the database to match the new
+schema.</p>
 
 </div>
 
