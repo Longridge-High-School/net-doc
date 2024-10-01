@@ -22,3 +22,8 @@ items:
     icon: fa-user-shield
     description: >
       Build your own Access Control Lists and assign them to Assets and Entries.
+  - title: Processes
+    subtitle: Build out your standard processes.
+    icon: fa-gears
+    description: >
+      Build standard and repeatable processes from your documents.

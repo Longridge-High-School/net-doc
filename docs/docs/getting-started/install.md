@@ -57,3 +57,27 @@ services:
 | `/app/prisma/data`    | Contains the sqlite database                              |
 | `/app/public/uploads` | [Attachments](/docs/fields/attachment) are uploaded here. |
 | `/app/public/backups` | Contains the generated backup files                       |
+
+## Launching
+
+With the `docker-compose.yml` in a folder with the paths updated you can then
+pull the images.
+
+```sh
+docker compose pull
+```
+
+Once the images are pulled you can launch net-doc by running:
+
+```sh
+docker compose up -d
+```
+
+This will create a new docker container running the Net-Doc image, and the redis
+image.
+
+Every time Net-Doc starts up it runs all the
+[prisma migrations](https://github.com/Longridge-High-School/net-doc/tree/main/prisma/migrations)
+to intially create the database and keep it in sync. The same process also runs
+the seed command which will update any data in the database to match the new
+schema.

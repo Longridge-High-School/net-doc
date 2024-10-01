@@ -8,12 +8,16 @@
   items:
     - name: Assets
       link: /docs/concepts/assets
+    - name: Documents
+      link: /docs/concepts/documents
     - name: Entries
       link: /docs/concepts/entries
     - name: Fields
       link: /docs/concepts/fields
     - name: Passwords
       link: /docs/concepts/passwords
+    - name: Processes
+      link: /docs/concepts/processes
 - label: Fields
   items:
     - name: Attachment
@@ -34,3 +38,11 @@
   items:
     - name: Approaching Dates
       link: /docs/dashboard-boxes/approaching-dates
+    - name: Pinned Items
+      link: /docs/dashboard-boxes/pinned-items
+    - name: Recent Changes
+      link: /docs/dashboard-boxes/recent-changes
+    - name: Recent Documents
+      link: /docs/dashboard-boxes/recent-documents
+    - name: Stats
+      link: /docs/dashboard-boxes/stats

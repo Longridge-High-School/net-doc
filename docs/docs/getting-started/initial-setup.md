@@ -82,8 +82,85 @@ This asset will need some more fields.
 
 | Name             | Description                                   |   Type   | Asset Relation | Options                                      |
 | :--------------- | :-------------------------------------------- | :------: | :------------- | :------------------------------------------- |
-| Hostname         | Hostname field for any device on the network. |   text   |                |                                              |
+| Device Name      | Hostname field for any device on the network. |   text   |                |                                              |
 | Asset            | Relation to Asset Register                    | relation | Asset Register |                                              |
 | Operating System | A select field for operating systems          |  select  |                | Windows 10, Windows 11 (Each on a new line). |
 
-As with the asset register create a new asset using these feilds.
+As with the asset register create a new asset using these feilds and these
+settings:
+
+|          |                  |
+| :------- | :--------------- |
+| Name     | Windows Computer |
+| Slug     | windows-computer |
+| Singular | Computer         |
+| Plural   | Computers        |
+| ACL      | Default          |
+
+| Field            | Helper Text                               | Order | Display on Table |
+| :--------------- | :---------------------------------------- | :---: | :--------------: |
+| Device Name      | The computers hostname                    |   1   |       `no`       |
+| Asset            | The Asset Register tag for this computer. |   2   |       `no`       |
+| Operating System | The operating system on the computer      |   3   |       `no`       |
+
+Edit the asset once you have added all the fields with these settings:
+
+|            |             |
+| :--------- | :---------- |
+| Icon       | 🖥️          |
+| Name Field | Device Name |
+| Sort Field | Device Name |
+
+### ChromeOS Device
+
+As with Windows Computers we need to create a new asset, but this time we
+already have all the fields we need. The only change needed is to edit the
+`Operating System` field to have `ChromeOS` as an additional option.
+
+Follow the same procedure as the Windows Computers to create teh asset with
+these settings:
+
+|          |                  |
+| :------- | :--------------- |
+| Name     | ChromeOS Device  |
+| Slug     | chromeos-device  |
+| Singular | ChromeOS Device  |
+| Plural   | ChromeOS Devices |
+| ACL      | Default          |
+
+| Field            | Helper Text                                 | Order | Display on Table |
+| :--------------- | :------------------------------------------ | :---: | :--------------: |
+| Device Name      | The chromebooks hostname                    |   1   |       `no`       |
+| Asset            | The Asset Register tag for this chromebook. |   2   |       `no`       |
+| Operating System | The OS of the Chromebook.                   |   3   |       `no`       |
+
+Edit the asset once you have added all the fields with these settings:
+
+|            |             |
+| :--------- | :---------- |
+| Icon       | 💻          |
+| Name Field | Device Name |
+| Sort Field | Device Name |
+
+## Adding Data
+
+Its now possible to add data to Net-Doc!
+
+Lets say there is a Windows Computer on the network called `Desktop-456`. It's a
+`HP EliteDesk 800 G4`, serial number `CND123456`, Asset Tag `ND00123`, in the
+`Main Office`, and running `Windows 11`.
+
+From the sidebar select the newly created _Asset Register_ and hit _Add Asset_
+at the top right.
+
+The new Asset needs the _Asset Tag_ `ND00123`, the _Make/Model_ of
+`HP EliteDesk 800 G4`, _serial number_ of `CND123456` and the _location_ of
+`Main Office`.
+
+Now head to the _Windows Computer_ asset and hit _Add Asset_ again.
+
+This time the _device name_ is `Desktop-456` and the _operating system_ is
+`Windows 11`. In the _Asset_ field search for the Asset tag `ND00132`. Setting
+this will link the two assets. The Windows Computer will have an value in its
+entry that links to the Asset Register Entry. The Asset Register will have a
+linked asset in sidebar to the Windows Computer.

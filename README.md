@@ -20,3 +20,12 @@ The next version of Net-Doc is aiming to be `1.1`, these are the
 The longer term goals are listed in the
 [version next](https://github.com/Longridge-High-School/net-doc/issues?q=is%3Aopen+is%3Aissue+milestone%3A%22Version+Next%22)
 milestone.
+
+## Technology
+
+Net-Doc incorperates quite a few open source technologies, some of which are
+listed here:
+
+- Remix
+- Prisma
+- React
