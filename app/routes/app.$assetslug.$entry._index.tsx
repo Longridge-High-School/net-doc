@@ -8,7 +8,8 @@ import {Link, useLoaderData} from '@remix-run/react'
 import {
   getEntryValues,
   getEntryRevisions,
-  getEntryRelations
+  getEntryRelations,
+  getEntryPasswords
 } from '@prisma/client/sql'
 
 import {ensureUser} from '~/lib/utils/ensure-user'
@@ -35,12 +36,13 @@ export const loader = async ({request, params}: LoaderFunctionArgs) => {
     prisma.entry.findFirstOrThrow({
       where: {id: params.entry},
       include: {
-        asset: true,
-        passwords: {
-          include: {password: {select: {id: true, title: true, username: true}}}
-        }
+        asset: true
       }
     })
+  )
+
+  const passwords = await time('getPasswords', 'Get Passwords', () =>
+    prisma.$queryRawTyped(getEntryPasswords(user.role, user.id, entry.id))
   )
 
   const values = await time('getValues', 'Get Values', () =>
@@ -82,7 +84,8 @@ export const loader = async ({request, params}: LoaderFunctionArgs) => {
       name,
       values,
       revisions,
-      canEdit
+      canEdit,
+      passwords
     },
     {headers: headers({'Set-Cookie': user.setCookie})}
   )
@@ -97,7 +100,7 @@ export const headers = ({loaderHeaders}: HeadersArgs) => {
 }
 
 const AssetEntry = () => {
-  const {entry, relations, documents, name, values, revisions} =
+  const {entry, relations, documents, name, values, revisions, passwords} =
     useLoaderData<typeof loader>()
 
   return (
@@ -158,16 +161,16 @@ const AssetEntry = () => {
         </div>
         <h4 className="text-xl font-light my-4">Linked Passwords</h4>
         <div className="flex flex-wrap gap-2">
-          {entry.passwords.length === 0
+          {passwords.length === 0
             ? 'No Passwords'
-            : entry.passwords.map(({id, password}) => {
+            : passwords.map(({id, title}) => {
                 return (
                   <Link
                     key={id}
-                    to={`/app/passwords/${password.id}`}
+                    to={`/app/passwords/${id}`}
                     className="bg-gray-300 p-2 rounded"
                   >
-                    🔒 {password.title}
+                    🔒 {title}
                   </Link>
                 )
               })}
