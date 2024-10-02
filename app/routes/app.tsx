@@ -6,9 +6,12 @@ import {
   useLoaderData,
   Link
 } from '@remix-run/react'
+import {useHotkeys} from 'react-hotkeys-hook'
+import {useState, useCallback} from 'react'
 
-import {AButton} from '~/lib/components/button'
+import {AButton, Button} from '~/lib/components/button'
 import {Notificatons} from '~/lib/components/notifications'
+import {Label, inputClasses} from '~/lib/components/input'
 
 import {getPrisma} from '~/lib/prisma.server'
 import {ensureUser} from '~/lib/utils/ensure-user'
@@ -45,12 +48,56 @@ export const loader = async ({request}: LoaderFunctionArgs) => {
 
 export type AppLoader = {user: {name: string; id: string}}
 
+const SearchModal = ({close}: {close: () => void}) => {
+  const focusRef = useCallback((node: HTMLInputElement) => {
+    if (node !== null) {
+      node.focus()
+    }
+  }, [])
+
+  return (
+    <div className="fixed bg-white border-gray-300 border shadow-xl p-4 top-64 w-[60em] left-[calc(50%-30rem)]">
+      <h2 className="text-[#444] text-2xl">Search</h2>
+      <form method="POST" action="/app/search">
+        <Label>
+          <input
+            name="query"
+            ref={focusRef}
+            className={inputClasses}
+            onKeyDown={e => {
+              if (e.key === 'Escape') {
+                close()
+              }
+            }}
+          />
+        </Label>
+        <Button className="bg-green-300">Search</Button>
+        <Button type="button" onClick={close} className="bg-gray-300 ml-2">
+          Cancel
+        </Button>
+      </form>
+    </div>
+  )
+}
+
 const Dashboard = () => {
   const {assets, user, cans} = useLoaderData<typeof loader>()
+  const [searchModalOpen, setSearchModelOpen] = useState(false)
+  useHotkeys('ctrl+k', e => {
+    e.preventDefault()
+    setSearchModelOpen(!searchModalOpen)
+  })
 
   return (
     <div className="grid grid-cols-dashboard min-h-screen gap-8">
       <Notificatons />
+      {searchModalOpen ? (
+        <div className="fixed top-0 bottom-0 left-0 right-0 bg-black/30">
+          <SearchModal close={() => setSearchModelOpen(false)} />
+        </div>
+      ) : (
+        ''
+      )}
       <nav className="bg-gray-300 shadow-xl pt-8 text-[#444]">
         <h1 className="text-center text-4xl mb-8">Net Doc</h1>
         <h2 className="text-xl ml-4 mb-4">Core</h2>

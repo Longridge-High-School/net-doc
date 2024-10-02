@@ -53,7 +53,7 @@ export const action = async ({request}: ActionFunctionArgs) => {
     ...documentResults
   ].sort((a, b) => (a.label ?? '').localeCompare(b.label ?? ''))
 
-  return json({results})
+  return json({results, query})
 }
 
 export const meta: MetaFunction = () => {
@@ -69,7 +69,7 @@ const Search = () => {
       <form method="POST">
         <Label>
           Search
-          <Input name="query" />
+          <Input name="query" defaultValue={data ? data.query : ''} />
         </Label>
       </form>
 
