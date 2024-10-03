@@ -4,9 +4,12 @@ import {mkdirp} from 'mkdirp'
 import {format} from 'date-fns'
 import AdmZip from 'adm-zip'
 import cron from 'node-cron'
+import {PrismaClient} from '@prisma/client'
+import {asyncForEach} from '@arcath/utils'
 
 import {getRedis} from '../app/lib/redis.server.mjs'
 
+const prisma = new PrismaClient()
 const connection = getRedis()
 
 const queue = new Queue('main', {connection})
@@ -42,6 +45,10 @@ cron.schedule('0 0 0 * * 7', async () => {
   await queue.add('createBackup', {})
 })
 
+cron.schedule('* */6 * * *', async () => {
+  await queue.add('clearRecentItems')
+})
+
 const BACKUPS_DIR = path.join(process.cwd(), 'public', 'backups')
 const UPLOADS_PATH = path.join(process.cwd(), 'public', 'uploads')
 const DB_PATH = path.join(
@@ -63,6 +70,23 @@ createHandler('createBackup', async () => {
   const fileDate = format(new Date(), 'yyyy-MM-dd-HH-mm')
 
   await zip.writeZipPromise(path.join(BACKUPS_DIR, `backup-${fileDate}.zip`))
+})
+
+createHandler('clearRecentItems', async () => {
+  const users = await prisma.user.findMany({select: {id: true}})
+
+  asyncForEach(users, async ({id}) => {
+    const recentItems = await prisma.recentItems.findMany({
+      where: {userId: id},
+      orderBy: {updatedAt: 'desc'},
+      take: 5,
+      select: {id: true, updatedAt: true}
+    })
+
+    await prisma.recentItems.deleteMany({
+      where: {updatedAt: {lt: recentItems[4].updatedAt}}
+    })
+  })
 })
 
 console.log('Ready for jobs')

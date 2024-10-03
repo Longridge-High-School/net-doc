@@ -13,7 +13,7 @@ export type RecentItemsData = {
 export const recentItemsBox: DashboardBoxFn<RecentItemsData> = {
   render: ({recentItems}) => {
     return (
-      <DashboardBox title="Pinned Items">
+      <DashboardBox title="Recent Items">
         {recentItems.map(({RecentItemId, targetId, target, name, icon}) => {
           return (
             <a
