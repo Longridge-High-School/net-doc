@@ -1,23 +1,23 @@
 import {type DashboardBoxFn, DashboardBox} from './boxes'
 
-export type PinsData = {
-  pins: Array<{
+export type RecentItemsData = {
+  recentItems: Array<{
     target: string
     targetId: string
     icon: string | null
     name: string | null
-    pinId: string
+    RecentItemId: string
   }>
 }
 
-export const pinnedItemsBox: DashboardBoxFn<PinsData> = {
-  render: ({pins}) => {
+export const recentItemsBox: DashboardBoxFn<RecentItemsData> = {
+  render: ({recentItems}) => {
     return (
       <DashboardBox title="Pinned Items">
-        {pins.map(({pinId, targetId, target, name, icon}) => {
+        {recentItems.map(({RecentItemId, targetId, target, name, icon}) => {
           return (
             <a
-              key={pinId}
+              key={RecentItemId}
               className="mt-2 block"
               href={`/app/${target}/${targetId}`}
             >
@@ -32,9 +32,9 @@ export const pinnedItemsBox: DashboardBoxFn<PinsData> = {
   },
   metaComponent: (meta, id) => (
     <div>
-      <i>Pins has no options</i>
+      <i>Recent Items has no options</i>
       <input type="hidden" name={id} value="{}" />
-      <input type="hidden" name={`${id}-type`} value="pinnedItems" />
+      <input type="hidden" name={`${id}-type`} value="recentItems" />
     </div>
   )
 }

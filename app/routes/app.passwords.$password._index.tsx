@@ -10,6 +10,7 @@ import {MDXComponent} from '~/lib/mdx'
 import {formatAsDateTime} from '~/lib/utils/format'
 import {pageTitle} from '~/lib/utils/page-title'
 import {useNotify} from '~/lib/hooks/use-notify'
+import {trackRecentItem} from '~/lib/utils/recent-item'
 
 export const loader = async ({request, params}: LoaderFunctionArgs) => {
   const user = await ensureUser(request, 'password:view', {
@@ -31,6 +32,8 @@ export const loader = async ({request, params}: LoaderFunctionArgs) => {
     },
     where: {id: params.password}
   })
+
+  await trackRecentItem('passwords', password.id, user.id)
 
   const code = await buildMDXBundle(password.notes)
 

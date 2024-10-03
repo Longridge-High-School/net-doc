@@ -4,6 +4,7 @@ import {approachingDatesBox} from './approaching-dates'
 import {pinnedItemsBox} from './pinned-items'
 import {recentChangesBox} from './recent-changes'
 import {recentDocumentsBox} from './recent-documents'
+import {recentItemsBox} from './recent-items'
 import {statsBox} from './stats'
 
 export type DashboardBoxFn<Data> = {
@@ -28,5 +29,6 @@ export const BOXES = {
   pinnedItems: pinnedItemsBox,
   recentChanges: recentChangesBox,
   recentDocuments: recentDocumentsBox,
+  recentItems: recentItemsBox,
   stats: statsBox
 }

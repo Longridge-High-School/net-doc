@@ -7,6 +7,7 @@ import {getPrisma} from '~/lib/prisma.server'
 import {buildMDXBundle} from '~/lib/mdx.server'
 import {MDXComponent} from '~/lib/mdx'
 import {pageTitle} from '~/lib/utils/page-title'
+import {trackRecentItem} from '~/lib/utils/recent-item'
 
 export const loader = async ({request, params}: LoaderFunctionArgs) => {
   const user = await ensureUser(request, 'process:view', {
@@ -18,6 +19,8 @@ export const loader = async ({request, params}: LoaderFunctionArgs) => {
   const process = await prisma.process.findFirstOrThrow({
     where: {id: params.process}
   })
+
+  await trackRecentItem('process', process.id, user.id)
 
   const code = await buildMDXBundle(process.body)
 

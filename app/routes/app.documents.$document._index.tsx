@@ -7,6 +7,7 @@ import {buildMDXBundle} from '~/lib/mdx.server'
 import {MDXComponent} from '~/lib/mdx'
 import {pageTitle} from '~/lib/utils/page-title'
 import {formatAsDateTime} from '~/lib/utils/format'
+import {trackRecentItem} from '~/lib/utils/recent-item'
 
 export const loader = async ({request, params}: LoaderFunctionArgs) => {
   const user = await ensureUser(request, 'document:view', {
@@ -21,6 +22,8 @@ export const loader = async ({request, params}: LoaderFunctionArgs) => {
       history: {orderBy: {createdAt: 'desc'}, include: {editedBy: true}}
     }
   })
+
+  await trackRecentItem('documents', document.id, user.id)
 
   const code = await buildMDXBundle(document.body)
 

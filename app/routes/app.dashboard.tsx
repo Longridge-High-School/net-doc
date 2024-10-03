@@ -124,6 +124,7 @@ const DashboardEdit = () => {
                     <option value="pinnedItems">Pinned Items</option>
                     <option value="recentChanges">Recent Changes</option>
                     <option value="recentDocuments">Recent Documents</option>
+                    <option value="recentItems">Recent Items</option>
                     <option value="stats">Stats</option>
                   </Select>
                 </Label>

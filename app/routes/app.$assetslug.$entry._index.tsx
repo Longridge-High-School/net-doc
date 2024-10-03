@@ -20,6 +20,7 @@ import {pageTitle} from '~/lib/utils/page-title'
 import {formatAsDateTime} from '~/lib/utils/format'
 import {can} from '~/lib/rbac.server'
 import {createTimings} from '~/lib/utils/timings.server'
+import {trackRecentItem} from '~/lib/utils/recent-item'
 
 export const loader = async ({request, params}: LoaderFunctionArgs) => {
   const {time, headers} = createTimings()
@@ -39,6 +40,10 @@ export const loader = async ({request, params}: LoaderFunctionArgs) => {
         asset: true
       }
     })
+  )
+
+  await time('setRecents', 'Set Recent Entries', () =>
+    trackRecentItem(entry.asset.slug, entry.id, user.id)
   )
 
   const passwords = await time('getPasswords', 'Get Passwords', () =>
