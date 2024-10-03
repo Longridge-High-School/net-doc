@@ -65,7 +65,7 @@ const SearchModal = ({close}: {close: () => void}) => {
     string
   >({
     mutationFn: async (searchTerm: string) => {
-      let formData = new FormData()
+      const formData = new FormData()
       formData.append('query', searchTerm)
 
       const response = await fetch('/app/search?_data=routes/app.search', {
