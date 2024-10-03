@@ -34,7 +34,7 @@ export const loader = async ({request}: LoaderFunctionArgs) => {
 
   const state = totp.totpSecret !== ''
 
-  const genTotp = generateTOTP()
+  const genTotp = await generateTOTP()
   const otpUri = getTOTPAuthUri({
     ...genTotp,
     accountName: totp.email,

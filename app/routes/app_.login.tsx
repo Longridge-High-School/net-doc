@@ -82,13 +82,13 @@ export const action = async ({request}: ActionFunctionArgs) => {
 
   if (user.totpSecret !== '' && otp !== null) {
     const result =
-      verifyTOTP({
+      (await verifyTOTP({
         otp,
         secret: user.totpSecret,
-        algorithm: user.totpAlgorithm,
+        algorithm: user.totpAlgorithm === 'SHA1' ? 'SHA-1' : user.totpAlgorithm,
         digits: user.totpDigits,
         period: user.totpPeriod
-      }) !== null
+      })) !== null
 
     if (!result) {
       return json(
