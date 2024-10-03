@@ -152,7 +152,10 @@ const Dashboard = () => {
         <h2 className="text-xl ml-4 mb-4">Core</h2>
         <div className="pl-8 mb-2 flex flex-col gap-2 mt-2">
           <Link to="/app">📜 Dashboard</Link>
-          <Link to="/app/search">🔎 Search</Link>
+          <Link to="/app/search">
+            🔎 Search{' '}
+            <span className="bg-gray-200 p-1 rounded text-xs">Ctrl + K</span>
+          </Link>
           <Link to="/app/documents">📰 Documents</Link>
           <Link to="/app/passwords">🔐 Passwords</Link>
           <Link to="/app/process">✔️ Process</Link>
