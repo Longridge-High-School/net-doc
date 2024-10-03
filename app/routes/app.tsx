@@ -4,10 +4,12 @@ import {
   useRouteError,
   isRouteErrorResponse,
   useLoaderData,
-  Link
+  Link,
+  useNavigate
 } from '@remix-run/react'
 import {useHotkeys} from 'react-hotkeys-hook'
 import {useState, useCallback} from 'react'
+import {useMutation} from '@tanstack/react-query'
 
 import {AButton, Button} from '~/lib/components/button'
 import {Notificatons} from '~/lib/components/notifications'
@@ -54,11 +56,43 @@ const SearchModal = ({close}: {close: () => void}) => {
       node.focus()
     }
   }, [])
+  const [searchTerm, setSearchTerm] = useState('')
+  const navigate = useNavigate()
+
+  const search = useMutation<
+    Array<{label: string; link: string}>,
+    Error,
+    string
+  >({
+    mutationFn: async (searchTerm: string) => {
+      let formData = new FormData()
+      formData.append('query', searchTerm)
+
+      const response = await fetch('/app/search?_data=routes/app.search', {
+        method: 'POST',
+        body: formData
+      })
+
+      const json = await response.json()
+
+      if (json.results.length === 1) {
+        navigate(json.results[0].link)
+        close()
+      }
+
+      return json.results
+    }
+  })
 
   return (
     <div className="fixed bg-white border-gray-300 border shadow-xl p-4 top-64 w-[60em] left-[calc(50%-30rem)]">
       <h2 className="text-[#444] text-2xl">Search</h2>
-      <form method="POST" action="/app/search">
+      <form
+        onSubmit={e => {
+          e.preventDefault()
+          search.mutateAsync(searchTerm)
+        }}
+      >
         <Label>
           <input
             name="query"
@@ -69,6 +103,10 @@ const SearchModal = ({close}: {close: () => void}) => {
                 close()
               }
             }}
+            onChange={e => {
+              setSearchTerm(e.target.value)
+            }}
+            disabled={search.isPending}
           />
         </Label>
         <Button className="bg-green-300">Search</Button>
@@ -76,6 +114,17 @@ const SearchModal = ({close}: {close: () => void}) => {
           Cancel
         </Button>
       </form>
+      <div className="flex gap-4 flex-wrap mt-4">
+        {search.data
+          ? search.data.map(({label, link}) => {
+              return (
+                <Link key={link} to={link} className="bg-gray-300 p-2 rounded">
+                  {label}
+                </Link>
+              )
+            })
+          : ''}
+      </div>
     </div>
   )
 }
