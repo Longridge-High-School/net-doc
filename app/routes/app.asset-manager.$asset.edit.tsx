@@ -57,7 +57,6 @@ export const action = async ({request, params}: ActionFunctionArgs) => {
   invariant(singular)
   invariant(plural)
   invariant(nameFieldId)
-  invariant(sortFieldId)
   invariant(sortOrder)
   invariant(icon)
   invariant(acl)
@@ -86,7 +85,7 @@ export const action = async ({request, params}: ActionFunctionArgs) => {
       icon,
       nameFieldId,
       aclId: acl,
-      sortFieldId,
+      sortFieldId: sortFieldId ?? nameFieldId,
       sortOrder,
       sidebar: !!sidebar
     }
