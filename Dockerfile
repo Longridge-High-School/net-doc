@@ -3,11 +3,10 @@
 #
 
 # Start with the node alpine image
-FROM node:20-alpine as base
+FROM node:20-bookworm-slim as base
 
 # Install openssl for Prisma and NGINX
-RUN apk update && apk add openssl nginx
-
+RUN apt-get update && apt-get install openssl nginx -y
 
 # Create a new temp container called `deps` from `base`
 # Add the package files and install all the deps.
@@ -58,4 +57,5 @@ COPY --from=build /app/build/server /app/build/server
 COPY --from=build /app/build/client /app/build/client
 ADD . .
 
-ENTRYPOINT [ "docker-entrypoint.sh" ]
+ENTRYPOINT [ "/app/docker-entrypoint.sh" ]
+CMD []
