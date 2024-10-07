@@ -1,42 +1,50 @@
-# base node image
-FROM node:20-bookworm-slim as base
+#
+# Net-Doc Docker File
+#
 
-# Install openssl for Prisma
-RUN apt-get update && apt-get install -y openssl
+# Start with the node alpine image
+FROM node:20-alpine as base
 
-# Install all node_modules, including dev dependencies
-FROM base as deps
+# Install openssl for Prisma and NGINX
+RUN apk update && apk add openssl nginx
 
-RUN mkdir /app
-WORKDIR /app
 
-ADD package.json package-lock.json ./
-RUN npm install --production=false
+# Create a new temp container called `deps` from `base`
+# Add the package files and install all the deps.
+  FROM base as deps
 
-# Setup production node_modules
-FROM base as production-deps
+  RUN mkdir /app
+  WORKDIR /app
 
-RUN mkdir /app
-WORKDIR /app
+  ADD package.json package-lock.json ./
+  RUN npm install --production=false
 
-COPY --from=deps /app/node_modules /app/node_modules
-ADD package.json package-lock.json ./
-RUN npm prune --production
+# create a new temp container called `production-deps` from `base`
+# copy the `deps` node_modules folder over and prune it to production only.
+  FROM base as production-deps
 
-# Build the app
-FROM base as build
+  RUN mkdir /app
+  WORKDIR /app
 
-ENV NODE_ENV=production
+  COPY --from=deps /app/node_modules /app/node_modules
+  ADD package.json package-lock.json ./
+  RUN npm prune --production
 
-RUN mkdir /app
-WORKDIR /app
+# create a new temp container called `build` from `base`
+# Copy over the full deps and run build.
+  FROM base as build
 
-COPY --from=deps /app/node_modules /app/node_modules
+  ENV NODE_ENV=production
 
-ADD . .
-RUN npm run build
+  RUN mkdir /app
+  WORKDIR /app
 
-# Finally, build the production image with minimal footprint
+  COPY --from=deps /app/node_modules /app/node_modules
+
+  ADD . .
+  RUN npm run build
+
+# Go back to the `base` image and copy in the production deps and build
 FROM base
 
 ENV NODE_ENV=production
@@ -50,4 +58,4 @@ COPY --from=build /app/build/server /app/build/server
 COPY --from=build /app/build/client /app/build/client
 ADD . .
 
-CMD ["npm", "run", "docker"]
+ENTRYPOINT [ "docker-entrypoint.sh" ]
