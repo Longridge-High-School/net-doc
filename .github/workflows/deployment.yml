@@ -49,6 +49,8 @@ jobs:
               - 'public/**'
               - '.github/workflows/**'
               - 'tests/**'
+              - Dockerfile
+              - docker-entrypoint.sh
             docs:
               - 'docs/**'
               - '.github/workflows/**'
