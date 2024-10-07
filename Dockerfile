@@ -3,14 +3,14 @@
 #
 
 # Start with the node alpine image
-FROM node:20-bookworm-slim as base
+FROM node:20-bookworm-slim AS base
 
 # Install openssl for Prisma and NGINX
 RUN apt-get update && apt-get install openssl nginx -y
 
 # Create a new temp container called `deps` from `base`
 # Add the package files and install all the deps.
-  FROM base as deps
+  FROM base AS deps
 
   RUN mkdir /app
   WORKDIR /app
@@ -20,7 +20,7 @@ RUN apt-get update && apt-get install openssl nginx -y
 
 # create a new temp container called `production-deps` from `base`
 # copy the `deps` node_modules folder over and prune it to production only.
-  FROM base as production-deps
+  FROM base AS production-deps
 
   RUN mkdir /app
   WORKDIR /app
@@ -31,7 +31,7 @@ RUN apt-get update && apt-get install openssl nginx -y
 
 # create a new temp container called `build` from `base`
 # Copy over the full deps and run build.
-  FROM base as build
+  FROM base AS build
 
   ENV NODE_ENV=production
 
@@ -56,6 +56,8 @@ COPY --from=production-deps /app/node_modules /app/node_modules
 COPY --from=build /app/build/server /app/build/server
 COPY --from=build /app/build/client /app/build/client
 ADD . .
+
+RUN chmod +x /app/docker-entrypoint.sh
 
 ENTRYPOINT [ "/app/docker-entrypoint.sh" ]
 CMD []
