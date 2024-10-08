@@ -3,10 +3,10 @@
 #
 
 # Start with the node alpine image
-FROM node:20-bookworm-slim AS base
+FROM node:22-alpine AS base
 
 # Install openssl for Prisma and NGINX
-RUN apt-get update && apt-get install openssl nginx -y
+RUN apk update && apk add openssl nginx
 
 # Create a new temp container called `deps` from `base`
 # Add the package files and install all the deps.
