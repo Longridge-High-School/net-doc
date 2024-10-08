@@ -47,7 +47,7 @@ export const loader = async ({request, params}: LoaderFunctionArgs) => {
   )
 
   const passwords = await time('getPasswords', 'Get Passwords', () =>
-    prisma.$queryRawTyped(getEntryPasswords(user.role, user.id, entry.id))
+    prisma.$queryRawTyped(getEntryPasswords(entry.id, user.role, user.id))
   )
 
   const values = await time('getValues', 'Get Values', () =>
