@@ -291,32 +291,52 @@
 <blockquote>
   <p>The tag <code class="language-plaintext highlighter-rouge">latest</code> will always pull the latest
 <a href="https://github.com/Longridge-High-School/net-doc/releases">release</a>, <code class="language-plaintext highlighter-rouge">main</code>
-will pull the latest commit to the main branch.</p>
+will pull the latest commit to the main branch. Ideally you should use the
+major version tag e.g. <code class="language-plaintext highlighter-rouge">2</code> to avoid automatically installing any breaking
+changes. <code class="language-plaintext highlighter-rouge">2</code> would include any <code class="language-plaintext highlighter-rouge">2.x.y</code> release.</p>
 </blockquote>
 
-<div class="language-yml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">version</span><span class="pi">:</span> <span class="s1">'</span><span class="s">3.9'</span>
-<span class="na">services</span><span class="pi">:</span>
-  <span class="na">remix</span><span class="pi">:</span>
-    <span class="na">image</span><span class="pi">:</span> <span class="s">longridgehighschool/net-doc:latest</span>
-    <span class="na">restart</span><span class="pi">:</span> <span class="s">always</span>
-    <span class="na">ports</span><span class="pi">:</span>
-      <span class="pi">-</span> <span class="s1">'</span><span class="s">3000:3000'</span>
-    <span class="na">environment</span><span class="pi">:</span>
+<div class="language-yml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">x-shared</span><span class="pi">:</span>
+  <span class="na">net-doc-service</span><span class="pi">:</span> <span class="nl">&amp;net-doc-service</span>
+    <span class="na">environment</span><span class="pi">:</span> <span class="nl">&amp;net-doc-environment</span>
       <span class="pi">-</span> <span class="s">PASSWORD_KEY=YOUR KEY</span>
       <span class="pi">-</span> <span class="s">PASSWORD_SALT=YOUR SALT</span>
       <span class="pi">-</span> <span class="s">PASSWORD_IV=YOUR IV</span>
       <span class="pi">-</span> <span class="s">DATABASE_URL=file:./data/net-doc.db</span>
-    <span class="na">volumes</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">REDIS_URL=net-doc-redis:6379</span>
+    <span class="na">volumes</span><span class="pi">:</span> <span class="nl">&amp;net-doc-volumes</span>
       <span class="pi">-</span> <span class="s">./db:/app/prisma/data</span>
       <span class="pi">-</span> <span class="s">./uploads:/app/public/uploads</span>
       <span class="pi">-</span> <span class="s">./backups:/app/public/backups</span>
-  <span class="na">redis</span><span class="pi">:</span>
+    <span class="na">image</span><span class="pi">:</span> <span class="s">longridgehighschool/net-doc:2</span>
+    <span class="na">restart</span><span class="pi">:</span> <span class="s">always</span>
+    <span class="na">depends_on</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">net-doc-redis</span>
+
+<span class="na">services</span><span class="pi">:</span>
+  <span class="na">net-doc-remix</span><span class="pi">:</span>
+    <span class="na">&lt;&lt;</span><span class="pi">:</span> <span class="nv">*net-doc-service</span>
+    <span class="na">command</span><span class="pi">:</span> <span class="pi">[</span><span class="s1">'</span><span class="s">net-doc-remix'</span><span class="pi">]</span>
+
+  <span class="na">net-doc-worker</span><span class="pi">:</span>
+    <span class="na">&lt;&lt;</span><span class="pi">:</span> <span class="nv">*net-doc-service</span>
+    <span class="na">command</span><span class="pi">:</span> <span class="pi">[</span><span class="s1">'</span><span class="s">net-doc-worker'</span><span class="pi">]</span>
+    <span class="na">depends_on</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">net-doc-remix</span>
+
+  <span class="na">net-doc-nginx</span><span class="pi">:</span>
+    <span class="na">&lt;&lt;</span><span class="pi">:</span> <span class="nv">*net-doc-service</span>
+    <span class="na">command</span><span class="pi">:</span> <span class="pi">[</span><span class="s1">'</span><span class="s">net-doc-nginx'</span><span class="pi">]</span>
+    <span class="na">depends_on</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">net-doc-remix</span>
+    <span class="na">ports</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s1">'</span><span class="s">8080:80'</span>
+
+  <span class="na">net-doc-redis</span><span class="pi">:</span>
     <span class="na">image</span><span class="pi">:</span> <span class="s">redis:7</span>
     <span class="na">restart</span><span class="pi">:</span> <span class="s">always</span>
     <span class="na">volumes</span><span class="pi">:</span>
       <span class="pi">-</span> <span class="s">./data/redis:/data</span>
-    <span class="na">ports</span><span class="pi">:</span>
-      <span class="pi">-</span> <span class="s">6379:6379</span>
 </code></pre></div></div>
 
 <h3 id="environment-variables">Environment Variables</h3>
