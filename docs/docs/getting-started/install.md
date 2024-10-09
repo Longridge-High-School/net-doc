@@ -13,32 +13,52 @@ Net-Doc is distributed as a docker container.
 
 > The tag `latest` will always pull the latest
 > [release](https://github.com/Longridge-High-School/net-doc/releases), `main`
-> will pull the latest commit to the main branch.
+> will pull the latest commit to the main branch. Ideally you should use the
+> major version tag e.g. `2` to avoid automatically installing any breaking
+> changes. `2` would include any `2.x.y` release.
 
 ```yml
-version: '3.9'
-services:
-  remix:
-    image: longridgehighschool/net-doc:latest
-    restart: always
-    ports:
-      - '3000:3000'
-    environment:
+x-shared:
+  net-doc-service: &net-doc-service
+    environment: &net-doc-environment
       - PASSWORD_KEY=YOUR KEY
       - PASSWORD_SALT=YOUR SALT
       - PASSWORD_IV=YOUR IV
       - DATABASE_URL=file:./data/net-doc.db
-    volumes:
+      - REDIS_URL=net-doc-redis:6379
+    volumes: &net-doc-volumes
       - ./db:/app/prisma/data
       - ./uploads:/app/public/uploads
       - ./backups:/app/public/backups
-  redis:
+    image: longridgehighschool/net-doc:2
+    restart: always
+    depends_on:
+      - net-doc-redis
+
+services:
+  net-doc-remix:
+    <<: *net-doc-service
+    command: ['net-doc-remix']
+
+  net-doc-worker:
+    <<: *net-doc-service
+    command: ['net-doc-worker']
+    depends_on:
+      - net-doc-remix
+
+  net-doc-nginx:
+    <<: *net-doc-service
+    command: ['net-doc-nginx']
+    depends_on:
+      - net-doc-remix
+    ports:
+      - '8080:80'
+
+  net-doc-redis:
     image: redis:7
     restart: always
     volumes:
       - ./data/redis:/data
-    ports:
-      - 6379:6379
 ```
 
 ### Environment Variables

@@ -1,42 +1,49 @@
-# base node image
-FROM node:20-bookworm-slim as base
+#
+# Net-Doc Docker File
+#
 
-# Install openssl for Prisma
-RUN apt-get update && apt-get install -y openssl
+# Start with the node debian image
+FROM node:22-bullseye-slim AS base
 
-# Install all node_modules, including dev dependencies
-FROM base as deps
+# Install openssl for Prisma and NGINX
+RUN apt-get update && apt-get install openssl nginx -y
 
-RUN mkdir /app
-WORKDIR /app
+# Create a new temp container called `deps` from `base`
+# Add the package files and install all the deps.
+  FROM base AS deps
 
-ADD package.json package-lock.json ./
-RUN npm install --production=false
+  RUN mkdir /app
+  WORKDIR /app
 
-# Setup production node_modules
-FROM base as production-deps
+  ADD package.json package-lock.json ./
+  RUN npm install --production=false
 
-RUN mkdir /app
-WORKDIR /app
+# create a new temp container called `production-deps` from `base`
+# copy the `deps` node_modules folder over and prune it to production only.
+  FROM base AS production-deps
 
-COPY --from=deps /app/node_modules /app/node_modules
-ADD package.json package-lock.json ./
-RUN npm prune --production
+  RUN mkdir /app
+  WORKDIR /app
 
-# Build the app
-FROM base as build
+  COPY --from=deps /app/node_modules /app/node_modules
+  ADD package.json package-lock.json ./
+  RUN npm prune --production
 
-ENV NODE_ENV=production
+# create a new temp container called `build` from `base`
+# Copy over the full deps and run build.
+  FROM base AS build
 
-RUN mkdir /app
-WORKDIR /app
+  ENV NODE_ENV=production
 
-COPY --from=deps /app/node_modules /app/node_modules
+  RUN mkdir /app
+  WORKDIR /app
 
-ADD . .
-RUN npm run build
+  COPY --from=deps /app/node_modules /app/node_modules
 
-# Finally, build the production image with minimal footprint
+  ADD . .
+  RUN npm run build
+
+# Go back to the `base` image and copy in the production deps and build
 FROM base
 
 ENV NODE_ENV=production
@@ -50,4 +57,7 @@ COPY --from=build /app/build/server /app/build/server
 COPY --from=build /app/build/client /app/build/client
 ADD . .
 
-CMD ["npm", "run", "docker"]
+RUN chmod +x /app/docker-entrypoint.sh
+
+ENTRYPOINT [ "/app/docker-entrypoint.sh" ]
+CMD []
