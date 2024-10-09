@@ -2,8 +2,8 @@
 # Net-Doc Docker File
 #
 
-# Start with the node alpine image
-FROM node:22-alpine AS base
+# Start with the node debian image
+FROM node:22-bullseye-slim AS base
 
 # Install openssl for Prisma and NGINX
 RUN apk update && apk add openssl nginx
