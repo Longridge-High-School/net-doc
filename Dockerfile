@@ -6,7 +6,7 @@
 FROM node:22-bullseye-slim AS base
 
 # Install openssl for Prisma and NGINX
-RUN apk update && apk add openssl nginx
+RUN apt-get update && apt-get install openssl nginx -y
 
 # Create a new temp container called `deps` from `base`
 # Add the package files and install all the deps.
