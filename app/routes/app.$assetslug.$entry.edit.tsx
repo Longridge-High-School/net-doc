@@ -6,7 +6,7 @@ import {
   redirect,
   unstable_parseMultipartFormData
 } from '@remix-run/node'
-import {asyncForEach, indexedBy, invariant} from '@arcath/utils'
+import {asyncMap, indexedBy, invariant} from '@arcath/utils'
 
 import {ensureUser} from '~/lib/utils/ensure-user'
 import {getPrisma} from '~/lib/prisma.server'
@@ -80,9 +80,14 @@ export const action = async ({request, params}: ActionFunctionArgs) => {
     data: {aclId: acl}
   })
 
-  await asyncForEach(
+  const results = await asyncMap(
     asset.assetFields,
-    async ({fieldId, field, id}): Promise<void> => {
+    async ({
+      fieldId,
+      field,
+      id,
+      unique
+    }): Promise<{error: string} | boolean> => {
       const entryValue = await prisma.value.findFirst({
         where: {entryId: params.entry!, fieldId}
       })
@@ -92,6 +97,19 @@ export const action = async ({request, params}: ActionFunctionArgs) => {
         id,
         entryValue ? entryValue.value : ''
       )
+
+      switch (unique) {
+        case 2:
+          const withinFieldCount = await prisma.value.count({
+            where: {fieldId, value}
+          })
+          if (withinFieldCount > 0) {
+            return {error: 'Value is not unique'}
+          }
+        case 0:
+        default:
+          break
+      }
 
       if (entryValue) {
         if (value !== entryValue.value) {
@@ -110,12 +128,14 @@ export const action = async ({request, params}: ActionFunctionArgs) => {
           data: {value}
         })
 
-        return
+        return true
       }
 
       await prisma.value.create({
         data: {entryId: params.entry!, fieldId, value, lastEditedById: user.id}
       })
+
+      return true
     }
   )
 

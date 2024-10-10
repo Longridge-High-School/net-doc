@@ -49,6 +49,7 @@ model AssetField {
   helperText     String  @default("")
   displayOnTable Boolean @default(false)
   hidden         Boolean @default(false)
+  unique         Int     @default(0) // Unique Modes: 0 - Not, 1 - Within Asset, 2 - Unique within Field
 
   asset   Asset  @relation(fields: [assetId], references: [id], onDelete: Cascade)
   assetId String
