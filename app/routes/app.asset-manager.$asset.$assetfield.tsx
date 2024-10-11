@@ -135,9 +135,9 @@ const AssetManagerAddFieldToAsset = () => {
             </option>
           </Select>
           <HelperText>
-            Control the uniqueness of this field. If you choose "Unique within
-            all assets using this field" all other assets will be updated to the
-            same setting.
+            Control the uniqueness of this field. If you choose &quot;Unique
+            within all assets using this field&quot; all other assets will be
+            updated to the same setting.
           </HelperText>
         </Label>
         <Button className="bg-success">Update Field</Button>

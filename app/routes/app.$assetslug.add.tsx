@@ -68,7 +68,7 @@ export const action = async ({request, params}: ActionFunctionArgs) => {
       )
 
       switch (unique) {
-        case 1:
+        case 1: {
           const [withinAssetCount] = await prisma.$queryRawTyped(
             getUniqueCountForAssetField(params.entry!, fieldId, value)
           )
@@ -78,7 +78,9 @@ export const action = async ({request, params}: ActionFunctionArgs) => {
               field: fieldId
             }
           }
-        case 2:
+          break
+        }
+        case 2: {
           const withinFieldCount = await prisma.value.count({
             where: {fieldId, value}
           })
@@ -88,6 +90,8 @@ export const action = async ({request, params}: ActionFunctionArgs) => {
               field: fieldId
             }
           }
+          break
+        }
         case 0:
         default:
           break
