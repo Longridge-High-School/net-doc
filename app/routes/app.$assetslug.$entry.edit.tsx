@@ -6,11 +6,12 @@ import {
   redirect,
   unstable_parseMultipartFormData
 } from '@remix-run/node'
+import {useLoaderData, useActionData} from '@remix-run/react'
 import {asyncMap, indexedBy, invariant} from '@arcath/utils'
+import {getUniqueCountForAssetField} from '@prisma/client/sql'
 
 import {ensureUser} from '~/lib/utils/ensure-user'
 import {getPrisma} from '~/lib/prisma.server'
-import {useLoaderData} from '@remix-run/react'
 import {FIELDS} from '~/lib/fields/field'
 import {Button} from '~/lib/components/button'
 import {pageTitle} from '~/lib/utils/page-title'
@@ -87,7 +88,7 @@ export const action = async ({request, params}: ActionFunctionArgs) => {
       field,
       id,
       unique
-    }): Promise<{error: string} | boolean> => {
+    }): Promise<{error: string; field: string} | boolean> => {
       const entryValue = await prisma.value.findFirst({
         where: {entryId: params.entry!, fieldId}
       })
@@ -99,12 +100,25 @@ export const action = async ({request, params}: ActionFunctionArgs) => {
       )
 
       switch (unique) {
+        case 1:
+          const [withinAssetCount] = await prisma.$queryRawTyped(
+            getUniqueCountForAssetField(params.entry!, fieldId, value)
+          )
+          if (withinAssetCount['COUNT(*)'] > 0) {
+            return {
+              error: `Value is not unique across all ${asset.name}`,
+              field: fieldId
+            }
+          }
         case 2:
           const withinFieldCount = await prisma.value.count({
             where: {fieldId, value}
           })
           if (withinFieldCount > 0) {
-            return {error: 'Value is not unique'}
+            return {
+              error: 'Value is not unique across all of the documentation',
+              field: fieldId
+            }
           }
         case 0:
         default:
@@ -139,6 +153,12 @@ export const action = async ({request, params}: ActionFunctionArgs) => {
     }
   )
 
+  const flags = results.filter(v => v !== true)
+
+  if (flags.length > 0) {
+    return json({errors: flags})
+  }
+
   return redirect(`/app/${params.assetslug}/${params.entry}`)
 }
 
@@ -148,14 +168,34 @@ export const meta: MetaFunction<typeof loader> = ({data}) => {
 
 const Asset = () => {
   const {entry, acls} = useLoaderData<typeof loader>()
+  const actionData = useActionData<typeof action>()
 
   const {asset} = entry
 
   const fieldValues = indexedBy('fieldId', entry.values)
+  const fields = indexedBy('fieldId', asset.assetFields)
 
   return (
     <div className="entry">
       <h2>Edit {asset.singular}</h2>
+      {actionData && actionData.errors ? (
+        <div className="bg-red-200 border-red-300 border p-2 mb-8">
+          <h3 className="text-lg">Save Errors</h3>
+          <ul>
+            {actionData.errors
+              .filter(v => v !== false)
+              .map(({field, error}) => {
+                return (
+                  <li key={field}>
+                    {fields[field].field.name}: {error}
+                  </li>
+                )
+              })}
+          </ul>
+        </div>
+      ) : (
+        ''
+      )}
       <form method="POST" encType="multipart/form-data">
         {asset.assetFields.map(({id, helperText, field}) => {
           const FieldComponent = (params: {
