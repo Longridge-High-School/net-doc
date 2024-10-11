@@ -19,3 +19,10 @@ another asset.
 
 Assets have an icon which is any emoji. Be aware that emoji does render
 differently on each OS, even within versions.
+
+## Fields
+
+Any field can be added to an asset. When adding a field you set the _Helper
+Text_ which is the text that will appear under the field in the editors. The
+order is a numerical order for the field in the forms and display. A field can
+be set to unique within the asset, or globally within the whole of Net-Doc.
