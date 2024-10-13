@@ -29,6 +29,14 @@ const Documents = () => {
     invariant(params)
 
     switch (id) {
+      case 'routes/app.documents.$document.attach':
+        return [
+          {
+            link: `/app/documents/${params.document}`,
+            label: 'Back to Document',
+            className: 'bg-warning'
+          }
+        ]
       case 'routes/app.documents._index':
         return [
           {
