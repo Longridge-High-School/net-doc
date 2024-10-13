@@ -6,8 +6,9 @@ import {
   redirect,
   unstable_parseMultipartFormData
 } from '@remix-run/node'
-import {useLoaderData} from '@remix-run/react'
-import {asyncForEach} from '@arcath/utils'
+import {useLoaderData, useActionData} from '@remix-run/react'
+import {asyncMap, indexedBy} from '@arcath/utils'
+import {getUniqueCountForAssetField} from '@prisma/client/sql'
 
 import {ensureUser} from '~/lib/utils/ensure-user'
 import {getPrisma} from '~/lib/prisma.server'
@@ -52,20 +53,67 @@ export const action = async ({request, params}: ActionFunctionArgs) => {
     data: {assetId: asset.id, aclId: asset.aclId}
   })
 
-  await asyncForEach(
+  const results = await asyncMap(
     asset.assetFields,
-    async ({fieldId, field, id}): Promise<void> => {
+    async ({
+      fieldId,
+      field,
+      id,
+      unique
+    }): Promise<{error: string; field: string} | boolean> => {
       const value = await FIELD_HANDLERS[field.type].valueSetter(
         formData,
         id,
         ''
       )
 
+      switch (unique) {
+        case 1: {
+          const [withinAssetCount] = await prisma.$queryRawTyped(
+            getUniqueCountForAssetField(params.entry!, fieldId, value)
+          )
+          if (withinAssetCount['COUNT(*)'] > 0) {
+            return {
+              error: `Value is not unique across all ${asset.name}`,
+              field: fieldId
+            }
+          }
+          break
+        }
+        case 2: {
+          const withinFieldCount = await prisma.value.count({
+            where: {fieldId, value}
+          })
+          if (withinFieldCount > 0) {
+            return {
+              error: 'Value is not unique across all of the documentation',
+              field: fieldId
+            }
+          }
+          break
+        }
+        case 0:
+        default:
+          break
+      }
+
       await prisma.value.create({
         data: {entryId: entry.id, fieldId, value, lastEditedById: user.id}
       })
+
+      return true
     }
   )
+
+  // If validation fails, need to delete the new entry.
+  const flags = results.filter(v => v !== true)
+
+  if (flags.length > 0) {
+    await prisma.value.deleteMany({where: {entryId: entry.id}})
+    await prisma.entry.delete({where: {id: entry.id}})
+
+    return json({errors: flags})
+  }
 
   return redirect(`/app/${params.assetslug}/${entry.id}`)
 }
@@ -81,9 +129,31 @@ export const meta: MetaFunction<typeof loader> = ({data}) => {
 const Asset = () => {
   const {asset} = useLoaderData<typeof loader>()
 
+  const actionData = useActionData<typeof action>()
+
+  const fields = indexedBy('fieldId', asset.assetFields)
+
   return (
     <div className="entry">
       <h2>Add {asset.singular}</h2>
+      {actionData && actionData.errors ? (
+        <div className="bg-red-200 border-red-300 border p-2 mb-8">
+          <h3 className="text-lg">Save Errors</h3>
+          <ul>
+            {actionData.errors
+              .filter(v => v !== false)
+              .map(({field, error}) => {
+                return (
+                  <li key={field}>
+                    {fields[field].field.name}: {error}
+                  </li>
+                )
+              })}
+          </ul>
+        </div>
+      ) : (
+        ''
+      )}
       <form method="POST" encType="multipart/form-data">
         {asset.assetFields.map(({id, helperText, field}) => {
           const FieldComponent = (params: {

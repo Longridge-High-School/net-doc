@@ -11,7 +11,13 @@ import {invariant} from '@arcath/utils'
 import {ensureUser} from '~/lib/utils/ensure-user'
 import {getPrisma} from '~/lib/prisma.server'
 import {Button} from '~/lib/components/button'
-import {Label, Input, HelperText, Checkbox} from '~/lib/components/input'
+import {
+  Label,
+  Input,
+  HelperText,
+  Checkbox,
+  Select
+} from '~/lib/components/input'
 import {pageTitle} from '~/lib/utils/page-title'
 
 export const loader = async ({request, params}: LoaderFunctionArgs) => {
@@ -39,19 +45,29 @@ export const action = async ({request, params}: ActionFunctionArgs) => {
   const order = formData.get('order') as string | undefined
   const displayOnTable = formData.get('displayontable') as null | 'on'
   const hidden = formData.get('hidden') as null | 'on'
+  const unique = formData.get('unique') as string | undefined
 
   invariant(helper)
   invariant(order)
+  invariant(unique)
 
-  await prisma.assetField.update({
+  const updatedAssetField = await prisma.assetField.update({
     where: {id: params.assetfield},
     data: {
       helperText: helper,
       order: parseInt(order),
       displayOnTable: displayOnTable === 'on',
-      hidden: hidden === 'on'
+      hidden: hidden === 'on',
+      unique: parseInt(unique)
     }
   })
+
+  if (parseInt(unique) === 2) {
+    await prisma.assetField.updateMany({
+      where: {fieldId: updatedAssetField.fieldId},
+      data: {unique: 2}
+    })
+  }
 
   return redirect(`/app/asset-manager/${params.asset}`)
 }
@@ -107,6 +123,21 @@ const AssetManagerAddFieldToAsset = () => {
           <Checkbox name="hidden" defaultChecked={assetField.hidden} />
           <HelperText>
             Hide this field from the display (not revisions) and forms.
+          </HelperText>
+        </Label>
+        <Label>
+          Unique
+          <Select name="unique" defaultValue={assetField.unique}>
+            <option value="0">Not Unique</option>
+            <option value="1">Unique within this Asset</option>
+            <option value="2">
+              Unique within all assets using this field.
+            </option>
+          </Select>
+          <HelperText>
+            Control the uniqueness of this field. If you choose &quot;Unique
+            within all assets using this field&quot; all other assets will be
+            updated to the same setting.
           </HelperText>
         </Label>
         <Button className="bg-success">Update Field</Button>
