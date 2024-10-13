@@ -303,7 +303,7 @@ jobs:
   docs:
     name: 📚 Docs
     needs: [prepare]
-    if: ${{ needs.prepare.outputs.docs == 'true' }}
+    if: ${{ startsWith(github.ref, 'refs/tags/v') }}
     runs-on: ubuntu-latest
     concurrency:
       group: ${{ github.workflow }}-${{ github.ref }}-docs
