@@ -42,13 +42,18 @@ export const action = async ({request, params}: ActionFunctionArgs) => {
     where: {assetId: params.asset!}
   })
 
+  const uniqueCount = await prisma.assetField.count({
+    where: {fieldId: params.field!, unique: 2}
+  })
+
   const newField = await prisma.assetField.create({
     data: {
       assetId: params.asset!,
       fieldId: params.field!,
       helperText: helper,
       order: parseInt(order),
-      displayOnTable: displayOnTable === 'on'
+      displayOnTable: displayOnTable === 'on',
+      unique: uniqueCount > 0 ? 2 : 0
     }
   })
 
