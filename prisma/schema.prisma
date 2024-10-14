@@ -130,9 +130,10 @@ model Session {
 }
 
 model Document {
-  id    String @id @default(uuid())
-  body  String
-  title String
+  id          String @id @default(uuid())
+  body        String
+  title       String
+  attachments String @default("[]")
 
   history DocumentHistory[]
 

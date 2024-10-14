@@ -8,6 +8,10 @@ import {MDXComponent} from '~/lib/mdx'
 import {pageTitle} from '~/lib/utils/page-title'
 import {formatAsDateTime} from '~/lib/utils/format'
 import {trackRecentItem} from '~/lib/utils/recent-item'
+import {LinkButton} from '~/lib/components/button'
+import {can} from '~/lib/rbac.server'
+
+import {type Attachment} from './app.documents.$document.attach'
 
 export const loader = async ({request, params}: LoaderFunctionArgs) => {
   const user = await ensureUser(request, 'document:view', {
@@ -27,7 +31,20 @@ export const loader = async ({request, params}: LoaderFunctionArgs) => {
 
   const code = await buildMDXBundle(document.body)
 
-  return json({user, document, code})
+  const canWrite = await can(user.role, 'document:write', {
+    user: {role: user.role, id: user.id},
+    documentId: params.document
+  })
+
+  const attachments = JSON.parse(document.attachments) as Array<Attachment>
+
+  return json({
+    user,
+    document,
+    code,
+    canWrite,
+    attachments: attachments.filter(v => v !== null)
+  })
 }
 
 export const meta: MetaFunction<typeof loader> = ({data}) => {
@@ -35,7 +52,7 @@ export const meta: MetaFunction<typeof loader> = ({data}) => {
 }
 
 const DocumentView = () => {
-  const {document, code} = useLoaderData<typeof loader>()
+  const {document, code, canWrite, attachments} = useLoaderData<typeof loader>()
 
   return (
     <div className="grid grid-cols-4 gap-4">
@@ -44,6 +61,33 @@ const DocumentView = () => {
         <MDXComponent code={code} />
       </div>
       <div>
+        <h3 className="border-b border-b-gray-200 text-xl font-light mb-4">
+          Attachments
+        </h3>
+        <div className="flex flex-wrap gap-2">
+          {attachments.map(({uri, originalFileName}) => {
+            return (
+              <a
+                key={uri}
+                href={uri}
+                download={originalFileName}
+                className="bg-gray-300 p-2 rounded inline-block"
+              >
+                💾 {originalFileName}
+              </a>
+            )
+          })}
+        </div>
+        {canWrite ? (
+          <LinkButton
+            to={`/app/documents/${document.id}/attach`}
+            className="bg-info text-sm mt-4"
+          >
+            Manage Attachments
+          </LinkButton>
+        ) : (
+          ''
+        )}
         <h3 className="border-b border-b-gray-200 text-xl font-light mb-4">
           Revision History
         </h3>
