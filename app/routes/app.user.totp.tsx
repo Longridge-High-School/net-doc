@@ -8,6 +8,7 @@ import {useLoaderData, useActionData} from '@remix-run/react'
 import {invariant, omit} from '@arcath/utils'
 import {generateTOTP, getTOTPAuthUri, verifyTOTP} from '@epic-web/totp'
 import {toDataURL} from 'qrcode'
+import {useState} from 'react'
 
 import {ensureUser} from '~/lib/utils/ensure-user'
 import {getPrisma} from '~/lib/prisma.server'
@@ -90,6 +91,7 @@ export const meta: MetaFunction = () => {
 const UserTOTP = () => {
   const {state, dataURL, genTotp} = useLoaderData<typeof loader>()
   const data = useActionData<typeof action>()
+  const [open, setOpen] = useState(false)
 
   if (data) {
     if (data.result) {
@@ -100,7 +102,47 @@ const UserTOTP = () => {
   }
 
   if (state) {
-    return <div className="entry">2FA is Setup, Remove?</div>
+    return (
+      <div className="entry">
+        <h2>2FA</h2>
+        <p>2FA is Setup on your account.</p>
+        {open ? (
+          <div>
+            <img src={dataURL} alt="2FA QR Code" />
+            <form method="POST">
+              <Label>
+                Verification Code
+                <Input name="verify" />
+              </Label>
+              <input
+                type="hidden"
+                name="totp"
+                value={JSON.stringify(genTotp)}
+              />
+              <Button className="bg-success">Replace 2FA</Button>
+              <Button
+                onClick={() => setOpen(false)}
+                type="button"
+                className="bg-danger"
+              >
+                Cancel
+              </Button>
+            </form>
+          </div>
+        ) : (
+          <div>
+            <Button
+              onClick={() => {
+                setOpen(true)
+              }}
+              className="bg-info"
+            >
+              Replace Authenticator
+            </Button>
+          </div>
+        )}
+      </div>
+    )
   }
 
   return (
