@@ -2,23 +2,17 @@ import {
   type LoaderFunctionArgs,
   type ActionFunctionArgs,
   type MetaFunction,
-  json,
-  redirect,
-  unstable_parseMultipartFormData
+  json
 } from '@remix-run/node'
-import {useLoaderData, useActionData} from '@remix-run/react'
-import {asyncForEach, asyncMap, indexedBy} from '@arcath/utils'
-import {getUniqueCountForAssetField} from '@prisma/client/sql'
-import {useState} from 'react'
+import {useLoaderData} from '@remix-run/react'
+import {asyncForEach, asyncMap} from '@arcath/utils'
+import {useState, useEffect, useReducer} from 'react'
 import Papa from 'papaparse'
 
 import {ensureUser} from '~/lib/utils/ensure-user'
 import {getPrisma} from '~/lib/prisma.server'
-import {FIELDS} from '~/lib/fields/field'
 import {Button} from '~/lib/components/button'
 import {pageTitle} from '~/lib/utils/page-title'
-import {getUploadHandler} from '~/lib/utils/upload-handler.server'
-import {FIELD_HANDLERS} from '~/lib/fields/field.server'
 import {Input, Select} from '~/lib/components/input'
 
 export const loader = async ({request, params}: LoaderFunctionArgs) => {
@@ -87,7 +81,7 @@ export const action = async ({request, params}: ActionFunctionArgs) => {
 export const meta: MetaFunction<typeof loader> = ({data}) => {
   return [
     {
-      title: pageTitle(data!.asset.singular, 'New')
+      title: pageTitle(data!.asset.singular, 'Import')
     }
   ]
 }
@@ -95,14 +89,42 @@ export const meta: MetaFunction<typeof loader> = ({data}) => {
 const AssetImport = () => {
   const [stage, setStage] = useState(1)
   const [csvFile, setCsvFile] = useState<undefined | File>(undefined)
-  const [csvDetails, setCsvDetails] = useState<Array<any>>([])
+  const [csvDetails, setCsvDetails] = useState<
+    Papa.ParseResult<string[]>['data']
+  >([])
   const [columnMappings, setColumnMappings] = useState<string[]>([])
-  const [importedCount, setImportedCount] = useState(0)
+  const [importedCount, dispatchImportedCount] = useReducer(
+    (state: {count: number}, action: {}) => {
+      const newState = {...state}
+
+      newState.count += 1
+
+      return newState
+    },
+    {count: 0}
+  )
   const {asset} = useLoaderData<typeof loader>()
 
-  //const actionData = useActionData<typeof action>()
+  useEffect(() => {
+    if (stage === 3) {
+      asyncForEach(csvDetails, async (v, i) => {
+        if (i === 0) {
+          return
+        }
 
-  //const fields = indexedBy('fieldId', asset.assetFields)
+        if (v.length === 1 && v[0] === '') {
+          return
+        }
+
+        await fetch(`/app/${asset.slug}/import`, {
+          method: 'POST',
+          body: JSON.stringify({record: v, columnMappings})
+        })
+
+        dispatchImportedCount({})
+      })
+    }
+  }, [stage, csvDetails])
 
   switch (stage) {
     default:
@@ -121,7 +143,7 @@ const AssetImport = () => {
               className="bg-success"
               disabled={typeof csvFile === 'undefined'}
               onClick={() => {
-                Papa.parse(csvFile!, {
+                Papa.parse<string[]>(csvFile!, {
                   complete: results => {
                     setCsvDetails(results.data)
                     setStage(2)
@@ -179,21 +201,9 @@ const AssetImport = () => {
               </tbody>
             </table>
             <Button
+              className="bg-success"
               onClick={() => {
                 setStage(3)
-                setImportedCount(0)
-                asyncForEach(csvDetails, async (v, i) => {
-                  if (i === 0) {
-                    return
-                  }
-
-                  await fetch(`/app/${asset.slug}/import`, {
-                    method: 'POST',
-                    body: JSON.stringify({record: v, columnMappings})
-                  })
-
-                  setImportedCount(importedCount + 1)
-                })
               }}
             >
               Import
@@ -212,7 +222,8 @@ const AssetImport = () => {
           <div className="entry col-span-2">Importing...</div>
           <div className="entry">
             <h2>Imported</h2>
-            {importedCount} / {csvDetails.length - 1}
+            {importedCount.count} /{' '}
+            {csvDetails.filter(v => v.length !== 1 && v[0] !== '').length - 1}
           </div>
         </div>
       )
