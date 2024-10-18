@@ -94,7 +94,7 @@ const AssetImport = () => {
   >([])
   const [columnMappings, setColumnMappings] = useState<string[]>([])
   const [importedCount, dispatchImportedCount] = useReducer(
-    (state: {count: number}, action: {}) => {
+    (state: {count: number}) => {
       const newState = {...state}
 
       newState.count += 1
@@ -121,7 +121,7 @@ const AssetImport = () => {
           body: JSON.stringify({record: v, columnMappings})
         })
 
-        dispatchImportedCount({})
+        dispatchImportedCount()
       })
     }
   }, [stage, csvDetails])
