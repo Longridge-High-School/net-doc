@@ -26,3 +26,8 @@ Any field can be added to an asset. When adding a field you set the _Helper
 Text_ which is the text that will appear under the field in the editors. The
 order is a numerical order for the field in the forms and display. A field can
 be set to unique within the asset, or globally within the whole of Net-Doc.
+
+## Importing a CSV
+
+On the asset list click _Import (Plural)_. Select your CSV and then match the
+columns of the CSV to the fields in the asset.
