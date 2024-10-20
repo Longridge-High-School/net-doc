@@ -46,6 +46,11 @@ const Asset = () => {
             link: `/app/${asset.slug}/add`,
             label: `Add ${asset.singular}`,
             className: 'bg-success'
+          },
+          {
+            link: `/app/${asset.slug}/import`,
+            label: `Import ${asset.plural}`,
+            className: 'bg-info'
           }
         ]
       case 'routes/app.$assetslug.$entry._index':
