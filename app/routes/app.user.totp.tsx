@@ -38,8 +38,9 @@ export const loader = async ({request}: LoaderFunctionArgs) => {
   const genTotp = await generateTOTP()
   const otpUri = getTOTPAuthUri({
     ...genTotp,
+    algorithm: 'SHA1',
     accountName: totp.email,
-    issuer: 'Net Doc'
+    issuer: 'Net-Doc'
   })
   const dataURL = await toDataURL(otpUri)
 
