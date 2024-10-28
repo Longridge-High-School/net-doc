@@ -51,8 +51,8 @@ export const action = async ({request, params}: ActionFunctionArgs) => {
   return redirect(`/app/process/${process.id}`)
 }
 
-export const meta: MetaFunction<typeof loader> = ({data}) => {
-  return [{title: pageTitle('Process', data!.process.title, 'Edit')}]
+export const meta: MetaFunction<typeof loader> = ({data, matches}) => {
+  return [{title: pageTitle(matches, 'Process', data!.process.title, 'Edit')}]
 }
 
 const ProcessEdit = () => {

@@ -19,8 +19,6 @@ import {createTimings} from '~/lib/utils/timings.server'
 
 import {getSession, commitSession} from '~/lib/cookies'
 
-import {pageTitle} from '~/lib/utils/page-title'
-
 export const action = async ({request}: ActionFunctionArgs) => {
   const {time, getHeader, headers} = createTimings()
 
@@ -123,7 +121,7 @@ export const action = async ({request}: ActionFunctionArgs) => {
 }
 
 export const meta: MetaFunction = () => {
-  return [{title: pageTitle('Login')}]
+  return [{title: 'Login'}]
 }
 
 export const headers = ({actionHeaders}: HeadersArgs) => {

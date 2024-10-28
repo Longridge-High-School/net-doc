@@ -89,8 +89,8 @@ export const action = async ({request, params}: ActionFunctionArgs) => {
   return redirect(`/app/passwords/${updatedPassword.id}`)
 }
 
-export const meta: MetaFunction<typeof loader> = ({data}) => {
-  return [{title: pageTitle('Password', data!.password.title, 'Edit')}]
+export const meta: MetaFunction<typeof loader> = ({data, matches}) => {
+  return [{title: pageTitle(matches, 'Password', data!.password.title, 'Edit')}]
 }
 
 const PasswordEdit = () => {

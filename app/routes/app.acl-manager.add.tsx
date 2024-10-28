@@ -37,8 +37,8 @@ export const action = async ({request}: ActionFunctionArgs) => {
   return redirect(`/app/acl-manager/${acl.id}`)
 }
 
-export const meta: MetaFunction = () => {
-  return [{title: pageTitle('ACL Manager', 'Add')}]
+export const meta: MetaFunction = ({matches}) => {
+  return [{title: pageTitle(matches, 'ACL Manager', 'Add')}]
 }
 
 const ACLManagerAdd = () => {

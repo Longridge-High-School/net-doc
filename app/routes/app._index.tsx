@@ -46,8 +46,8 @@ export const loader = async ({request, params}: LoaderFunctionArgs) => {
   return json({user, boxes: boxesWithData}, {headers: headers()})
 }
 
-export const meta: MetaFunction = () => {
-  return [{title: pageTitle('Dashboard')}]
+export const meta: MetaFunction = ({matches}) => {
+  return [{title: pageTitle(matches, 'Dashboard')}]
 }
 
 export const headers = ({loaderHeaders}: HeadersArgs) => {

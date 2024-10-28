@@ -78,10 +78,10 @@ export const action = async ({request, params}: ActionFunctionArgs) => {
   return json({status: 200})
 }
 
-export const meta: MetaFunction<typeof loader> = ({data}) => {
+export const meta: MetaFunction<typeof loader> = ({matches, data}) => {
   return [
     {
-      title: pageTitle(data!.asset.singular, 'Import')
+      title: pageTitle(matches, data!.asset.singular, 'Import')
     }
   ]
 }

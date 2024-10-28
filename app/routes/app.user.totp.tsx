@@ -85,8 +85,8 @@ export const action = async ({request}: ActionFunctionArgs) => {
   return json({result})
 }
 
-export const meta: MetaFunction = () => {
-  return [{title: pageTitle('User', '2FA Setup')}]
+export const meta: MetaFunction = ({matches}) => {
+  return [{title: pageTitle(matches, 'User', '2FA Setup')}]
 }
 
 const UserTOTP = () => {

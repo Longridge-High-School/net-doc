@@ -27,8 +27,8 @@ export const loader = async ({request, params}: LoaderFunctionArgs) => {
   return json({user, process, code})
 }
 
-export const meta: MetaFunction<typeof loader> = ({data}) => {
-  return [{title: pageTitle('Process', data!.process.title)}]
+export const meta: MetaFunction<typeof loader> = ({data, matches}) => {
+  return [{title: pageTitle(matches, 'Process', data!.process.title)}]
 }
 
 const ProcessView = () => {

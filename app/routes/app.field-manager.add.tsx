@@ -46,8 +46,8 @@ export const action = async ({request}: ActionFunctionArgs) => {
   return redirect(`/app/field-manager/${field.id}`)
 }
 
-export const meta: MetaFunction = () => {
-  return [{title: pageTitle('Field Manager', 'Add')}]
+export const meta: MetaFunction = ({matches}) => {
+  return [{title: pageTitle(matches, 'Field Manager', 'Add')}]
 }
 
 const FieldManagerAdd = () => {

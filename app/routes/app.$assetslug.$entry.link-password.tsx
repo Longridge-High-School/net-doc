@@ -76,10 +76,10 @@ export const action = async ({request, params}: ActionFunctionArgs) => {
   return redirect(`/app/${params.assetslug}/${params.entry}`)
 }
 
-export const meta: MetaFunction<typeof loader> = ({data}) => {
+export const meta: MetaFunction<typeof loader> = ({matches, data}) => {
   return [
     {
-      title: pageTitle(data!.entry.asset.singular, 'Link a Password')
+      title: pageTitle(matches, data!.entry.asset.singular, 'Link a Password')
     }
   ]
 }

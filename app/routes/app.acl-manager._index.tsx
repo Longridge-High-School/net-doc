@@ -15,10 +15,10 @@ export const loader = async ({request}: LoaderFunctionArgs) => {
   return json({user, acls})
 }
 
-export const meta: MetaFunction = () => {
+export const meta: MetaFunction = ({matches}) => {
   return [
     {
-      title: pageTitle('AACL Manager')
+      title: pageTitle(matches, 'ACL Manager')
     }
   ]
 }

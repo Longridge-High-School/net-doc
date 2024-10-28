@@ -83,8 +83,8 @@ export const action = async ({request}: ActionFunctionArgs) => {
   return redirect('/app')
 }
 
-export const meta: MetaFunction = () => {
-  return [{title: pageTitle('Dashboard')}]
+export const meta: MetaFunction = ({matches}) => {
+  return [{title: pageTitle(matches, 'Dashboard')}]
 }
 
 export const headers = ({loaderHeaders}: HeadersArgs) => {

@@ -19,8 +19,8 @@ export const loader = async ({request}: LoaderFunctionArgs) => {
   return json({user, processes})
 }
 
-export const meta: MetaFunction = () => {
-  return [{title: pageTitle('Processes')}]
+export const meta: MetaFunction = ({matches}) => {
+  return [{title: pageTitle(matches, 'Processes')}]
 }
 
 const ProcessList = () => {

@@ -34,8 +34,8 @@ export const loader = async ({request}: LoaderFunctionArgs) => {
   return json({user, sessions, currentSession: sessionUser.sessionId})
 }
 
-export const meta: MetaFunction = () => {
-  return [{title: pageTitle('User')}]
+export const meta: MetaFunction = ({matches}) => {
+  return [{title: pageTitle(matches, 'User')}]
 }
 
 export const action: ActionFunction = async ({request}) => {

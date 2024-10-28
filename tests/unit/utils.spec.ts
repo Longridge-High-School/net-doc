@@ -1,11 +1,20 @@
 import {describe, test, expect} from 'vitest'
 
+import {getPrisma} from '~/lib/prisma.server'
+
 import {
   createTimings,
   combineServerTimingHeaders
 } from '~/lib/utils/timings.server'
 
 import {pageTitle} from '~/lib/utils/page-title'
+
+import {
+  getSetting,
+  setSetting,
+  DEFAULT_SETTINGS,
+  getSettings
+} from '~/lib/settings.server'
 
 describe('Timing', () => {
   test('should create timings', async () => {
@@ -51,6 +60,49 @@ describe('Timing', () => {
 
 describe('Page Title', () => {
   test('should generate a page title', () => {
-    expect(pageTitle('Test')).toBe('Net Doc / Test')
+    expect(
+      pageTitle(
+        [
+          {
+            pathname: '/app',
+            data: {
+              settings: {'site-name': 'Net Doc'}
+            },
+            id: '',
+            params: {},
+            meta: []
+          }
+        ],
+        'Test'
+      )
+    ).toBe('Net Doc / Test')
+  })
+})
+
+describe('Settings', () => {
+  test('should return a default, save a value and return the value', async () => {
+    const prisma = getPrisma()
+
+    await prisma.setting.deleteMany({where: {key: 'site-name'}})
+
+    const firstName = await getSetting('site-name')
+
+    expect(firstName).toBe(DEFAULT_SETTINGS['site-name'])
+
+    await setSetting('site-name', 'new net doc')
+
+    const secondName = await getSetting('site-name')
+
+    expect(secondName).toBe('new net doc')
+
+    await prisma.setting.delete({where: {key: 'site-name'}})
+  })
+
+  test('should get all settings', async () => {
+    const settings = await getSettings(['site-name', 'site-color'])
+
+    expect(Object.keys(settings)).toHaveLength(2)
+    expect(settings['site-name']).toBe(DEFAULT_SETTINGS['site-name'])
+    expect(settings['site-color']).toBe(DEFAULT_SETTINGS['site-color'])
   })
 })

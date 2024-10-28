@@ -71,8 +71,17 @@ export const action = async ({request, params}: ActionFunctionArgs) => {
   return json({error: 'Name does not match'})
 }
 
-export const meta: MetaFunction<typeof loader> = ({data}) => {
-  return [{title: pageTitle(data!.entry.asset.singular, data!.name, 'Delete')}]
+export const meta: MetaFunction<typeof loader> = ({matches, data}) => {
+  return [
+    {
+      title: pageTitle(
+        matches,
+        data!.entry.asset.singular,
+        data!.name,
+        'Delete'
+      )
+    }
+  ]
 }
 
 const AssetEntryDelete = () => {

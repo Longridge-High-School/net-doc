@@ -1,8 +1,9 @@
-import {type LoaderFunctionArgs, json} from '@remix-run/node'
+import {type LoaderFunctionArgs, type MetaFunction, json} from '@remix-run/node'
 import {Outlet, useLoaderData, Link} from '@remix-run/react'
 
 import {ensureUser} from '~/lib/utils/ensure-user'
 import {getPrisma} from '~/lib/prisma.server'
+import {pageTitle} from '~/lib/utils/page-title'
 
 export const loader = async ({request, params}: LoaderFunctionArgs) => {
   const user = await ensureUser(request, 'asset-manager:edit', {
@@ -27,6 +28,14 @@ export const loader = async ({request, params}: LoaderFunctionArgs) => {
   })
 
   return json({user, asset, fields})
+}
+
+export const meta: MetaFunction<typeof loader> = ({matches, data}) => {
+  return [
+    {
+      title: pageTitle(matches, 'Asset Manager', data!.asset.name)
+    }
+  ]
 }
 
 const AssetManagerAsset = () => {

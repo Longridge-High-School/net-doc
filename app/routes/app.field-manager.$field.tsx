@@ -57,8 +57,8 @@ export const action = async ({request, params}: ActionFunctionArgs) => {
   return redirect(`/app/field-manager/${field.id}`)
 }
 
-export const meta: MetaFunction<typeof loader> = ({data}) => {
-  return [{title: pageTitle('Field Manager', data!.field.name)}]
+export const meta: MetaFunction<typeof loader> = ({data, matches}) => {
+  return [{title: pageTitle(matches, 'Field Manager', data!.field.name)}]
 }
 
 const FieldManagerField = () => {

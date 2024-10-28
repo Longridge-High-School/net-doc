@@ -72,10 +72,11 @@ export const action = async ({request, params}: ActionFunctionArgs) => {
   return redirect(`/app/asset-manager/${params.asset}`)
 }
 
-export const meta: MetaFunction<typeof loader> = ({data}) => {
+export const meta: MetaFunction<typeof loader> = ({matches, data}) => {
   return [
     {
       title: pageTitle(
+        matches,
         'Asset Manager',
         'Edit Field',
         data!.assetField.field.name

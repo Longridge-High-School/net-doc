@@ -15,10 +15,10 @@ export const loader = async ({request}: LoaderFunctionArgs) => {
   return json({user, assets})
 }
 
-export const meta: MetaFunction = () => {
+export const meta: MetaFunction = ({matches}) => {
   return [
     {
-      title: pageTitle('Asset Manager')
+      title: pageTitle(matches, 'Asset Manager')
     }
   ]
 }

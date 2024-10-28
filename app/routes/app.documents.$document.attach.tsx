@@ -14,10 +14,11 @@ import {ensureUser} from '~/lib/utils/ensure-user'
 import {getPrisma} from '~/lib/prisma.server'
 import {pageTitle} from '~/lib/utils/page-title'
 import {Input} from '~/lib/components/input'
-import {Button} from '~/lib/components/button'
-import {getUploadMetaData} from '~/lib/utils/upload-handler.server'
-import {getUploadHandler} from '~/lib/utils/upload-handler.server'
-import {AButton} from '~/lib/components/button'
+import {Button, AButton} from '~/lib/components/button'
+import {
+  getUploadMetaData,
+  getUploadHandler
+} from '~/lib/utils/upload-handler.server'
 
 export type Attachment = {
   uri: string
@@ -59,8 +60,10 @@ export const loader = async ({request, params}: LoaderFunctionArgs) => {
   })
 }
 
-export const meta: MetaFunction<typeof loader> = ({data}) => {
-  return [{title: pageTitle('Document', data!.document.title, 'Attachments')}]
+export const meta: MetaFunction<typeof loader> = ({data, matches}) => {
+  return [
+    {title: pageTitle(matches, 'Document', data!.document.title, 'Attachments')}
+  ]
 }
 
 export const action = async ({request, params}: ActionFunctionArgs) => {

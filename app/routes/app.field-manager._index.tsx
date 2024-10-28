@@ -15,8 +15,8 @@ export const loader = async ({request}: LoaderFunctionArgs) => {
   return json({user, fields})
 }
 
-export const meta: MetaFunction = () => {
-  return [{title: pageTitle('Field Manager')}]
+export const meta: MetaFunction = ({matches}) => {
+  return [{title: pageTitle(matches, 'Field Manager')}]
 }
 
 const FieldManagerList = () => {

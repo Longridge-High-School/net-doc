@@ -79,8 +79,8 @@ export const loader = async ({request, params}: LoaderFunctionArgs) => {
   return json({user, entry, name, values, revisions, pastValues})
 }
 
-export const meta: MetaFunction<typeof loader> = ({data}) => {
-  return [{title: pageTitle(data!.entry.asset.singular, data!.name)}]
+export const meta: MetaFunction<typeof loader> = ({matches, data}) => {
+  return [{title: pageTitle(matches, data!.entry.asset.singular, data!.name)}]
 }
 
 const AssetEntry = () => {
