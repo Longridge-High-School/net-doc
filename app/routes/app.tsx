@@ -47,7 +47,7 @@ export const loader = async ({request}: LoaderFunctionArgs) => {
     })
   ])
 
-  const settings = await getSettings(['site-name', 'site-color'])
+  const settings = await getSettings(['site-name', 'site-color', 'site-icon'])
 
   return json({user, assets, cans, settings})
 }
@@ -158,6 +158,11 @@ const Dashboard = () => {
           color: contrastColor(settings['site-color'].replace('#', ''))
         }}
       >
+        <img
+          src={settings['site-icon']}
+          alt={settings['site-name']}
+          className="mb-8 mx-auto w-24 h-24"
+        />
         <h1 className="text-center text-4xl mb-8">{settings['site-name']}</h1>
         <h2 className="text-xl ml-4 mb-4">Core</h2>
         <div className="pl-8 mb-2 flex flex-col gap-2 mt-2">

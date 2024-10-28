@@ -1,11 +1,12 @@
 import {asyncForEach} from '@arcath/utils'
 import {getPrisma} from './prisma.server'
 
-type SettingKey = 'site-name' | 'site-color'
+type SettingKey = 'site-name' | 'site-color' | 'site-icon'
 
 export const DEFAULT_SETTINGS: {[setting in SettingKey]: string} = {
   'site-name': 'Net Doc',
-  'site-color': '#d1d5db'
+  'site-color': '#d1d5db',
+  'site-icon': '/icon.png'
 }
 
 export const getSetting = async (setting: SettingKey) => {
