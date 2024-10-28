@@ -4,6 +4,8 @@
       link: /docs/getting-started/install
     - name: Initial Setup
       link: /docs/getting-started/initial-setup
+    - name: System Settings
+      link: /docs/getting-started/system-settings
 - label: Concepts
   items:
     - name: Assets
