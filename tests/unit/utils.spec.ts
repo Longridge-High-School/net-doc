@@ -60,7 +60,22 @@ describe('Timing', () => {
 
 describe('Page Title', () => {
   test('should generate a page title', () => {
-    expect(pageTitle('Test')).toBe('Net Doc / Test')
+    expect(
+      pageTitle(
+        [
+          {
+            pathname: '/app',
+            data: {
+              settings: {'site-name': 'Net Doc'}
+            },
+            id: '',
+            params: {},
+            meta: []
+          }
+        ],
+        'Test'
+      )
+    ).toBe('Net Doc / Test')
   })
 })
 

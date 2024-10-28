@@ -82,7 +82,7 @@ const System = () => {
             <Label>
               Site Name
               <Input name="site-name" defaultValue={settings['site-name']} />
-              <HelperText>This defaults to "Net Doc"</HelperText>
+              <HelperText>This defaults to &quot;Net Doc&quot;</HelperText>
             </Label>
             <Label>
               Site Color
