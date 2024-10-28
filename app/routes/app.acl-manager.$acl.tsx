@@ -81,10 +81,10 @@ export const action: ActionFunction = async ({request, params}) => {
   return redirect(`/app/acl-manager/${params.acl}`)
 }
 
-export const meta: MetaFunction = () => {
+export const meta: MetaFunction = ({matches}) => {
   return [
     {
-      title: pageTitle('ACL Manager')
+      title: pageTitle(matches, 'ACL Manager')
     }
   ]
 }

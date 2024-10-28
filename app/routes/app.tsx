@@ -19,6 +19,8 @@ import {getPrisma} from '~/lib/prisma.server'
 import {ensureUser} from '~/lib/utils/ensure-user'
 import {canList} from '~/lib/rbac.server'
 import {canFromList} from '~/lib/rbac'
+import {getSettings} from '~/lib/settings.server'
+import {contrastColor} from '~/lib/utils/contrast-color'
 
 export const loader = async ({request}: LoaderFunctionArgs) => {
   const user = await ensureUser(request, 'app', {})
@@ -45,7 +47,9 @@ export const loader = async ({request}: LoaderFunctionArgs) => {
     })
   ])
 
-  return json({user, assets, cans})
+  const settings = await getSettings(['site-name', 'site-color'])
+
+  return json({user, assets, cans, settings})
 }
 
 export type AppLoader = {user: {name: string; id: string}}
@@ -130,7 +134,7 @@ const SearchModal = ({close}: {close: () => void}) => {
 }
 
 const Dashboard = () => {
-  const {assets, user, cans} = useLoaderData<typeof loader>()
+  const {assets, user, cans, settings} = useLoaderData<typeof loader>()
   const [searchModalOpen, setSearchModelOpen] = useState(false)
   useHotkeys('ctrl+k', e => {
     e.preventDefault()
@@ -147,14 +151,22 @@ const Dashboard = () => {
       ) : (
         ''
       )}
-      <nav className="bg-gray-300 shadow-xl pt-8 text-[#444]">
-        <h1 className="text-center text-4xl mb-8">Net Doc</h1>
+      <nav
+        className="shadow-xl pt-8 text-[#444]"
+        style={{
+          backgroundColor: settings['site-color'],
+          color: contrastColor(settings['site-color'].replace('#', ''))
+        }}
+      >
+        <h1 className="text-center text-4xl mb-8">{settings['site-name']}</h1>
         <h2 className="text-xl ml-4 mb-4">Core</h2>
         <div className="pl-8 mb-2 flex flex-col gap-2 mt-2">
           <Link to="/app">📜 Dashboard</Link>
           <Link to="/app/search">
             🔎 Search{' '}
-            <span className="bg-gray-200 p-1 rounded text-xs">Ctrl + K</span>
+            <span className="bg-gray-200 p-1 rounded text-xs text-[#444]">
+              Ctrl + K
+            </span>
           </Link>
           <Link to="/app/documents">📰 Documents</Link>
           <Link to="/app/passwords">🔐 Passwords</Link>

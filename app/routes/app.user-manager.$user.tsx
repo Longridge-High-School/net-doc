@@ -59,8 +59,8 @@ export const action = async ({request, params}: ActionFunctionArgs) => {
   return redirect(`/app/user-manager/${user.id}`)
 }
 
-export const meta: MetaFunction<typeof loader> = ({data}) => {
-  return [{title: pageTitle('User Manager', data!.user.name)}]
+export const meta: MetaFunction<typeof loader> = ({data, matches}) => {
+  return [{title: pageTitle(matches, 'User Manager', data!.user.name)}]
 }
 
 const UserManagerUser = () => {

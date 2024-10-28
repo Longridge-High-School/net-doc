@@ -18,8 +18,8 @@ export const loader = async ({request}: LoaderFunctionArgs) => {
   return json({user, users})
 }
 
-export const meta: MetaFunction = () => {
-  return [{title: pageTitle('User Manager')}]
+export const meta: MetaFunction = ({matches}) => {
+  return [{title: pageTitle(matches, 'User Manager')}]
 }
 
 const UserManagerList = () => {

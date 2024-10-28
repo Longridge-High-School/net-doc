@@ -48,8 +48,8 @@ export const action = async ({request, params}: ActionFunctionArgs) => {
   return redirect(`/app/user-manager/${user.id}`)
 }
 
-export const meta: MetaFunction = () => {
-  return [{title: pageTitle('User Manager', 'Add')}]
+export const meta: MetaFunction = ({matches}) => {
+  return [{title: pageTitle(matches, 'User Manager', 'Add')}]
 }
 
 const UserManagerAdd = () => {

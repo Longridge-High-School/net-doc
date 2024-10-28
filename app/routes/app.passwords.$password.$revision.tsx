@@ -46,8 +46,8 @@ export const loader = async ({request, params}: LoaderFunctionArgs) => {
   })
 }
 
-export const meta: MetaFunction<typeof loader> = ({data}) => {
-  return [{title: pageTitle('Password', data!.revision.previousTitle)}]
+export const meta: MetaFunction<typeof loader> = ({matches, data}) => {
+  return [{title: pageTitle(matches, 'Password', data!.revision.previousTitle)}]
 }
 
 const AssetManagerAsset = () => {

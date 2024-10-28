@@ -56,8 +56,8 @@ export const action = async ({request}: ActionFunctionArgs) => {
   return json({results, query})
 }
 
-export const meta: MetaFunction = () => {
-  return [{title: pageTitle('Search')}]
+export const meta: MetaFunction = ({matches}) => {
+  return [{title: pageTitle(matches, 'Search')}]
 }
 
 const Search = () => {

@@ -59,8 +59,10 @@ export const loader = async ({request, params}: LoaderFunctionArgs) => {
   })
 }
 
-export const meta: MetaFunction<typeof loader> = ({data}) => {
-  return [{title: pageTitle('Document', data!.document.title, 'Attachments')}]
+export const meta: MetaFunction<typeof loader> = ({data, matches}) => {
+  return [
+    {title: pageTitle(matches, 'Document', data!.document.title, 'Attachments')}
+  ]
 }
 
 export const action = async ({request, params}: ActionFunctionArgs) => {

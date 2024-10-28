@@ -55,8 +55,8 @@ export const action = async ({request}: ActionFunctionArgs) => {
   return redirect(`/app/documents/${document.id}`)
 }
 
-export const meta: MetaFunction = () => {
-  return [{title: pageTitle('Documents', 'Add')}]
+export const meta: MetaFunction = ({matches}) => {
+  return [{title: pageTitle(matches, 'Documents', 'Add')}]
 }
 
 const DocumentAdd = () => {

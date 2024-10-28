@@ -66,8 +66,8 @@ export const action = async ({request}: ActionFunctionArgs) => {
   return redirect(`/app/passwords/${newPassword.id}`)
 }
 
-export const meta: MetaFunction = () => {
-  return [{title: pageTitle('Passwords', 'Add')}]
+export const meta: MetaFunction = ({matches}) => {
+  return [{title: pageTitle(matches, 'Passwords', 'Add')}]
 }
 
 const PasswordAdd = () => {

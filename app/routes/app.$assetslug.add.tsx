@@ -118,10 +118,10 @@ export const action = async ({request, params}: ActionFunctionArgs) => {
   return redirect(`/app/${params.assetslug}/${entry.id}`)
 }
 
-export const meta: MetaFunction<typeof loader> = ({data}) => {
+export const meta: MetaFunction<typeof loader> = ({matches, data}) => {
   return [
     {
-      title: pageTitle(data!.asset.singular, 'New')
+      title: pageTitle(matches, data!.asset.singular, 'New')
     }
   ]
 }

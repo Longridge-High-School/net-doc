@@ -50,8 +50,8 @@ export const action = async ({request}: ActionFunctionArgs) => {
   return redirect(`/app/asset-manager/${asset.id}`)
 }
 
-export const meta: MetaFunction = () => {
-  return [{title: pageTitle('Asset Manager', 'Add')}]
+export const meta: MetaFunction = ({matches}) => {
+  return [{title: pageTitle(matches, 'Asset Manager', 'Add')}]
 }
 
 const AssetManagerAdd = () => {

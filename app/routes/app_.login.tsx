@@ -123,7 +123,7 @@ export const action = async ({request}: ActionFunctionArgs) => {
 }
 
 export const meta: MetaFunction = () => {
-  return [{title: pageTitle('Login')}]
+  return [{title: 'Login'}]
 }
 
 export const headers = ({actionHeaders}: HeadersArgs) => {

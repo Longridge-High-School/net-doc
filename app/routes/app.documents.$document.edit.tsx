@@ -74,8 +74,8 @@ export const action = async ({request, params}: ActionFunctionArgs) => {
   return redirect(`/app/documents/${updatedDocument.id}`)
 }
 
-export const meta: MetaFunction<typeof loader> = ({data}) => {
-  return [{title: pageTitle('Document', data!.document.title, 'Edit')}]
+export const meta: MetaFunction<typeof loader> = ({data, matches}) => {
+  return [{title: pageTitle(matches, 'Document', data!.document.title, 'Edit')}]
 }
 
 const DocumentEdit = () => {

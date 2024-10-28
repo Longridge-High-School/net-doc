@@ -32,8 +32,8 @@ export const loader = async ({request, params}: LoaderFunctionArgs) => {
   return json({user, document, code, title: revision.previousTitle})
 }
 
-export const meta: MetaFunction<typeof loader> = ({data}) => {
-  return [{title: pageTitle('Document', data!.document.title)}]
+export const meta: MetaFunction<typeof loader> = ({data, matches}) => {
+  return [{title: pageTitle(matches, 'Document', data!.document.title)}]
 }
 
 const DocumentViewRevision = () => {

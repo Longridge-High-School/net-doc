@@ -40,8 +40,8 @@ export const loader = async ({request, params}: LoaderFunctionArgs) => {
   return json({user, password, code})
 }
 
-export const meta: MetaFunction<typeof loader> = ({data}) => {
-  return [{title: pageTitle('Password', data!.password.title)}]
+export const meta: MetaFunction<typeof loader> = ({data, matches}) => {
+  return [{title: pageTitle(matches, 'Password', data!.password.title)}]
 }
 
 const AssetManagerAsset = () => {
