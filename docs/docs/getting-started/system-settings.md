@@ -12,7 +12,7 @@ Net-Doc.
 
 ### Site Name
 
-Used at teh top of the side bar and in the tab title.
+Used at the top of the side bar and in the tab title.
 
 ### Site Color
 
