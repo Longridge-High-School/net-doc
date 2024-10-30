@@ -121,6 +121,5 @@ main()
   .catch(async e => {
     console.error(e)
     await prisma.$disconnect()
-    // eslint-disable-next-line
     process.exit(1)
   })

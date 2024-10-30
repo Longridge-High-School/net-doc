@@ -117,8 +117,8 @@ const System = () => {
           </ul>
           <Button
             className="bg-success"
-            onClick={() => {
-              fetch('/api/backup')
+            onClick={async () => {
+              await fetch('/api/backup')
             }}
           >
             Backup Now

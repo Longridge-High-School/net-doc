@@ -96,7 +96,7 @@ export const createACL = async (name: string, definition: ACLDefinition) => {
 
   const acl = await prisma.aCL.create({data: {name}})
 
-  asyncForEach(keys(definition), async typeAndTarget => {
+  await asyncForEach(keys(definition), async typeAndTarget => {
     const [type, target] = (typeAndTarget as string).split('/')
 
     const {read, write, delete: del} = definition[typeAndTarget]

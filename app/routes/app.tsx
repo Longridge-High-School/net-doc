@@ -92,9 +92,9 @@ const SearchModal = ({close}: {close: () => void}) => {
     <div className="fixed bg-white border-gray-300 border shadow-xl p-4 top-64 w-[60em] left-[calc(50%-30rem)]">
       <h2 className="text-[#444] text-2xl">Search</h2>
       <form
-        onSubmit={e => {
+        onSubmit={async e => {
           e.preventDefault()
-          search.mutateAsync(searchTerm)
+          await search.mutateAsync(searchTerm)
         }}
       >
         <Label>

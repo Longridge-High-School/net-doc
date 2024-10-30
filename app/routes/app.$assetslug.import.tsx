@@ -122,9 +122,9 @@ const AssetImport = () => {
         })
 
         dispatchImportedCount()
-      })
+      }).catch(e => console.error(e))
     }
-  }, [stage, csvDetails])
+  }, [stage, csvDetails, asset.slug, columnMappings])
 
   switch (stage) {
     default:

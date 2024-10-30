@@ -22,7 +22,6 @@ export const AButton = (
 ) => {
   const className = `${ButtonClasses} inline-block ${props.className}`
 
-  // eslint-disable-next-line jsx-a11y/anchor-has-content
   return <a {...omit(props, ['className'])} className={className} />
 }
 

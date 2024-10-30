@@ -1,4 +1,4 @@
-import {FieldHandlers} from './field.server'
+import {type FieldHandlers} from './field.server'
 
 const metaSave: FieldHandlers['metaSave'] = formData => {
   return formData.get('meta') as string

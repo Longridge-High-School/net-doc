@@ -3,18 +3,18 @@ import {describe, test, expect} from 'vitest'
 import {getPrisma} from '~/lib/prisma.server'
 
 import {
-  createTimings,
-  combineServerTimingHeaders
-} from '~/lib/utils/timings.server'
-
-import {pageTitle} from '~/lib/utils/page-title'
-
-import {
   getSetting,
   setSetting,
   DEFAULT_SETTINGS,
   getSettings
 } from '~/lib/settings.server'
+
+import {pageTitle} from '~/lib/utils/page-title'
+
+import {
+  createTimings,
+  combineServerTimingHeaders
+} from '~/lib/utils/timings.server'
 
 describe('Timing', () => {
   test('should create timings', async () => {

@@ -1,5 +1,3 @@
-/* eslint-disable react/prop-types */
-
 import {omit} from '@arcath/utils'
 
 export const inputClasses =
@@ -43,7 +41,6 @@ export const Label = (
 ) => {
   const className = `mt-2 ${props.className}`
 
-  // eslint-disable-next-line jsx-a11y/label-has-associated-control
   return <label {...omit(props, ['className'])} className={className} />
 }
 

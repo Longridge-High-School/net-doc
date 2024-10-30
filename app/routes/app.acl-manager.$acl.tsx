@@ -2,7 +2,7 @@ import {
   type LoaderFunctionArgs,
   type MetaFunction,
   json,
-  ActionFunction,
+  type ActionFunction,
   redirect
 } from '@remix-run/node'
 import {useLoaderData} from '@remix-run/react'
@@ -47,7 +47,7 @@ export const action: ActionFunction = async ({request, params}) => {
     where: {aclId: params.acl}
   })
 
-  asyncForEach(aclEntries, async ({id}) => {
+  await asyncForEach(aclEntries, async ({id}) => {
     const read = formData.get(`${id}-read`) === 'on'
     const write = formData.get(`${id}-write`) === 'on'
     const del = formData.get(`${id}-delete`) === 'on'

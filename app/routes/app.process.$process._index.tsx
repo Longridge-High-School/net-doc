@@ -34,10 +34,10 @@ export const meta: MetaFunction<typeof loader> = ({data, matches}) => {
 const ProcessView = () => {
   const {process, code} = useLoaderData<typeof loader>()
 
-  const handleCheckbox: EventListener = ({target}) => {
+  const handleCheckbox: EventListener = async ({target}) => {
     const index = (target! as HTMLInputElement).dataset.index
 
-    fetch(`/api/process/${process.id}/toggle/${index}`).then(() => {
+    await fetch(`/api/process/${process.id}/toggle/${index}`).then(() => {
       location.reload()
     })
   }

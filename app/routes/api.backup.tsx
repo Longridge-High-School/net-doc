@@ -12,7 +12,7 @@ export const loader = async ({request}: LoaderFunctionArgs) => {
     ensureUser(request, 'system', {})
   )
 
-  addJob('createBackup', {})
+  await addJob('createBackup', {})
 
   return json({user}, {headers: headers()})
 }

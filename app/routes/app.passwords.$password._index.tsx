@@ -78,8 +78,8 @@ const AssetManagerAsset = () => {
             <span>
               {isPending ? '⌛' : data}{' '}
               <button
-                onClick={() => {
-                  navigator.clipboard.writeText(data)
+                onClick={async () => {
+                  await navigator.clipboard.writeText(data)
                   notify({
                     title: 'Copied',
                     message: 'Copied password to the clipboard',
@@ -92,9 +92,9 @@ const AssetManagerAsset = () => {
             </span>
           ) : (
             <button
-              onClick={() => {
+              onClick={async () => {
                 setPasswordOpen(true)
-                refetch()
+                await refetch()
               }}
             >
               🔒

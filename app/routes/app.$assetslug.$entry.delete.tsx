@@ -1,7 +1,7 @@
 import {
   type LoaderFunctionArgs,
   type ActionFunctionArgs,
-  MetaFunction,
+  type MetaFunction,
   json,
   redirect
 } from '@remix-run/node'

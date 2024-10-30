@@ -44,8 +44,8 @@ describe('RBAC', () => {
 
     await prisma.pin.delete({where: {id: newPin.id}})
 
-    reader.dispose()
-    readerTwo.dispose()
+    await reader.dispose()
+    await readerTwo.dispose()
   })
 
   test('should apply permissions to sessions', async () => {

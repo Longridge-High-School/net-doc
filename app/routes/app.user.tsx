@@ -2,7 +2,7 @@ import {
   type LoaderFunctionArgs,
   type MetaFunction,
   json,
-  ActionFunction
+  type ActionFunction
 } from '@remix-run/node'
 import {useLoaderData, Outlet, useActionData} from '@remix-run/react'
 import {useQueryClient} from '@tanstack/react-query'
