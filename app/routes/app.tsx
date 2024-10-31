@@ -122,7 +122,12 @@ const SearchModal = ({close}: {close: () => void}) => {
         {search.data
           ? search.data.map(({label, link}) => {
               return (
-                <Link key={link} to={link} className="bg-gray-300 p-2 rounded">
+                <Link
+                  key={link}
+                  to={link}
+                  className="bg-gray-300 p-2 rounded"
+                  onClick={close}
+                >
                   {label}
                 </Link>
               )
