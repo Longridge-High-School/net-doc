@@ -11,6 +11,7 @@ function prepare_database {
 
   npx prisma migrate deploy
   npx prisma generate --sql
+  npx prisma db seed
 }
 
 if [ "$1" = 'net-doc-remix' ]; then
