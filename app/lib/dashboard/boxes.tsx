@@ -8,8 +8,8 @@ import {recentItemsBox} from './recent-items'
 import {statsBox} from './stats'
 
 export type DashboardBoxFn<Data> = {
-  render: (data: Data, meta: string) => JSX.Element
-  metaComponent: (meta: string, id: string) => JSX.Element
+  render: (data: Data, meta: string) => React.ReactElement
+  metaComponent: (meta: string, id: string) => React.ReactElement
 }
 
 export const DashboardBox = ({

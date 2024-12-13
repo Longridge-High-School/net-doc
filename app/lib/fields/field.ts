@@ -1,3 +1,5 @@
+import {type ReactElement} from 'react'
+
 import {attachmentField} from './attachment'
 import {dateField} from './date'
 import {imageField} from './image'
@@ -24,7 +26,7 @@ export type Field = {
     helperText: string
     meta: string
     validation: {required: boolean}
-  }) => JSX.Element
+  }) => ReactElement
   viewComponent: ({
     value,
     title,
@@ -33,7 +35,7 @@ export type Field = {
     value: string
     title: string
     meta: string
-  }) => JSX.Element
+  }) => ReactElement
   listComponent: ({
     value,
     title,
@@ -42,8 +44,8 @@ export type Field = {
     value: string
     title: string
     meta: string
-  }) => JSX.Element
-  metaComponent: ({meta}: {meta: string}) => JSX.Element
+  }) => ReactElement
+  metaComponent: ({meta}: {meta: string}) => ReactElement
 }
 
 export const FIELD_TYPES = [
