@@ -11,7 +11,7 @@ body {
 }
 
 .entry-table {
-  @apply border border-gray-300 bg-white shadow-xl;
+  @apply border border-gray-300 bg-white shadow-xl print:shadow-none;
 }
 
 .entry-table th,

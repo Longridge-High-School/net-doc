@@ -35,6 +35,7 @@ export const SortableTable = ({
           <th>
             {asset.singular}
             <button
+              className="print:hidden"
               onClick={() => {
                 sort(
                   sortedBy === asset.nameFieldId && sortOrder === 'ASC'
@@ -56,6 +57,7 @@ export const SortableTable = ({
                 <th key={id}>
                   {field.name}{' '}
                   <button
+                    className="print:hidden"
                     onClick={() => {
                       sort(
                         sortedBy === field.id && sortOrder === 'ASC'

@@ -25,7 +25,7 @@ export const Header = ({
             <LinkButton
               key={i}
               to={link}
-              className={className}
+              className={`${className} print:hidden`}
               onClick={action}
             >
               {label}
@@ -33,7 +33,7 @@ export const Header = ({
           )
         })}
         <Button
-          className="bg-success"
+          className="bg-success print:hidden"
           onClick={() => {
             copyToClipboard(window.location.href)
             notify({
