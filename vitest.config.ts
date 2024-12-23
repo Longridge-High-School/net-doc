@@ -5,6 +5,7 @@ import mainViteConfig from './vite.config'
 export default defineConfig({
   ...mainViteConfig,
   test: {
+    setupFiles: ['/tests/setup.ts'],
     coverage: {
       provider: 'istanbul',
       include: ['app'],
