@@ -157,7 +157,7 @@ const Dashboard = () => {
         ''
       )}
       <nav
-        className="shadow-xl pt-8 text-[#444]"
+        className="shadow-xl pt-8 text-[#444] print:hidden"
         style={{
           backgroundColor: settings['site-color'],
           color: contrastColor(settings['site-color'].replace('#', ''))
@@ -236,7 +236,7 @@ const Dashboard = () => {
           <Link to="/app/logout">👋 Logout</Link>
         </div>
       </nav>
-      <div className="pt-8 pr-8">
+      <div className="pt-8 pr-8 print:col-span-2">
         <Outlet />
       </div>
     </div>

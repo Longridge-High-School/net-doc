@@ -51,6 +51,7 @@ jobs:
               - 'tests/**'
               - Dockerfile
               - docker-entrypoint.sh
+              - tailwind.config.js
             docs:
               - 'docs/**'
               - '.github/workflows/**'

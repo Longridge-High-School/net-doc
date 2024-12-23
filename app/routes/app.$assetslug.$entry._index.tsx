@@ -110,7 +110,7 @@ const AssetEntry = () => {
 
   return (
     <div className="grid grid-cols-4 gap-4">
-      <div className="col-span-3">
+      <div className="col-span-3 print:col-span-4">
         <div className="border border-gray-300 shadow-xl bg-white p-2">
           <h2 className="border-b border-b-gray-200 text-xl font-light mb-4">
             {name}
@@ -128,7 +128,7 @@ const AssetEntry = () => {
           })}
         </div>
       </div>
-      <div>
+      <div className="print:hidden">
         <h3 className="border-b border-b-gray-200 text-xl font-light mb-4">
           Additional Details
         </h3>
