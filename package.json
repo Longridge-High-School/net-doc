@@ -8,6 +8,7 @@
     "dev": "npm-run-all -p dev:*",
     "dev:remix": "remix vite:dev --manual",
     "dev:worker": "env-cmd -f .env node ./worker/worker.mjs",
+    "dev:api": "tsx --watch ./api/index.ts",
     "lint": "eslint --cache --cache-location ./node_modules/.cache/eslint .",
     "start:remix": "remix-serve ./build/server/index.js",
     "start:worker": "node ./worker/worker.mjs",
