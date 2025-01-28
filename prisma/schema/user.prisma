@@ -1,0 +1,79 @@
+model User {
+  id           String @id @default(uuid())
+  name         String
+  email        String @unique()
+  passwordHash String
+  role         String
+
+  totpSecret    String @default("")
+  totpPeriod    Int    @default(0)
+  totpDigits    Int    @default(0)
+  totpAlgorithm String @default("")
+
+  sessions        Session[]
+  valueEdits      Value[]
+  pastValueEdits  ValueHistory[]
+  documentChanges DocumentHistory[]
+  passwordChanges PasswordHistory[]
+  passwordViews   PasswordView[]
+  pins            Pin[]
+  RecentItems     RecentItems[]
+}
+
+model Session {
+  id        String   @id @default(uuid())
+  ip        String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+  path      String   @default("/")
+}
+
+model ACL {
+  id   String @id @default(uuid())
+  name String
+
+  entries   ACLEntry[]
+  passwords Password[]
+  documents Document[]
+  processes Process[]
+
+  assets       Asset[]
+  assetEntries Entry[]
+}
+
+model ACLEntry {
+  id     String  @id @default(uuid())
+  type   String //'role' or 'user'
+  target String //'role name' or 'user id'
+  read   Boolean
+  write  Boolean
+  delete Boolean
+
+  acl   ACL    @relation(fields: [aclId], references: [id], onDelete: Cascade)
+  aclId String
+}
+
+model Pin {
+  id String @id @default(uuid())
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String
+
+  target   String // 'document', 'entry', 'password'
+  targetId String
+}
+
+model RecentItems {
+  id String @id @default(uuid())
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String
+
+  target   String // 'document', 'entry', 'password'
+  targetId String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

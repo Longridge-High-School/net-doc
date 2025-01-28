@@ -1,0 +1,82 @@
+model Asset {
+  id          String       @id @default(uuid())
+  name        String
+  icon        String
+  slug        String
+  singular    String
+  plural      String
+  nameFieldId String
+  assetFields AssetField[]
+  entries     Entry[]
+  sortFieldId String       @default("")
+  sortOrder   String       @default("ASC")
+  sidebar     Boolean      @default(true)
+
+  acl   ACL    @relation(fields: [aclId], references: [id])
+  aclId String @default("")
+}
+
+model Field {
+  id          String       @id @default(uuid())
+  name        String
+  icon        String
+  description String
+  type        String
+  meta        String
+  assetFields AssetField[]
+  values      Value[]
+}
+
+model AssetField {
+  id             String  @id @default(uuid())
+  order          Int
+  helperText     String  @default("")
+  displayOnTable Boolean @default(false)
+  hidden         Boolean @default(false)
+  unique         Int     @default(0) // Unique Modes: 0 - Not, 1 - Within Asset, 2 - Unique within Field
+
+  asset   Asset  @relation(fields: [assetId], references: [id], onDelete: Cascade)
+  assetId String
+  field   Field  @relation(fields: [fieldId], references: [id], onDelete: Cascade)
+  fieldId String
+}
+
+model Entry {
+  id        String          @id @default(uuid())
+  asset     Asset           @relation(fields: [assetId], references: [id], onDelete: Cascade)
+  assetId   String
+  values    Value[]
+  deleted   Boolean         @default(false)
+  passwords EntryPassword[]
+
+  acl   ACL    @relation(fields: [aclId], references: [id])
+  aclId String @default("")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+}
+
+model Value {
+  id             String         @id @default(uuid())
+  value          String
+  entry          Entry          @relation(fields: [entryId], references: [id], onDelete: Cascade)
+  entryId        String
+  field          Field          @relation(fields: [fieldId], references: [id], onDelete: Cascade)
+  fieldId        String
+  history        ValueHistory[]
+  lastEditedBy   User           @relation(fields: [lastEditedById], references: [id])
+  lastEditedById String
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @default(now()) @updatedAt
+}
+
+model ValueHistory {
+  id           String   @id @default(uuid())
+  valueAtPoint String
+  createdAt    DateTime @default(now())
+  value        Value    @relation(fields: [valueId], references: [id], onDelete: Cascade)
+  valueId      String
+  changeNote   String
+  editedBy     User     @relation(fields: [editedById], references: [id])
+  editedById   String
+}
