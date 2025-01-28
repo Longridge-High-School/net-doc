@@ -35,7 +35,7 @@ export const loader = async ({request, params}: LoaderFunctionArgs) => {
     asyncMap(boxes, async box => {
       const data = await BOXES_HANDLERS[
         box.boxType as keyof typeof BOXES
-      ].loader(box.meta, user.id)
+      ].loader(box.meta, user.id, user.role)
 
       return {...box, data}
     })

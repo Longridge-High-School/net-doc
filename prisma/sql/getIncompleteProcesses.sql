@@ -12,5 +12,7 @@ aclId IN (SELECT aclId FROM ACLEntry
     (type = "user" AND target = $2)
     )
   )
+AND
+complete = false
 ORDER BY
 Process.complete ASC, Process.title ASC

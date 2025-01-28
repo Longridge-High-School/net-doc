@@ -121,6 +121,9 @@ const DashboardEdit = () => {
                     }}
                   >
                     <option value="approachingDates">Approaching Dates</option>
+                    <option value="incompleteProcesses">
+                      Incomplete Processes
+                    </option>
                     <option value="pinnedItems">Pinned Items</option>
                     <option value="recentChanges">Recent Changes</option>
                     <option value="recentDocuments">Recent Documents</option>
