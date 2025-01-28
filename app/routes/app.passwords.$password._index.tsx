@@ -64,7 +64,7 @@ const AssetManagerAsset = () => {
 
   return (
     <div className="grid grid-cols-3 gap-4">
-      <div className="col-span-2 entry">
+      <div className="col-span-2 entry print:col-span-3">
         <h2>{password.title}</h2>
         <p>
           <b>Username</b>
@@ -106,7 +106,7 @@ const AssetManagerAsset = () => {
         </p>
         <MDXComponent code={code} />
       </div>
-      <div>
+      <div className="print:hidden">
         <h3 className="border-b border-b-gray-200 text-xl font-light mb-4">
           View History
         </h3>

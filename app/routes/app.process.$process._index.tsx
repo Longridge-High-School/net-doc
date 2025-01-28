@@ -60,7 +60,7 @@ const ProcessView = () => {
 
   return (
     <div className="grid grid-cols-4 gap-4">
-      <div className="entry col-span-3">
+      <div className="entry col-span-3 print:col-span-4">
         <h2 className="text-xl">{process.title}</h2>
         <MDXComponent code={code} />
       </div>
