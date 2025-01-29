@@ -1,4 +1,5 @@
 import {getApproachingDates} from '@prisma/client/sql'
+import {Prisma} from '@prisma/client'
 
 import {type DashboardBoxFnHandlers} from './boxes.server'
 import {type ApproachingDatesData} from './approaching-dates'
@@ -14,7 +15,7 @@ const loader: DashboardBoxFnHandlers<ApproachingDatesData>['loader'] = async (
   const prisma = getPrisma()
 
   const values = await prisma.$queryRawTyped(
-    getApproachingDates(userRole, userId, fieldId)
+    getApproachingDates(fieldId, userRole, userId)
   )
 
   return values as unknown as Array<{
