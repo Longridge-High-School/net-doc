@@ -24,13 +24,13 @@ x-shared:
       - PASSWORD_KEY=YOUR KEY
       - PASSWORD_SALT=YOUR SALT
       - PASSWORD_IV=YOUR IV
-      - DATABASE_URL=file:./data/net-doc.db
+      - DATABASE_URL=file:../data/net-doc.db
       - REDIS_URL=net-doc-redis:6379
     volumes: &net-doc-volumes
       - ./db:/app/prisma/data
       - ./uploads:/app/public/uploads
       - ./backups:/app/public/backups
-    image: longridgehighschool/net-doc:2
+    image: longridgehighschool/net-doc:3
     restart: always
     depends_on:
       - net-doc-redis

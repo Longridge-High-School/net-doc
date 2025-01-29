@@ -40,6 +40,8 @@
   items:
     - name: Approaching Dates
       link: /docs/dashboard-boxes/approaching-dates
+    - name: Incomplete Processes
+      link: /docs/dashboard-boxes/incomplete-processes
     - name: Pinned Items
       link: /docs/dashboard-boxes/pinned-items
     - name: Recent Changes
