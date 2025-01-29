@@ -1,7 +1,7 @@
 import {type LinkProps, Link} from '@remix-run/react'
 import {omit} from '@arcath/utils'
 
-export const ButtonClasses = 'shadow rounded-lg p-2'
+export const ButtonClasses = 'shadow-sm rounded-lg p-2'
 
 export const Button = (
   props: React.DetailedHTMLProps<

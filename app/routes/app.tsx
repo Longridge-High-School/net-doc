@@ -125,7 +125,7 @@ const SearchModal = ({close}: {close: () => void}) => {
                 <Link
                   key={link}
                   to={link}
-                  className="bg-gray-300 p-2 rounded"
+                  className="bg-gray-300 p-2 rounded-sm"
                   onClick={close}
                 >
                   {label}
@@ -174,7 +174,7 @@ const Dashboard = () => {
           <Link to="/app">📜 Dashboard</Link>
           <Link to="/app/search">
             🔎 Search{' '}
-            <span className="bg-gray-200 p-1 rounded text-xs text-[#444]">
+            <span className="bg-gray-200 p-1 rounded-sm text-xs text-[#444]">
               Ctrl + K
             </span>
           </Link>

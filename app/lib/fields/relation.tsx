@@ -61,7 +61,7 @@ const EditComponent: Field['editComponent'] = ({
               <button
                 key={entryId}
                 type="button"
-                className="bg-gray-300 p-2 rounded m-2 hover:bg-gray-200"
+                className="bg-gray-300 p-2 rounded-sm m-2 hover:bg-gray-200"
                 onClick={() => {
                   setNewValue([...newValue, entryId])
                   setText('')
@@ -75,7 +75,7 @@ const EditComponent: Field['editComponent'] = ({
       <div className="flex gap-2">
         {newValue.map((entryId: string) => {
           return (
-            <span key={entryId} className="bg-gray-300 p-2 rounded">
+            <span key={entryId} className="bg-gray-300 p-2 rounded-sm">
               {entries[entryId].value}{' '}
               <button
                 type="button"
@@ -144,7 +144,7 @@ const ViewComponent: Field['viewComponent'] = ({value, title, meta}) => {
             <a
               key={entryId}
               href={`/app/${data.asset.slug}/${entryId}`}
-              className="bg-gray-300 p-2 rounded"
+              className="bg-gray-300 p-2 rounded-sm"
             >
               {data.asset.icon} {entries[entryId].value}
             </a>
@@ -228,7 +228,7 @@ const ListComponent: Field['listComponent'] = ({value, title, meta}) => {
           <a
             key={entryId}
             href={`/app/${data.asset.slug}/${entryId}`}
-            className="bg-gray-300 p-2 rounded"
+            className="bg-gray-300 p-2 rounded-sm"
           >
             {data.asset.icon} {entries[entryId].value}
           </a>

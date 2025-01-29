@@ -141,7 +141,7 @@ const AssetEntry = () => {
                   <Link
                     key={id}
                     to={`/app/${slug}/${id}`}
-                    className="bg-gray-300 p-2 rounded"
+                    className="bg-gray-300 p-2 rounded-sm"
                   >
                     {icon} {value}
                   </Link>
@@ -157,7 +157,7 @@ const AssetEntry = () => {
                   <Link
                     key={id}
                     to={`/app/documents/${id}`}
-                    className="bg-gray-300 p-2 rounded"
+                    className="bg-gray-300 p-2 rounded-sm"
                   >
                     📰 {title}
                   </Link>
@@ -173,7 +173,7 @@ const AssetEntry = () => {
                   <Link
                     key={id}
                     to={`/app/passwords/${id}`}
-                    className="bg-gray-300 p-2 rounded"
+                    className="bg-gray-300 p-2 rounded-sm"
                   >
                     🔒 {title}
                   </Link>

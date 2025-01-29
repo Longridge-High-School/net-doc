@@ -1,7 +1,7 @@
 import {omit} from '@arcath/utils'
 
 export const inputClasses =
-  'w-full border border-gray-300 rounded p-2 mt-2 mb-4 shadow invalid:border-pink-300'
+  'w-full border border-gray-300 rounded-sm p-2 mt-2 mb-4 shadow-sm invalid:border-pink-300'
 
 export const Input = (
   props: React.DetailedHTMLProps<
@@ -20,7 +20,7 @@ export const Checkbox = (
     HTMLInputElement
   >
 ) => {
-  const className = `w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600 ${props.className}`
+  const className = `w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded-sm focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600 ${props.className}`
 
   return (
     <div className="mt-2 mb-4">
@@ -45,7 +45,7 @@ export const Label = (
 }
 
 export const HelperText: React.FC<{children: string}> = ({children}) => {
-  return <p className="text-grey-300 font-thin text-sm mb-4">{children}</p>
+  return <p className="text-gray-300 font-thin text-sm mb-4">{children}</p>
 }
 
 export const Select = (

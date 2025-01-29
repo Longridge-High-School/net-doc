@@ -96,7 +96,7 @@ const AssetManagerAsset = () => {
             return (
               <Link
                 key={id}
-                className="bg-white shadow p-2 cursor-pointer hover:shadow-none"
+                className="bg-white shadow-sm p-2 cursor-pointer hover:shadow-none"
                 to={`/app/asset-manager/${asset.id}/add/${id}`}
               >
                 {name}

@@ -24,7 +24,7 @@ const viewComponent = ({value, title}: {value: string; title: string}) => {
         <a
           href={uri}
           download={originalFileName}
-          className="bg-gray-300 p-2 rounded inline-block"
+          className="bg-gray-300 p-2 rounded-sm inline-block"
         >
           💾 {originalFileName}
         </a>
@@ -50,7 +50,7 @@ const listComponent = ({value}: {value: string; title: string}) => {
     <a
       href={uri}
       download={originalFileName}
-      className="bg-gray-300 p-2 rounded inline-block"
+      className="bg-gray-300 p-2 rounded-sm inline-block"
     >
       💾 {originalFileName}
     </a>

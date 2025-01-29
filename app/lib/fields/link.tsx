@@ -40,7 +40,7 @@ const viewComponent = ({value, title}: {value: string; title: string}) => {
       <div className="mb-4 font-bold block">{title}</div>
       <a
         href={target}
-        className="bg-gray-300 p-2 rounded"
+        className="bg-gray-300 p-2 rounded-sm"
         target="_blank"
         rel="noreferrer"
       >
@@ -58,7 +58,7 @@ const listComponent = ({value}: {value: string; title: string}) => {
   return (
     <a
       href={target}
-      className="bg-gray-300 p-2 rounded"
+      className="bg-gray-300 p-2 rounded-sm"
       target="_blank"
       rel="noreferrer"
     >

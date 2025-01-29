@@ -18,7 +18,7 @@ export const Header = ({
   const [, copyToClipboard] = useCopyToClipboard()
 
   return (
-    <header className="border-b border-b-grey-100 pb-2 mb-4">
+    <header className="border-b border-b-gray-300 pb-2 mb-4">
       <div className="flex gap-2 float-right">
         {actions?.map(({link, label, className, action}, i) => {
           return (

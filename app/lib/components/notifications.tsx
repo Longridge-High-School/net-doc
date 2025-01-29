@@ -50,7 +50,7 @@ const NotificationBox = ({
 
   return (
     <motion.div
-      className={`rounded shadow-xl p-2 mb-2 ${bgColor(notification.type)}`}
+      className={`rounded-sm shadow-xl p-2 mb-2 ${bgColor(notification.type)}`}
       onMouseEnter={() => cancel()}
       onMouseLeave={() => reset()}
       layout

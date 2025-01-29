@@ -77,7 +77,11 @@ const Search = () => {
         {data
           ? data.results.map(({label, link}) => {
               return (
-                <Link key={link} to={link} className="bg-gray-300 p-2 rounded">
+                <Link
+                  key={link}
+                  to={link}
+                  className="bg-gray-300 p-2 rounded-sm"
+                >
                   {label}
                 </Link>
               )
