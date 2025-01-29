@@ -1,11 +1,12 @@
 import {type LoaderFunctionArgs, type MetaFunction, json} from '@remix-run/node'
 import {useLoaderData, Link} from '@remix-run/react'
-import {getProcesses} from '@prisma/client/sql'
+import {getProcesses, getProcessesFromDocuments} from '@prisma/client/sql'
 
 import {ensureUser} from '~/lib/utils/ensure-user'
 import {getPrisma} from '~/lib/prisma.server'
 import {formatAsDate} from '~/lib/utils/format'
 import {pageTitle} from '~/lib/utils/page-title'
+import {AButton} from '~/lib/components/button'
 
 export const loader = async ({request}: LoaderFunctionArgs) => {
   const user = await ensureUser(request, 'process:list', {})
@@ -16,7 +17,11 @@ export const loader = async ({request}: LoaderFunctionArgs) => {
     getProcesses(user.role, user.id)
   )
 
-  return json({user, processes})
+  const documents = await prisma.$queryRawTyped(
+    getProcessesFromDocuments(user.role, user.id)
+  )
+
+  return json({user, processes, documents})
 }
 
 export const meta: MetaFunction = ({matches}) => {
@@ -24,10 +29,10 @@ export const meta: MetaFunction = ({matches}) => {
 }
 
 const ProcessList = () => {
-  const {processes} = useLoaderData<typeof loader>()
+  const {processes, documents} = useLoaderData<typeof loader>()
 
   return (
-    <div>
+    <div className="grid grid-cols-2 print:grid-cols-1 gap-4">
       <table className="entry-table">
         <thead>
           <tr>
@@ -52,6 +57,33 @@ const ProcessList = () => {
           })}
         </tbody>
       </table>
+      <div>
+        <table className="entry-table print:hidden w-full">
+          <thead>
+            <tr>
+              <th>Document</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            {documents.map(({id, title}) => {
+              return (
+                <tr key={id}>
+                  <td>{title}</td>
+                  <td>
+                    <AButton
+                      href={`/app/process/add/${id}`}
+                      className="bg-warning"
+                    >
+                      New Process Run
+                    </AButton>
+                  </td>
+                </tr>
+              )
+            })}
+          </tbody>
+        </table>
+      </div>
     </div>
   )
 }
