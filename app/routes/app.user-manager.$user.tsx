@@ -85,8 +85,8 @@ const UserManagerUser = () => {
         <Label>
           Role
           <Select name="role" defaultValue={user.role}>
-            <option value="user">User</option>
-            <option value="manager">Manager</option>
+            <option value="reader">Reader</option>
+            <option value="writer">Writer</option>
             <option value="admin">Admin</option>
           </Select>
         </Label>
