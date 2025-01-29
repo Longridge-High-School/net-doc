@@ -232,6 +232,11 @@
                 </li>
             
                 <li>
+                    <a href="/net-doc/docs/dashboard-boxes/incomplete-processes" class="">Incomplete Processes</a>
+                    
+                </li>
+            
+                <li>
                     <a href="/net-doc/docs/dashboard-boxes/pinned-items" class="">Pinned Items</a>
                     
                 </li>
@@ -307,13 +312,13 @@ changes. <code class="language-plaintext highlighter-rouge">2</code> would inclu
       <span class="pi">-</span> <span class="s">PASSWORD_KEY=YOUR KEY</span>
       <span class="pi">-</span> <span class="s">PASSWORD_SALT=YOUR SALT</span>
       <span class="pi">-</span> <span class="s">PASSWORD_IV=YOUR IV</span>
-      <span class="pi">-</span> <span class="s">DATABASE_URL=file:./data/net-doc.db</span>
+      <span class="pi">-</span> <span class="s">DATABASE_URL=file:../data/net-doc.db</span>
       <span class="pi">-</span> <span class="s">REDIS_URL=net-doc-redis:6379</span>
     <span class="na">volumes</span><span class="pi">:</span> <span class="nl">&amp;net-doc-volumes</span>
       <span class="pi">-</span> <span class="s">./db:/app/prisma/data</span>
       <span class="pi">-</span> <span class="s">./uploads:/app/public/uploads</span>
       <span class="pi">-</span> <span class="s">./backups:/app/public/backups</span>
-    <span class="na">image</span><span class="pi">:</span> <span class="s">longridgehighschool/net-doc:2</span>
+    <span class="na">image</span><span class="pi">:</span> <span class="s">longridgehighschool/net-doc:3</span>
     <span class="na">restart</span><span class="pi">:</span> <span class="s">always</span>
     <span class="na">depends_on</span><span class="pi">:</span>
       <span class="pi">-</span> <span class="s">net-doc-redis</span>

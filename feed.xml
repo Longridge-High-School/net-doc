@@ -1,3 +1,17 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.4">Jekyll</generator><link href="/net-doc/feed.xml" rel="self" type="application/atom+xml" /><link href="/net-doc/" rel="alternate" type="text/html" /><updated>2024-12-13T21:27:52+00:00</updated><id>/net-doc/feed.xml</id><title type="html">Net-Doc</title><entry><title type="html">Welcome to the Documentation</title><link href="/net-doc/docs/update/2024/03/15/welcome-to-the-documentation.html" rel="alternate" type="text/html" title="Welcome to the Documentation" /><published>2024-03-15T18:29:04+00:00</published><updated>2024-03-15T18:29:04+00:00</updated><id>/net-doc/docs/update/2024/03/15/welcome-to-the-documentation</id><content type="html" xml:base="/net-doc/docs/update/2024/03/15/welcome-to-the-documentation.html"><![CDATA[<p>Welcome to the documentation site for Net-Doc!</p>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.4">Jekyll</generator><link href="/net-doc/feed.xml" rel="self" type="application/atom+xml" /><link href="/net-doc/" rel="alternate" type="text/html" /><updated>2025-01-29T12:59:35+00:00</updated><id>/net-doc/feed.xml</id><title type="html">Net-Doc</title><entry><title type="html">Welcome to the Documentation</title><link href="/net-doc/migration/2025/01/29/v3-migration.html" rel="alternate" type="text/html" title="Welcome to the Documentation" /><published>2025-01-29T12:29:04+00:00</published><updated>2025-01-29T12:29:04+00:00</updated><id>/net-doc/migration/2025/01/29/v3-migration</id><content type="html" xml:base="/net-doc/migration/2025/01/29/v3-migration.html"><![CDATA[<p>Welcome to Version 3.0.0 of Net-Doc!</p>
+
+<p>This version adds a couple of new features and fixes some bugs, but does contain
+a Breaking Change</p>
+
+<p>Now that the Prisma schema is split across multiple files the path to the
+database needs changing if it was defined as a relative path.</p>
+
+<p>To update to version 3 you need to change your <code class="language-plaintext highlighter-rouge">docker-compose.yml</code> so that:</p>
+
+<ul>
+  <li>The docker tag is 3, so your image needs to be
+<code class="language-plaintext highlighter-rouge">image: longridgehighschool/net-doc:3</code></li>
+  <li>The env variable <code class="language-plaintext highlighter-rouge">DATABASE_URL</code> (if using <code class="language-plaintext highlighter-rouge">./</code>) needs to be changed to <code class="language-plaintext highlighter-rouge">../</code></li>
+</ul>]]></content><author><name>Adam Laycock</name></author><category term="migration" /><summary type="html"><![CDATA[Welcome to Version 3.0.0 of Net-Doc!]]></summary></entry><entry><title type="html">Welcome to the Documentation</title><link href="/net-doc/docs/update/2024/03/15/welcome-to-the-documentation.html" rel="alternate" type="text/html" title="Welcome to the Documentation" /><published>2024-03-15T18:29:04+00:00</published><updated>2024-03-15T18:29:04+00:00</updated><id>/net-doc/docs/update/2024/03/15/welcome-to-the-documentation</id><content type="html" xml:base="/net-doc/docs/update/2024/03/15/welcome-to-the-documentation.html"><![CDATA[<p>Welcome to the documentation site for Net-Doc!</p>
 
 <p>It’s a small site at the moment but the documenation is coming.</p>]]></content><author><name>Adam Laycock</name></author><category term="docs" /><category term="update" /><summary type="html"><![CDATA[Welcome to the documentation site for Net-Doc!]]></summary></entry></feed>
