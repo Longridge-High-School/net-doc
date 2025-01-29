@@ -2,7 +2,6 @@ import {
   type LoaderFunctionArgs,
   type ActionFunctionArgs,
   type MetaFunction,
-  json,
   redirect
 } from '@remix-run/node'
 import {invariant} from '@arcath/utils'
@@ -19,7 +18,7 @@ import {FIELD_HANDLERS} from '~/lib/fields/field.server'
 export const loader = async ({request}: LoaderFunctionArgs) => {
   const user = await ensureUser(request, 'field-manager:add', {})
 
-  return json({user})
+  return {user}
 }
 
 export const action = async ({request}: ActionFunctionArgs) => {

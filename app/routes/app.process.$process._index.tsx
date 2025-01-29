@@ -1,4 +1,4 @@
-import {type LoaderFunctionArgs, type MetaFunction, json} from '@remix-run/node'
+import {type LoaderFunctionArgs, type MetaFunction} from '@remix-run/node'
 import {useLoaderData} from '@remix-run/react'
 import {useEffect} from 'react'
 
@@ -24,7 +24,7 @@ export const loader = async ({request, params}: LoaderFunctionArgs) => {
 
   const code = await buildMDXBundle(process.body)
 
-  return json({user, process, code})
+  return {user, process, code}
 }
 
 export const meta: MetaFunction<typeof loader> = ({data, matches}) => {

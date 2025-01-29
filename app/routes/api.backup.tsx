@@ -1,4 +1,4 @@
-import {type LoaderFunctionArgs, type HeadersArgs, json} from '@remix-run/node'
+import {type LoaderFunctionArgs, type HeadersArgs} from '@remix-run/node'
 
 import {ensureUser} from '~/lib/utils/ensure-user'
 import {createTimings} from '~/lib/utils/timings.server'
@@ -14,7 +14,7 @@ export const loader = async ({request}: LoaderFunctionArgs) => {
 
   await addJob('createBackup', {})
 
-  return json({user}, {headers: headers()})
+  return Response.json({user}, {headers: headers()})
 }
 
 export const headers = ({loaderHeaders}: HeadersArgs) => {

@@ -2,7 +2,6 @@ import {
   type LoaderFunctionArgs,
   type ActionFunctionArgs,
   type MetaFunction,
-  json,
   redirect
 } from '@remix-run/node'
 import {invariant} from '@arcath/utils'
@@ -34,7 +33,7 @@ export const loader = async ({request, params}: LoaderFunctionArgs) => {
     return ''
   }, '')
 
-  return json({user, entry, name})
+  return {user, entry, name}
 }
 
 export const action = async ({request, params}: ActionFunctionArgs) => {
@@ -68,7 +67,7 @@ export const action = async ({request, params}: ActionFunctionArgs) => {
     return redirect(`/app/${entry.asset.slug}`)
   }
 
-  return json({error: 'Name does not match'})
+  return {error: 'Name does not match'}
 }
 
 export const meta: MetaFunction<typeof loader> = ({matches, data}) => {

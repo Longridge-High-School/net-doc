@@ -2,7 +2,6 @@ import {
   type MetaFunction,
   type LoaderFunctionArgs,
   type ActionFunctionArgs,
-  json,
   redirect,
   unstable_parseMultipartFormData
 } from '@remix-run/node'
@@ -27,7 +26,7 @@ export const loader = async ({request}: LoaderFunctionArgs) => {
 
   const settings = await getSettings(['site-name', 'site-color'])
 
-  return json({user, files, settings})
+  return {user, files, settings}
 }
 
 export const action = async ({request}: ActionFunctionArgs) => {

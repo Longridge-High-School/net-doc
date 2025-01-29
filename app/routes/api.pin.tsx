@@ -1,4 +1,4 @@
-import {type ActionFunctionArgs, type HeadersArgs, json} from '@remix-run/node'
+import {type ActionFunctionArgs, type HeadersArgs} from '@remix-run/node'
 import {invariant} from '@arcath/utils'
 
 import {ensureUser} from '~/lib/utils/ensure-user'
@@ -32,7 +32,7 @@ export const action = async ({request}: ActionFunctionArgs) => {
       prisma.pin.deleteMany({where: {userId: user.id, target, targetId}})
     )
 
-    return json({pinId: '', result: 'remove'}, {headers: headers()})
+    return Response.json({pinId: '', result: 'remove'}, {headers: headers()})
   }
 
   const pin = await time('createPin', 'Create new pin', async () =>
@@ -41,7 +41,7 @@ export const action = async ({request}: ActionFunctionArgs) => {
     })
   )
 
-  return json({pinId: pin.id, result: 'add'}, {headers: headers()})
+  return Response.json({pinId: pin.id, result: 'add'}, {headers: headers()})
 }
 
 export const headers = ({actionHeaders}: HeadersArgs) => {

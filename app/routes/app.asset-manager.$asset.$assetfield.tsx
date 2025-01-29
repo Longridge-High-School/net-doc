@@ -2,7 +2,6 @@ import {
   type LoaderFunctionArgs,
   type ActionFunctionArgs,
   type MetaFunction,
-  json,
   redirect
 } from '@remix-run/node'
 import {useLoaderData} from '@remix-run/react'
@@ -31,7 +30,7 @@ export const loader = async ({request, params}: LoaderFunctionArgs) => {
     include: {field: true}
   })
 
-  return json({user, assetField})
+  return {user, assetField}
 }
 
 export const action = async ({request, params}: ActionFunctionArgs) => {

@@ -1,7 +1,6 @@
 import {
   type LoaderFunctionArgs,
   type MetaFunction,
-  json,
   type ActionFunction
 } from '@remix-run/node'
 import {useLoaderData, Outlet, useActionData} from '@remix-run/react'
@@ -18,6 +17,7 @@ import {getPrisma} from '~/lib/prisma.server'
 import {hashPassword} from '~/lib/user.server'
 import {FlashMessage} from '~/lib/components/flash'
 import {formatAsDateTime} from '~/lib/utils/format'
+import {reviveDate} from '~/lib/utils/serialize'
 
 export const loader = async ({request}: LoaderFunctionArgs) => {
   const sessionUser = await ensureUser(request, 'user:self', {})
@@ -31,7 +31,7 @@ export const loader = async ({request}: LoaderFunctionArgs) => {
     orderBy: {updatedAt: 'desc'}
   })
 
-  return json({user, sessions, currentSession: sessionUser.sessionId})
+  return {user, sessions, currentSession: sessionUser.sessionId}
 }
 
 export const meta: MetaFunction = ({matches}) => {
@@ -66,14 +66,14 @@ export const action: ActionFunction = async ({request}) => {
         data: {passwordHash: hashedPassword}
       })
     } else {
-      return json({
+      return {
         message: 'New password and confirmation did not match',
         type: 'bg-danger'
-      })
+      }
     }
   }
 
-  return json({message: 'Account updated', type: 'bg-success'})
+  return {message: 'Account updated', type: 'bg-success'}
 }
 
 const User = () => {
@@ -161,7 +161,7 @@ const User = () => {
                   )}
                   <br />
                   <span className="text-sm text-gray-400">
-                    {formatAsDateTime(updatedAt)}
+                    {formatAsDateTime(reviveDate(updatedAt).toISOString())}
                   </span>
                 </div>
               )

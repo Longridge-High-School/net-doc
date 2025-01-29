@@ -1,4 +1,4 @@
-import {type LoaderFunctionArgs, type MetaFunction, json} from '@remix-run/node'
+import {type LoaderFunctionArgs, type MetaFunction} from '@remix-run/node'
 import {useLoaderData, Link} from '@remix-run/react'
 
 import {ensureUser} from '~/lib/utils/ensure-user'
@@ -10,6 +10,7 @@ import {formatAsDateTime} from '~/lib/utils/format'
 import {trackRecentItem} from '~/lib/utils/recent-item'
 import {LinkButton} from '~/lib/components/button'
 import {can} from '~/lib/rbac.server'
+import {reviveDate} from '~/lib/utils/serialize'
 
 import {type Attachment} from './app.documents.$document.attach'
 
@@ -38,13 +39,13 @@ export const loader = async ({request, params}: LoaderFunctionArgs) => {
 
   const attachments = JSON.parse(document.attachments) as Array<Attachment>
 
-  return json({
+  return {
     user,
     document,
     code,
     canWrite,
     attachments: attachments.filter(v => v !== null)
-  })
+  }
 }
 
 export const meta: MetaFunction<typeof loader> = ({matches, data}) => {
@@ -98,7 +99,8 @@ const DocumentView = () => {
                 to={`/app/documents/${document.id}/${id}`}
                 className="text-sm text-gray-400"
               >
-                {formatAsDateTime(createdAt)} - {editedBy.name}
+                {formatAsDateTime(reviveDate(createdAt).toISOString())} -{' '}
+                {editedBy.name}
               </Link>
             </div>
           )

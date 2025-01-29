@@ -2,7 +2,7 @@ import {
   type LoaderFunctionArgs,
   type MetaFunction,
   type HeadersArgs,
-  json
+  data
 } from '@remix-run/node'
 import {Link, useLoaderData} from '@remix-run/react'
 import {
@@ -21,6 +21,7 @@ import {formatAsDateTime} from '~/lib/utils/format'
 import {can} from '~/lib/rbac.server'
 import {createTimings} from '~/lib/utils/timings.server'
 import {trackRecentItem} from '~/lib/utils/recent-item'
+import {reviveDate} from '~/lib/utils/serialize'
 
 export const loader = async ({request, params}: LoaderFunctionArgs) => {
   const {time, headers} = createTimings()
@@ -80,7 +81,7 @@ export const loader = async ({request, params}: LoaderFunctionArgs) => {
 
   const canEdit = await can(user.role, 'entry:edit', {user, entryId: entry.id})
 
-  return json(
+  return data(
     {
       user,
       entry,
@@ -196,7 +197,8 @@ const AssetEntry = () => {
                 to={`/app/${entry.asset.slug}/${entry.id}/${id}`}
                 className="text-sm text-gray-400"
               >
-                {formatAsDateTime(createdAt)} - {userName}
+                {formatAsDateTime(reviveDate(createdAt).toISOString())} -{' '}
+                {userName}
               </Link>
             </div>
           )

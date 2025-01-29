@@ -2,7 +2,6 @@ import {
   type LoaderFunctionArgs,
   type ActionFunctionArgs,
   type MetaFunction,
-  json,
   redirect
 } from '@remix-run/node'
 import {useLoaderData} from '@remix-run/react'
@@ -33,7 +32,7 @@ export const loader = async ({request, params}: LoaderFunctionArgs) => {
 
   const acls = await prisma.aCL.findMany({orderBy: {name: 'asc'}})
 
-  return json({user, document, acls})
+  return {user, document, acls}
 }
 
 export const action = async ({request, params}: ActionFunctionArgs) => {

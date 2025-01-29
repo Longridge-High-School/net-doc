@@ -2,7 +2,6 @@ import {
   type LoaderFunctionArgs,
   type ActionFunctionArgs,
   type MetaFunction,
-  json,
   redirect
 } from '@remix-run/node'
 import {asyncForEach, diffArray, invariant} from '@arcath/utils'
@@ -29,7 +28,7 @@ export const loader = async ({request, params}: LoaderFunctionArgs) => {
     }
   })
 
-  return json({user, entry})
+  return {user, entry}
 }
 
 export const action = async ({request, params}: ActionFunctionArgs) => {
@@ -56,14 +55,6 @@ export const action = async ({request, params}: ActionFunctionArgs) => {
   const currentPasswordIds = links.map(({passwordId}) => passwordId)
 
   const {additional, missing} = diffArray(currentPasswordIds, newPasswordIds)
-
-  console.dir([
-    passwordsString,
-    newPasswordIds,
-    currentPasswordIds,
-    additional,
-    missing
-  ])
 
   await asyncForEach(additional, async passwordId => {
     await prisma.entryPassword.create({data: {passwordId, entryId}})

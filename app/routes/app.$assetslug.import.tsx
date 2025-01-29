@@ -1,8 +1,7 @@
 import {
   type LoaderFunctionArgs,
   type ActionFunctionArgs,
-  type MetaFunction,
-  json
+  type MetaFunction
 } from '@remix-run/node'
 import {useLoaderData} from '@remix-run/react'
 import {asyncForEach, asyncMap} from '@arcath/utils'
@@ -27,7 +26,7 @@ export const loader = async ({request, params}: LoaderFunctionArgs) => {
     include: {assetFields: {include: {field: true}, orderBy: {order: 'asc'}}}
   })
 
-  return json({user, asset})
+  return {user, asset}
 }
 
 export const action = async ({request, params}: ActionFunctionArgs) => {
@@ -75,7 +74,7 @@ export const action = async ({request, params}: ActionFunctionArgs) => {
     }
   )
 
-  return json({status: 200})
+  return {status: 200}
 }
 
 export const meta: MetaFunction<typeof loader> = ({matches, data}) => {

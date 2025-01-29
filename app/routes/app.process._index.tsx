@@ -1,4 +1,4 @@
-import {type LoaderFunctionArgs, type MetaFunction, json} from '@remix-run/node'
+import {type LoaderFunctionArgs, type MetaFunction} from '@remix-run/node'
 import {useLoaderData, Link} from '@remix-run/react'
 import {getProcesses, getProcessesFromDocuments} from '@prisma/client/sql'
 
@@ -7,6 +7,7 @@ import {getPrisma} from '~/lib/prisma.server'
 import {formatAsDate} from '~/lib/utils/format'
 import {pageTitle} from '~/lib/utils/page-title'
 import {AButton} from '~/lib/components/button'
+import {reviveDate} from '~/lib/utils/serialize'
 
 export const loader = async ({request}: LoaderFunctionArgs) => {
   const user = await ensureUser(request, 'process:list', {})
@@ -21,7 +22,7 @@ export const loader = async ({request}: LoaderFunctionArgs) => {
     getProcessesFromDocuments(user.role, user.id)
   )
 
-  return json({user, processes, documents})
+  return {user, processes, documents}
 }
 
 export const meta: MetaFunction = ({matches}) => {
@@ -50,7 +51,7 @@ const ProcessList = () => {
                     {title}
                   </Link>
                 </td>
-                <td>{formatAsDate(updatedAt)}</td>
+                <td>{formatAsDate(reviveDate(updatedAt).toISOString())}</td>
                 <td>{complete ? 'Yes' : 'No'}</td>
               </tr>
             )

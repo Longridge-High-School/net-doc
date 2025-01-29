@@ -1,4 +1,4 @@
-import {type LoaderFunctionArgs, type HeadersArgs, json} from '@remix-run/node'
+import {type LoaderFunctionArgs, type HeadersArgs} from '@remix-run/node'
 
 import {ensureUser} from '~/lib/utils/ensure-user'
 import {getPrisma} from '~/lib/prisma.server'
@@ -40,7 +40,7 @@ export const loader = async ({request, params}: LoaderFunctionArgs) => {
     data: {body: process.body}
   })
 
-  return json({body: process.body}, {headers: headers()})
+  return Response.json({body: process.body}, {headers: headers()})
 }
 
 export const headers = ({loaderHeaders}: HeadersArgs) => {

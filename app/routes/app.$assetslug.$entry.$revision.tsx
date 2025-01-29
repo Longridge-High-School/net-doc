@@ -1,4 +1,4 @@
-import {type LoaderFunctionArgs, type MetaFunction, json} from '@remix-run/node'
+import {type LoaderFunctionArgs, type MetaFunction} from '@remix-run/node'
 import {Link, useLoaderData} from '@remix-run/react'
 import {groupedBy} from '@arcath/utils'
 
@@ -76,7 +76,7 @@ export const loader = async ({request, params}: LoaderFunctionArgs) => {
     return ''
   }, '')
 
-  return json({user, entry, name, values, revisions, pastValues})
+  return {user, entry, name, values, revisions, pastValues}
 }
 
 export const meta: MetaFunction<typeof loader> = ({matches, data}) => {

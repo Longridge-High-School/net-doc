@@ -2,7 +2,6 @@ import {
   type LoaderFunctionArgs,
   type ActionFunctionArgs,
   type MetaFunction,
-  json,
   redirect,
   unstable_parseMultipartFormData
 } from '@remix-run/node'
@@ -52,7 +51,7 @@ export const loader = async ({request, params}: LoaderFunctionArgs) => {
 
   const acls = await prisma.aCL.findMany({orderBy: {name: 'asc'}})
 
-  return json({user, entry, name, acls})
+  return {user, entry, name, acls}
 }
 
 export const action = async ({request, params}: ActionFunctionArgs) => {
@@ -160,7 +159,7 @@ export const action = async ({request, params}: ActionFunctionArgs) => {
   const flags = results.filter(v => v !== true)
 
   if (flags.length > 0) {
-    return json({errors: flags})
+    return {errors: flags}
   }
 
   return redirect(`/app/${params.assetslug}/${params.entry}`)

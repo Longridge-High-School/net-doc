@@ -1,4 +1,4 @@
-import {type LoaderFunctionArgs, type HeadersArgs, json} from '@remix-run/node'
+import {type LoaderFunctionArgs, type HeadersArgs} from '@remix-run/node'
 
 import {ensureUser} from '~/lib/utils/ensure-user'
 import {getPrisma} from '~/lib/prisma.server'
@@ -24,7 +24,7 @@ export const loader = async ({request, params}: LoaderFunctionArgs) => {
   )
 
   if (userTotp.totpSecret === '') {
-    return json(
+    return Response.json(
       {password: "Can't fetch password without 2FA on your account"},
       {headers: headers()}
     )
@@ -52,7 +52,7 @@ export const loader = async ({request, params}: LoaderFunctionArgs) => {
     () => new Promise(resolve => resolve(decrypt(password.password)))
   )
 
-  return json({password: decryptedPassword})
+  return Response.json({password: decryptedPassword})
 }
 
 export const headers = ({loaderHeaders}: HeadersArgs) => {

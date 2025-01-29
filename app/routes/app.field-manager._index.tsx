@@ -1,4 +1,4 @@
-import {type LoaderFunctionArgs, type MetaFunction, json} from '@remix-run/node'
+import {type LoaderFunctionArgs, type MetaFunction} from '@remix-run/node'
 import {useLoaderData, Link} from '@remix-run/react'
 
 import {ensureUser} from '~/lib/utils/ensure-user'
@@ -12,7 +12,7 @@ export const loader = async ({request}: LoaderFunctionArgs) => {
 
   const fields = await prisma.field.findMany({orderBy: {name: 'asc'}})
 
-  return json({user, fields})
+  return {user, fields}
 }
 
 export const meta: MetaFunction = ({matches}) => {

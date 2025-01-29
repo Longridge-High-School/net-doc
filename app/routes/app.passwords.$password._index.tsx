@@ -1,4 +1,4 @@
-import {type LoaderFunctionArgs, type MetaFunction, json} from '@remix-run/node'
+import {type LoaderFunctionArgs, type MetaFunction} from '@remix-run/node'
 import {useLoaderData, Link} from '@remix-run/react'
 import {useState} from 'react'
 import {useQuery} from '@tanstack/react-query'
@@ -11,6 +11,7 @@ import {formatAsDateTime} from '~/lib/utils/format'
 import {pageTitle} from '~/lib/utils/page-title'
 import {useNotify} from '~/lib/hooks/use-notify'
 import {trackRecentItem} from '~/lib/utils/recent-item'
+import {reviveDate} from '~/lib/utils/serialize'
 
 export const loader = async ({request, params}: LoaderFunctionArgs) => {
   const user = await ensureUser(request, 'password:view', {
@@ -37,7 +38,7 @@ export const loader = async ({request, params}: LoaderFunctionArgs) => {
 
   const code = await buildMDXBundle(password.notes)
 
-  return json({user, password, code})
+  return {user, password, code}
 }
 
 export const meta: MetaFunction<typeof loader> = ({data, matches}) => {
@@ -116,7 +117,7 @@ const AssetManagerAsset = () => {
               {user.name}
               <br />
               <span className="text-gray-400">
-                {formatAsDateTime(createdAt)}
+                {formatAsDateTime(reviveDate(createdAt).toISOString())}
               </span>
             </div>
           )
@@ -131,7 +132,8 @@ const AssetManagerAsset = () => {
                 to={`/app/passwords/${password.id}/${id}`}
                 className="text-sm text-gray-400"
               >
-                {formatAsDateTime(createdAt)} - {editedBy.name}
+                {formatAsDateTime(reviveDate(createdAt).toISOString())} -{' '}
+                {editedBy.name}
               </Link>
             </div>
           )

@@ -2,7 +2,6 @@ import {
   type LoaderFunctionArgs,
   type ActionFunctionArgs,
   type MetaFunction,
-  json,
   redirect,
   unstable_parseMultipartFormData
 } from '@remix-run/node'
@@ -30,7 +29,7 @@ export const loader = async ({request, params}: LoaderFunctionArgs) => {
     include: {assetFields: {include: {field: true}, orderBy: {order: 'asc'}}}
   })
 
-  return json({user, asset})
+  return {user, asset}
 }
 
 export const action = async ({request, params}: ActionFunctionArgs) => {
@@ -112,7 +111,7 @@ export const action = async ({request, params}: ActionFunctionArgs) => {
     await prisma.value.deleteMany({where: {entryId: entry.id}})
     await prisma.entry.delete({where: {id: entry.id}})
 
-    return json({errors: flags})
+    return {errors: flags}
   }
 
   return redirect(`/app/${params.assetslug}/${entry.id}`)
