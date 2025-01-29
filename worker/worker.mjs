@@ -83,9 +83,11 @@ createHandler('clearRecentItems', async () => {
       select: {id: true, updatedAt: true}
     })
 
-    await prisma.recentItems.deleteMany({
-      where: {updatedAt: {lt: recentItems[4].updatedAt}}
-    })
+    if (recentItems[4]) {
+      await prisma.recentItems.deleteMany({
+        where: {updatedAt: {lt: recentItems[4].updatedAt}}
+      })
+    }
   })
 })
 
