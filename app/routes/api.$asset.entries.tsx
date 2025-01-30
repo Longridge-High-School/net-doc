@@ -1,4 +1,4 @@
-import {type LoaderFunctionArgs, type HeadersArgs, json} from '@remix-run/node'
+import {type LoaderFunctionArgs, type HeadersArgs} from '@remix-run/node'
 import {type Entry} from '@prisma/client'
 
 import {ensureUser} from '~/lib/utils/ensure-user'
@@ -33,7 +33,7 @@ export const loader = async ({request, params}: LoaderFunctionArgs) => {
       >`SELECT * FROM Entry INNER JOIN Value value ON fieldId = (SELECT nameFieldId from Asset WHERE id = ${params.asset}) AND entryId = entry.id WHERE assetId = (SELECT id from Asset WHERE id = ${params.asset}) AND deleted = false;`
   )
 
-  return json({asset, entries}, {headers: headers()})
+  return Response.json({asset, entries}, {headers: headers()})
 }
 
 export const headers = ({loaderHeaders}: HeadersArgs) => {

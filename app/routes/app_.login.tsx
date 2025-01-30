@@ -2,7 +2,7 @@ import {
   type ActionFunctionArgs,
   type MetaFunction,
   type HeadersArgs,
-  json,
+  data,
   redirect
 } from '@remix-run/node'
 import {useActionData} from '@remix-run/react'
@@ -48,7 +48,7 @@ export const action = async ({request}: ActionFunctionArgs) => {
   )
 
   if (!user) {
-    return json(
+    return data(
       {
         error: 'User not found.',
         twoFactor: false,
@@ -60,7 +60,7 @@ export const action = async ({request}: ActionFunctionArgs) => {
   }
 
   if (!(await checkPassword(password, user.passwordHash))) {
-    return json(
+    return data(
       {
         error: 'Pasword does not match.',
         twoFactor: false,
@@ -72,7 +72,7 @@ export const action = async ({request}: ActionFunctionArgs) => {
   }
 
   if (user.totpSecret !== '' && otp === null) {
-    return json(
+    return data(
       {twoFactor: true, error: false, email, password},
       {headers: headers()}
     )
@@ -90,7 +90,7 @@ export const action = async ({request}: ActionFunctionArgs) => {
     const result = (await verifyTOTP(opts)) !== null
 
     if (!result) {
-      return json(
+      return data(
         {
           twoFactor: true,
           error: '2FA verification failed.',

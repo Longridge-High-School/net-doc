@@ -1,4 +1,4 @@
-import {type LoaderFunctionArgs, type MetaFunction, json} from '@remix-run/node'
+import {type LoaderFunctionArgs, type MetaFunction} from '@remix-run/node'
 import {Outlet, useLoaderData, Link} from '@remix-run/react'
 
 import {ensureUser} from '~/lib/utils/ensure-user'
@@ -27,7 +27,7 @@ export const loader = async ({request, params}: LoaderFunctionArgs) => {
     where: {id: {notIn: fieldIds}}
   })
 
-  return json({user, asset, fields})
+  return {user, asset, fields}
 }
 
 export const meta: MetaFunction<typeof loader> = ({matches, data}) => {

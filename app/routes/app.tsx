@@ -1,4 +1,4 @@
-import {type LoaderFunctionArgs, json} from '@remix-run/node'
+import {type LoaderFunctionArgs} from '@remix-run/node'
 import {
   Outlet,
   useRouteError,
@@ -49,7 +49,7 @@ export const loader = async ({request}: LoaderFunctionArgs) => {
 
   const settings = await getSettings(['site-name', 'site-color', 'site-icon'])
 
-  return json({user, assets, cans, settings})
+  return {user, assets, cans, settings}
 }
 
 export type AppLoader = {user: {name: string; id: string}}

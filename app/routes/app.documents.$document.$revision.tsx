@@ -1,4 +1,4 @@
-import {type LoaderFunctionArgs, type MetaFunction, json} from '@remix-run/node'
+import {type LoaderFunctionArgs, type MetaFunction} from '@remix-run/node'
 import {useLoaderData, Link} from '@remix-run/react'
 
 import {ensureUser} from '~/lib/utils/ensure-user'
@@ -8,6 +8,7 @@ import {MDXComponent} from '~/lib/mdx'
 import {pageTitle} from '~/lib/utils/page-title'
 import {formatAsDateTime} from '~/lib/utils/format'
 import {LinkButton} from '~/lib/components/button'
+import {reviveDate} from '~/lib/utils/serialize'
 
 export const loader = async ({request, params}: LoaderFunctionArgs) => {
   const user = await ensureUser(request, 'document:view', {
@@ -29,7 +30,7 @@ export const loader = async ({request, params}: LoaderFunctionArgs) => {
 
   const code = await buildMDXBundle(revision.previousBody)
 
-  return json({user, document, code, title: revision.previousTitle})
+  return {user, document, code, title: revision.previousTitle}
 }
 
 export const meta: MetaFunction<typeof loader> = ({data, matches}) => {
@@ -64,7 +65,8 @@ const DocumentViewRevision = () => {
                 to={`/app/documents/${document.id}/${id}`}
                 className="text-sm text-gray-400"
               >
-                {formatAsDateTime(createdAt)} - {editedBy.name}
+                {formatAsDateTime(reviveDate(createdAt).toISOString())} -{' '}
+                {editedBy.name}
               </Link>
             </div>
           )

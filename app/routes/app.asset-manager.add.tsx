@@ -2,7 +2,6 @@ import {
   type LoaderFunctionArgs,
   type ActionFunctionArgs,
   type MetaFunction,
-  json,
   redirect
 } from '@remix-run/node'
 import {invariant} from '@arcath/utils'
@@ -21,7 +20,7 @@ export const loader = async ({request}: LoaderFunctionArgs) => {
 
   const acls = await prisma.aCL.findMany({orderBy: {name: 'asc'}})
 
-  return json({user, acls})
+  return {user, acls}
 }
 
 export const action = async ({request}: ActionFunctionArgs) => {

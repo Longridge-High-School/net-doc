@@ -2,7 +2,6 @@ import {
   type LoaderFunctionArgs,
   type ActionFunctionArgs,
   type MetaFunction,
-  json,
   redirect
 } from '@remix-run/node'
 import {invariant} from '@arcath/utils'
@@ -19,7 +18,7 @@ export const loader = async ({request, params}: LoaderFunctionArgs) => {
     userId: params.user
   })
 
-  return json({currentUser})
+  return {currentUser}
 }
 
 export const action = async ({request, params}: ActionFunctionArgs) => {

@@ -2,7 +2,7 @@ import {
   type LoaderFunctionArgs,
   type MetaFunction,
   type HeadersArgs,
-  json
+  data
 } from '@remix-run/node'
 import {indexedBy} from '@arcath/utils'
 
@@ -86,7 +86,7 @@ export const loader = async ({request, params}: LoaderFunctionArgs) => {
     )`
   )
 
-  return json(
+  return data(
     {user, asset, entries, values: indexedBy('lookup', extraValues)},
     {headers: headers({'Set-Cookie': user.setCookie})}
   )

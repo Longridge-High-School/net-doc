@@ -1,4 +1,4 @@
-import {type LoaderFunctionArgs, json} from '@remix-run/node'
+import {type LoaderFunctionArgs} from '@remix-run/node'
 import {Outlet, useLoaderData, useMatches} from '@remix-run/react'
 import {invariant} from '@arcath/utils'
 
@@ -19,7 +19,7 @@ export const loader = async ({request, params}: LoaderFunctionArgs) => {
     include: {assetFields: {include: {field: true}}}
   })
 
-  return json({user, asset})
+  return {user, asset}
 }
 
 const Asset = () => {

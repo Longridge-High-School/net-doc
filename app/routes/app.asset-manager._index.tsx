@@ -1,4 +1,4 @@
-import {type LoaderFunctionArgs, type MetaFunction, json} from '@remix-run/node'
+import {type LoaderFunctionArgs, type MetaFunction} from '@remix-run/node'
 import {useLoaderData, Link} from '@remix-run/react'
 import {pageTitle} from '~/lib/utils/page-title'
 
@@ -12,7 +12,7 @@ export const loader = async ({request}: LoaderFunctionArgs) => {
 
   const assets = await prisma.asset.findMany({orderBy: {name: 'asc'}})
 
-  return json({user, assets})
+  return {user, assets}
 }
 
 export const meta: MetaFunction = ({matches}) => {

@@ -1,4 +1,4 @@
-import {type LoaderFunctionArgs, type MetaFunction, json} from '@remix-run/node'
+import {type LoaderFunctionArgs, type MetaFunction} from '@remix-run/node'
 import {useLoaderData, Link} from '@remix-run/react'
 import {getPasswords} from '@prisma/client/sql'
 
@@ -15,7 +15,7 @@ export const loader = async ({request}: LoaderFunctionArgs) => {
     getPasswords(user.role, user.id)
   )
 
-  return json({user, passwords})
+  return {user, passwords}
 }
 
 export const meta: MetaFunction = ({matches}) => {

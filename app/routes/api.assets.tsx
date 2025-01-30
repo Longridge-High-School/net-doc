@@ -1,4 +1,4 @@
-import {type LoaderFunctionArgs, type HeadersArgs, json} from '@remix-run/node'
+import {type LoaderFunctionArgs, type HeadersArgs} from '@remix-run/node'
 
 import {ensureUser} from '~/lib/utils/ensure-user'
 import {getPrisma} from '~/lib/prisma.server'
@@ -17,7 +17,7 @@ export const loader = async ({request}: LoaderFunctionArgs) => {
     prisma.asset.findMany({orderBy: {name: 'asc'}})
   )
 
-  return json({assets}, {headers: headers()})
+  return Response.json({assets}, {headers: headers()})
 }
 
 export const headers = ({loaderHeaders}: HeadersArgs) => {

@@ -2,7 +2,7 @@ import {
   type LoaderFunctionArgs,
   type MetaFunction,
   type HeadersArgs,
-  json
+  data
 } from '@remix-run/node'
 import {useLoaderData} from '@remix-run/react'
 import {asyncMap} from '@arcath/utils'
@@ -41,7 +41,7 @@ export const loader = async ({request, params}: LoaderFunctionArgs) => {
     })
   )
 
-  return json({user, boxes: boxesWithData}, {headers: headers()})
+  return data({user, boxes: boxesWithData}, {headers: headers()})
 }
 
 export const meta: MetaFunction = ({matches}) => {

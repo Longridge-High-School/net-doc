@@ -1,4 +1,4 @@
-import {type LoaderFunctionArgs, type MetaFunction, json} from '@remix-run/node'
+import {type LoaderFunctionArgs, type MetaFunction} from '@remix-run/node'
 import {useLoaderData} from '@remix-run/react'
 
 import {ensureUser} from '~/lib/utils/ensure-user'
@@ -8,6 +8,7 @@ import {MDXComponent} from '~/lib/mdx'
 import {formatAsDateTime} from '~/lib/utils/format'
 import {pageTitle} from '~/lib/utils/page-title'
 import {getCryptoSuite} from '~/lib/crypto.server'
+import {reviveDate} from '~/lib/utils/serialize'
 
 export const loader = async ({request, params}: LoaderFunctionArgs) => {
   const user = await ensureUser(request, 'password:view', {
@@ -37,13 +38,13 @@ export const loader = async ({request, params}: LoaderFunctionArgs) => {
 
   const code = await buildMDXBundle(revision.previousNotes)
 
-  return json({
+  return {
     user,
     password,
     code,
     revision,
     previousPassword: decrypt(revision.previousPassword)
-  })
+  }
 }
 
 export const meta: MetaFunction<typeof loader> = ({matches, data}) => {
@@ -83,7 +84,7 @@ const AssetManagerAsset = () => {
               {user.name}
               <br />
               <span className="text-gray-400">
-                {formatAsDateTime(createdAt)}
+                {formatAsDateTime(reviveDate(createdAt).toISOString())}
               </span>
             </div>
           )

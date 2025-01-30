@@ -2,7 +2,6 @@ import {
   type LoaderFunctionArgs,
   type ActionFunctionArgs,
   type MetaFunction,
-  json,
   redirect
 } from '@remix-run/node'
 import {useLoaderData} from '@remix-run/react'
@@ -30,7 +29,7 @@ export const loader = async ({request}: LoaderFunctionArgs) => {
 
   const defaultAclId = await getDefaultACLID()
 
-  return json({user, acls, defaultAclId})
+  return {user, acls, defaultAclId}
 }
 
 export const action = async ({request}: ActionFunctionArgs) => {

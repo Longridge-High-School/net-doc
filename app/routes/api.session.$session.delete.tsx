@@ -1,4 +1,4 @@
-import {type ActionFunction, json} from '@remix-run/node'
+import {type ActionFunction} from '@remix-run/node'
 
 import {ensureUser} from '~/lib/utils/ensure-user'
 import {getPrisma} from '~/lib/prisma.server'
@@ -10,5 +10,5 @@ export const action: ActionFunction = async ({request, params}) => {
 
   await prisma.session.delete({where: {id: params.session}})
 
-  return json({})
+  return Response.json({})
 }

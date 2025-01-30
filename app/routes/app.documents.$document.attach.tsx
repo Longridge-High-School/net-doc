@@ -1,7 +1,6 @@
 import {
   type LoaderFunctionArgs,
   type MetaFunction,
-  json,
   type ActionFunctionArgs,
   redirect,
   unstable_parseMultipartFormData
@@ -53,11 +52,11 @@ export const loader = async ({request, params}: LoaderFunctionArgs) => {
     })
   }
 
-  return json({
+  return {
     user,
     document,
     attachments: attachments.filter(v => v !== null)
-  })
+  }
 }
 
 export const meta: MetaFunction<typeof loader> = ({data, matches}) => {

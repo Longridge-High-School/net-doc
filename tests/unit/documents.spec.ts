@@ -85,17 +85,13 @@ describe('Documents', () => {
 
     const newId = addResponse.headers.get('Location')!.split('/')[3]
 
-    const adminListLoaderResponse = await listLoader({
+    const adminListLoaderData = await listLoader({
       request: appRequest('/app/documents', {
         headers: await admin.sessionHeader()
       }),
       context: {},
       params: {}
     })
-
-    expect(adminListLoaderResponse.status).toBe(200)
-
-    const adminListLoaderData = await adminListLoaderResponse.json()
 
     const adminCanSeeDocument = adminListLoaderData.documents.reduce(
       (check, value) => {
@@ -108,17 +104,13 @@ describe('Documents', () => {
 
     expect(adminCanSeeDocument).toBeTruthy()
 
-    const readerListLoaderResponse = await listLoader({
+    const readerListLoaderData = await listLoader({
       request: appRequest('/app/documents', {
         headers: await reader.sessionHeader()
       }),
       context: {},
       params: {}
     })
-
-    expect(readerListLoaderResponse.status).toBe(200)
-
-    const readerListLoaderData = await readerListLoaderResponse.json()
 
     const readerCanSeeDocument = readerListLoaderData.documents.reduce(
       (check, value) => {
@@ -139,7 +131,7 @@ describe('Documents', () => {
       params: {document: newId}
     })
 
-    expect(adminViewRequest.status).toBe(200)
+    expect(adminViewRequest).not.toBeUndefined()
 
     await expect(async () => {
       await readLoader({

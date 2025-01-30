@@ -1,8 +1,7 @@
 import {
   type LoaderFunctionArgs,
   type ActionFunctionArgs,
-  type MetaFunction,
-  json
+  type MetaFunction
 } from '@remix-run/node'
 import {useLoaderData, useActionData} from '@remix-run/react'
 import {invariant, omit} from '@arcath/utils'
@@ -44,14 +43,14 @@ export const loader = async ({request}: LoaderFunctionArgs) => {
   })
   const dataURL = await toDataURL(otpUri)
 
-  return json({
+  return {
     currentUser,
     totp,
     state,
     genTotp: omit(genTotp, ['otp']),
     otpUri,
     dataURL
-  })
+  }
 }
 
 export const action = async ({request}: ActionFunctionArgs) => {
@@ -82,7 +81,7 @@ export const action = async ({request}: ActionFunctionArgs) => {
     })
   }
 
-  return json({result})
+  return {result}
 }
 
 export const meta: MetaFunction = ({matches}) => {

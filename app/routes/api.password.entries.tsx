@@ -1,4 +1,4 @@
-import {type LoaderFunctionArgs, type HeadersArgs, json} from '@remix-run/node'
+import {type LoaderFunctionArgs, type HeadersArgs} from '@remix-run/node'
 
 import {ensureUser} from '~/lib/utils/ensure-user'
 import {getPrisma} from '~/lib/prisma.server'
@@ -21,7 +21,7 @@ export const loader = async ({request}: LoaderFunctionArgs) => {
     return {entryId: id, value: title}
   })
 
-  return json(
+  return Response.json(
     {
       asset: {id: 'passwords', slug: 'passwords', icon: '🔒'},
       entries

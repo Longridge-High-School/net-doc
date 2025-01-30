@@ -3,7 +3,7 @@ import {
   type ActionFunctionArgs,
   type MetaFunction,
   type HeadersArgs,
-  json,
+  data,
   redirect
 } from '@remix-run/node'
 import {useLoaderData} from '@remix-run/react'
@@ -36,7 +36,7 @@ export const loader = async ({request}: LoaderFunctionArgs) => {
     })
   )
 
-  return json({user, boxes}, {headers: headers()})
+  return data({user, boxes}, {headers: headers()})
 }
 
 export const action = async ({request}: ActionFunctionArgs) => {
@@ -58,8 +58,6 @@ export const action = async ({request}: ActionFunctionArgs) => {
 
     invariant(meta)
     invariant(boxType)
-
-    console.dir(meta, boxType)
 
     if (id.substring(0, 3) === 'new') {
       await prisma.dashboardBox.create({data: {order: i, boxType, meta}})

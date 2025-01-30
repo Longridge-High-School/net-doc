@@ -2,7 +2,6 @@ import {
   type LoaderFunctionArgs,
   type ActionFunctionArgs,
   type MetaFunction,
-  json,
   redirect
 } from '@remix-run/node'
 import {invariant} from '@arcath/utils'
@@ -16,7 +15,7 @@ import {pageTitle} from '~/lib/utils/page-title'
 export const loader = async ({request}: LoaderFunctionArgs) => {
   const user = await ensureUser(request, 'asset-manager:add', {})
 
-  return json({user})
+  return {user}
 }
 
 export const action = async ({request}: ActionFunctionArgs) => {

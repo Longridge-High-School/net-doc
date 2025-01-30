@@ -1,8 +1,7 @@
 import {
   type LoaderFunctionArgs,
   type ActionFunctionArgs,
-  type MetaFunction,
-  json
+  type MetaFunction
 } from '@remix-run/node'
 import {Link, useActionData} from '@remix-run/react'
 import {invariant} from '@arcath/utils'
@@ -21,7 +20,7 @@ import {pageTitle} from '~/lib/utils/page-title'
 export const loader = async ({request}: LoaderFunctionArgs) => {
   const user = await ensureUser(request, 'search', {})
 
-  return json({user})
+  return {user}
 }
 
 export const action = async ({request}: ActionFunctionArgs) => {
@@ -53,7 +52,7 @@ export const action = async ({request}: ActionFunctionArgs) => {
     ...documentResults
   ].sort((a, b) => (a.label ?? '').localeCompare(b.label ?? ''))
 
-  return json({results, query})
+  return {results, query}
 }
 
 export const meta: MetaFunction = ({matches}) => {

@@ -2,7 +2,6 @@ import {
   type LoaderFunctionArgs,
   type ActionFunctionArgs,
   type MetaFunction,
-  json,
   redirect
 } from '@remix-run/node'
 import {useLoaderData} from '@remix-run/react'
@@ -24,7 +23,7 @@ export const loader = async ({request, params}: LoaderFunctionArgs) => {
 
   const user = await prisma.user.findFirstOrThrow({where: {id: params.user}})
 
-  return json({currentUser, user})
+  return {currentUser, user}
 }
 
 export const action = async ({request, params}: ActionFunctionArgs) => {
