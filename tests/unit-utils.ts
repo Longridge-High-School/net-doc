@@ -57,7 +57,7 @@ export const userForTest = async ({
       return headers
     }
 
-    const response = await logonAction({
+    const response = (await logonAction({
       request: appRequest('/logon', {
         method: 'POST',
         headers: {'Content-Type': 'application/x-www-form-urlencoded'},
@@ -65,7 +65,7 @@ export const userForTest = async ({
       }),
       context: {},
       params: {}
-    })
+    })) as Awaited<ReturnType<typeof logonAction>> & {headers: Headers}
 
     sessionCookie = response.headers.getSetCookie()[0]
 

@@ -25,7 +25,7 @@ describe('Logon Flow', () => {
   test('Logon page should return a session and that session should return the new user', async () => {
     const {user, password, dispose} = await userForTest({role: 'admin'})
 
-    const response = await logonAction({
+    const response = (await logonAction({
       request: appRequest('/logon', {
         method: 'POST',
         headers: {'Content-Type': 'application/x-www-form-urlencoded'},
@@ -33,7 +33,7 @@ describe('Logon Flow', () => {
       }),
       context: {},
       params: {}
-    })
+    })) as Awaited<ReturnType<typeof logonAction>> & {headers: Headers}
 
     expect(response.headers.getSetCookie()[0]).toMatch(/^__session=.*?;/)
 

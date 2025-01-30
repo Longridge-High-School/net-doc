@@ -91,15 +91,13 @@ describe('Passwords', () => {
 
     const newId = addResponse.headers.get('Location')!.split('/')[3]
 
-    const adminListLoaderResponse = await listLoader({
+    const adminListLoaderData = await listLoader({
       request: appRequest('/app/passwords', {
         headers: await admin.sessionHeader()
       }),
       context: {},
       params: {}
     })
-
-    const adminListLoaderData = await adminListLoaderResponse.json()
 
     const adminCanSeePassword = adminListLoaderData.passwords.reduce(
       (check, value) => {
@@ -112,17 +110,13 @@ describe('Passwords', () => {
 
     expect(adminCanSeePassword).toBeTruthy()
 
-    const readerListLoaderResponse = await listLoader({
+    const readerListLoaderData = await listLoader({
       request: appRequest('/app/passwords', {
         headers: await reader.sessionHeader()
       }),
       context: {},
       params: {}
     })
-
-    expect(readerListLoaderResponse.status).toBe(200)
-
-    const readerListLoaderData = await readerListLoaderResponse.json()
 
     const readerCanSeePassword = readerListLoaderData.passwords.reduce(
       (check, value) => {
@@ -143,7 +137,7 @@ describe('Passwords', () => {
       params: {password: newId}
     })
 
-    expect(adminViewRequest.status).toBe(200)
+    expect(adminViewRequest).not.toBeUndefined()
 
     await expect(async () => {
       await readLoader({
