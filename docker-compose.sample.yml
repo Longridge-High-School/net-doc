@@ -10,7 +10,7 @@ x-shared:
       - ./db:/app/prisma/data
       - ./uploads:/app/public/uploads
       - ./backups:/app/public/backups
-    image: longridgehighschool/net-doc:2
+    image: longridgehighschool/net-doc:3
     restart: always
     depends_on:
       - net-doc-redis
