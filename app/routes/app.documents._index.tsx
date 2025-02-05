@@ -13,9 +13,9 @@ export const loader = async ({request}: LoaderFunctionArgs) => {
 
   const prisma = getPrisma()
 
-  const documents = await prisma.$queryRawTyped(
-    getDocuments(user.role, user.id)
-  )
+  const documents = await prisma.$queryRawTyped(getDocuments(user.id))
+
+  console.dir(documents)
 
   return {user, documents}
 }

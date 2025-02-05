@@ -1,16 +1,10 @@
--- @param {String} $1:userRole The role of the current user
--- @param {String} $2:userId The ID of the current user
+-- @param {String} $1:userId The ID of the current user
+WITH ACLArgs AS (SELECT id, role FROM User WHERE id = $1) 
 SELECT 
-Document.id, Document.title, Document.updatedAt
+  Document.id, Document.title, Document.updatedAt
 FROM
-Document
+  Document
 WHERE 
-aclId IN (SELECT aclId FROM ACLEntry 
-  WHERE read = true AND (
-    (type = "role" AND target = $1) 
-    OR 
-    (type = "user" AND target = $2)
-    )
-  )
+  aclId IN user_read_acls
 ORDER BY
-Document.title ASC
+  Document.title ASC
