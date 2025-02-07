@@ -96,8 +96,3 @@ model GroupMembership {
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String
 }
-
-model ACLArgs{
-  id String @unique
-  role String
-}

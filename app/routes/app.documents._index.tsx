@@ -15,8 +15,6 @@ export const loader = async ({request}: LoaderFunctionArgs) => {
 
   const documents = await prisma.$queryRawTyped(getDocuments(user.id))
 
-  console.dir(documents)
-
   return {user, documents}
 }
 

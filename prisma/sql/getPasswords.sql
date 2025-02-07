@@ -1,16 +1,9 @@
--- @param {String} $1:userRole The role of the current user
--- @param {String} $2:userId The ID of the current user
+-- @param {String} $1:userId The ID of the current user
 SELECT 
 	Password.id, Password.title, Password.username 
 FROM
 	Password
 WHERE 
-	aclId IN (SELECT aclId FROM ACLEntry 
-		WHERE read = true AND (
-			(type = "role" AND target = $1) 
-			OR 
-			(type = "user" AND target = $2)
-			)
-		)
+	aclId IN (SELECT aclId FROM user_read_acls WHERE userId = $1)
 ORDER BY
 	Password.title ASC
