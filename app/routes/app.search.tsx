@@ -35,15 +35,15 @@ export const action = async ({request}: ActionFunctionArgs) => {
   const prisma = getPrisma()
 
   const entryResults = await prisma.$queryRawTyped(
-    searchEntries(`%${query}%`, user.role, user.id)
+    searchEntries(`%${query}%`, user.id)
   )
 
   const passwordResults = await prisma.$queryRawTyped(
-    searchPasswords(`%${query}%`, user.role, user.id)
+    searchPasswords(`%${query}%`, user.id)
   )
 
   const documentResults = await prisma.$queryRawTyped(
-    searchDocuments(`%${query}%`, user.role, user.id)
+    searchDocuments(`%${query}%`, user.id)
   )
 
   const results = [

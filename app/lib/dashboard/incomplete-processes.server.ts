@@ -10,7 +10,7 @@ const loader: DashboardBoxFnHandlers<IncompleteProcessesData>['loader'] =
     const prisma = getPrisma()
 
     const incompleteProcesses = await prisma.$queryRawTyped(
-      getIncompleteProcesses(userRole, userId)
+      getIncompleteProcesses(userId)
     )
 
     return incompleteProcesses as unknown as Array<{

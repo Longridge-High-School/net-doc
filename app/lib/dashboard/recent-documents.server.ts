@@ -13,7 +13,7 @@ const loader: DashboardBoxFnHandlers<RecentDocumentsData>['loader'] = async (
   const prisma = getPrisma()
 
   const recentDocuments = await prisma.$queryRawTyped(
-    getRecentDocuments(userRole, userId)
+    getRecentDocuments(userId)
   )
 
   return recentDocuments as unknown as Array<{

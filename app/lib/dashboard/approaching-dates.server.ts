@@ -8,14 +8,13 @@ import {getPrisma} from '../prisma.server'
 
 const loader: DashboardBoxFnHandlers<ApproachingDatesData>['loader'] = async (
   meta,
-  userId,
-  userRole
+  userId
 ) => {
   const {fieldId} = JSON.parse(meta)
   const prisma = getPrisma()
 
   const values = await prisma.$queryRawTyped(
-    getApproachingDates(fieldId, userRole, userId)
+    getApproachingDates(fieldId, userId)
   )
 
   return values as unknown as Array<{

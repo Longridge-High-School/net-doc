@@ -3,6 +3,8 @@
 // to see if the data needs to be added before adding it.
 
 import {PrismaClient} from '@prisma/client'
+import {asyncForEach} from '@arcath/utils'
+
 const prisma = new PrismaClient()
 import bcrypt from 'bcrypt'
 
@@ -110,6 +112,21 @@ const main = async () => {
     await prisma.process.updateMany({
       where: {aclId: ''},
       data: {aclId: defaultAcl.id}
+    })
+  }
+
+  const groupsCount = await prisma.group.count()
+
+  if (groupsCount === 0) {
+    console.log('👥 No Groups, Creating Default and assigning all users')
+    const defaultGroup = await prisma.group.create({data: {name: 'Default'}})
+
+    const users = await prisma.user.findMany({select: {id: true}})
+
+    await asyncForEach(users, async ({id}) => {
+      await prisma.groupMembership.create({
+        data: {userId: id, groupId: defaultGroup.id}
+      })
     })
   }
 }
