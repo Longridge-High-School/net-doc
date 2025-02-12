@@ -476,7 +476,8 @@ export const {can} = canCant<'guest' | 'reader' | 'writer' | 'admin'>({
       'dashboard:*',
       'process:*',
       'acl-manager:*',
-      'system'
+      'system',
+      'group-manager:*'
     ]
   }
 }) as {
