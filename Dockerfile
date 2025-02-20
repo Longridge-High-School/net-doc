@@ -5,6 +5,8 @@
 # Start with the node debian image
 FROM node:22-bullseye-slim AS base
 
+RUN echo "Building with tag: $TAG"
+
 # Install openssl for Prisma and NGINX
 RUN apt-get update && apt-get install openssl nginx -y
 
