@@ -11,7 +11,6 @@ import {ensureUser} from '~/lib/utils/ensure-user'
 import {getPrisma} from '~/lib/prisma.server'
 import {Button} from '~/lib/components/button'
 import {Label, Input, Select} from '~/lib/components/input'
-import {hashPassword} from '~/lib/user.server'
 import {pageTitle} from '~/lib/utils/page-title'
 
 export const loader = async ({request, params}: LoaderFunctionArgs) => {

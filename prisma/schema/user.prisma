@@ -84,7 +84,11 @@ model Group {
 
   name String
 
-  users GroupMembership[]
+  users     GroupMembership[]
+  entries   Entry[]
+  documents Document[]
+  processes Process[]
+  passwords Password[]
 }
 
 model GroupMembership {

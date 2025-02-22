@@ -8,5 +8,7 @@ SELECT Asset.icon || " " || NameValue.value as label, "/app/" || Asset.slug || "
 	lower(Value.value) LIKE lower($1)
   AND
 	Entry.aclId IN (SELECT aclId FROM user_read_acls WHERE userId = $2)
+  AND
+  Entry.groupId IN (SELECT groupId FROM GroupMembership WHERE userId = $2)
   GROUP BY Value.entryId
   ORDER BY label ASC

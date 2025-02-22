@@ -10,6 +10,8 @@ WHERE
   date(Value.value) > date('now')
   AND
   Entry.aclId IN (SELECT aclId FROM user_read_acls WHERE userId = $2)
+  AND
+  Entry.groupId IN (SELECT groupId FROM GroupMembership WHERE userId = $2)
 ORDER BY
   Value.value ASC
 LIMIT 5

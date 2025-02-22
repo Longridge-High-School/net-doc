@@ -31,8 +31,13 @@ export const loader = async ({request, params}: LoaderFunctionArgs) => {
   })
 
   const acls = await prisma.aCL.findMany({orderBy: {name: 'asc'}})
+  const groups = await prisma.groupMembership.findMany({
+    where: {userId: user.id},
+    include: {group: true},
+    orderBy: {group: {name: 'asc'}}
+  })
 
-  return {user, document, acls}
+  return {user, document, acls, groups}
 }
 
 export const action = async ({request, params}: ActionFunctionArgs) => {
@@ -78,7 +83,7 @@ export const meta: MetaFunction<typeof loader> = ({data, matches}) => {
 }
 
 const DocumentEdit = () => {
-  const {document, acls} = useLoaderData<typeof loader>()
+  const {document, acls, groups} = useLoaderData<typeof loader>()
 
   return (
     <div className="entry">
@@ -105,6 +110,18 @@ const DocumentEdit = () => {
               return (
                 <option key={id} value={id}>
                   {name}
+                </option>
+              )
+            })}
+          </Select>
+        </Label>
+        <Label>
+          Group
+          <Select name="groups" defaultValue={document.aclId}>
+            {groups.map(({group}) => {
+              return (
+                <option key={group.id} value={group.id}>
+                  {group.name}
                 </option>
               )
             })}

@@ -8,5 +8,7 @@ WHERE
   id IN (SELECT passwordId FROM EntryPassword WHERE EntryPassword.entryId = $1)
   AND
 	aclId IN (SELECT aclId FROM user_read_acls WHERE userId = $2)
+	AND
+	groupId IN (SELECT groupId FROM GroupMembership WHERE userId = $2)
 ORDER BY
 	Password.title ASC

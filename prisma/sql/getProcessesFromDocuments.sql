@@ -6,6 +6,8 @@ Document
 WHERE 
   aclId IN (SELECT aclId FROM user_read_acls WHERE userId = $1)
   AND
+  Document.groupId IN (SELECT groupId FROM GroupMembership WHERE userId = $1)
+  AND
   Document.body LIKE "%[ ]%"
 ORDER BY
 Document.title ASC

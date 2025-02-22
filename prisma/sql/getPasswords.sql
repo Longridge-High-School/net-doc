@@ -5,5 +5,7 @@ FROM
 	Password
 WHERE 
 	aclId IN (SELECT aclId FROM user_read_acls WHERE userId = $1)
+	AND
+	groupId IN (SELECT groupId FROM GroupMembership WHERE userId = $1)
 ORDER BY
 	Password.title ASC

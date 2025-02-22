@@ -5,4 +5,6 @@ SELECT "📰" || " " || Document.title as label, "/app/documents/" || Document.i
     (lower(Document.body) LIKE lower($1) OR lower(Document.title) LIKE lower($1))
   AND
     Document.aclId IN (SELECT aclId FROM user_read_acls WHERE userId = $2)
+  AND
+    Document.groupId IN (SELECT groupId FROM GroupMembership WHERE userId = $2)
   ORDER BY Document.title ASC

@@ -9,3 +9,5 @@ SELECT Entry.id, Value.value, Asset.icon, Asset.slug FROM Entry
     deleted = false 
   AND 
     Entry.aclId IN (SELECT aclId FROM user_read_acls WHERE userId = $2)
+  AND
+    Entry.groupId IN (SELECT groupId FROM GroupMembership WHERE userId = $2)

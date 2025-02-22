@@ -6,6 +6,8 @@ Process
 WHERE 
 aclId IN (SELECT aclId FROM user_read_acls WHERE userId = $1)
 AND
+groupId IN (SELECT groupId FROM GroupMembership WHERE userId = $1)
+AND
 complete = false
 ORDER BY
 Process.complete ASC, Process.title ASC

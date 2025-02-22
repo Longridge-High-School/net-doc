@@ -5,5 +5,7 @@ FROM
   Document
 WHERE 
   aclId IN (SELECT aclId FROM user_read_acls WHERE userId = $1)
+  AND
+  groupId in (SELECT groupId FROM GroupMembership WHERE userId = $1)
 ORDER BY
   Document.title ASC

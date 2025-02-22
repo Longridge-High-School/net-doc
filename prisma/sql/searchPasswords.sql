@@ -5,4 +5,6 @@ SELECT "🔐" || " " || Password.title as label, "/app/passwords/" || Password.i
     (lower(Password.notes) LIKE lower($1) OR Password.title LIKE lower($1))
   AND 
     Password.aclId IN (SELECT aclId FROM user_read_acls WHERE userId = $2)
+  AND
+    Password.groupId IN (SELECT groupId FROM GroupMembership WHERE userId = $2)
   ORDER BY Password.title ASC

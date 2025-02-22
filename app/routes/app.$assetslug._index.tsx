@@ -5,6 +5,7 @@ import {
   data
 } from '@remix-run/node'
 import {indexedBy} from '@arcath/utils'
+import {getEntries, getExtraValues} from '@prisma/client/sql'
 
 import {ensureUser} from '~/lib/utils/ensure-user'
 import {getPrisma} from '~/lib/prisma.server'
@@ -32,58 +33,12 @@ export const loader = async ({request, params}: LoaderFunctionArgs) => {
     })
   )
 
-  const entries = await time(
-    'getEntries',
-    'Get Entries',
-    () => prisma.$queryRaw<Array<{id: string; name: string}>>`
-    SELECT Entry.id, Value.value as name FROM Entry 
-  INNER JOIN Value ON Value.fieldId = (SELECT nameFieldId from Asset WHERE id = Entry.assetId) AND entryId = entry.id
-  WHERE 
-	assetId = (SELECT id from Asset WHERE slug = ${params.assetslug}) 
-	AND
-	deleted = false
-	AND
-	aclId IN (SELECT aclId FROM ACLEntry 
-		WHERE read = true AND (
-			(type = "role" AND target = ${user.role}) 
-			OR 
-			(type = "user" AND target = ${user.id})
-			)
-		)`
+  const entries = await time('getEntries', 'Get Entries', () =>
+    prisma.$queryRawTyped(getEntries(params.assetslug!, user.id))
   )
 
-  const extraValues = await time(
-    'getColumns',
-    'Get Column Values',
-    () => prisma.$queryRaw<
-      Array<{
-        id: string
-        value: string
-        type: string
-        lookup: string
-      }>
-    >`SELECT Value.id, Value.value, Value.entryId || '/' || Value.fieldId as lookup, Field.type  FROM Value 
-    INNER JOIN Entry ON Entry.id = Value.entryId
-    INNER JOIN Asset ON Asset.id = Entry.assetId
-    INNER JOIN AssetField ON AssetField.assetId = Asset.id AND AssetField.fieldId = Value.fieldId
-    INNER JOIN Field ON Field.id = Value.fieldId
-  WHERE 
-    ((AssetField.displayOnTable = true) OR (Value.fieldId = Asset.nameFieldId))
-    AND
-    Value.entryId IN (SELECT Entry.id FROM Entry
-      WHERE 
-        assetId = (SELECT id from Asset WHERE slug = ${params.assetslug}) 
-        AND
-        deleted = false
-        AND
-        aclId IN (SELECT aclId FROM ACLEntry 
-          WHERE read = true AND (
-            (type = "role" AND target = ${user.role}) 
-            OR 
-            (type = "user" AND target = ${user.id})
-            )
-          )
-    )`
+  const extraValues = await time('getColumns', 'Get Column Values', () =>
+    prisma.$queryRawTyped(getExtraValues(params.assetslug!, user.id))
   )
 
   return data(

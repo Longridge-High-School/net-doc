@@ -128,6 +128,23 @@ const main = async () => {
         data: {userId: id, groupId: defaultGroup.id}
       })
     })
+
+    await prisma.document.updateMany({
+      where: {groupId: ''},
+      data: {groupId: defaultGroup.id}
+    })
+    await prisma.process.updateMany({
+      where: {groupId: ''},
+      data: {groupId: defaultGroup.id}
+    })
+    await prisma.entry.updateMany({
+      where: {groupId: ''},
+      data: {groupId: defaultGroup.id}
+    })
+    await prisma.password.updateMany({
+      where: {groupId: ''},
+      data: {groupId: defaultGroup.id}
+    })
   }
 }
 

@@ -8,6 +8,8 @@ WHERE
   deleted = false 
   AND
   Entry.aclId IN (SELECT aclId FROM user_read_acls WHERE userId = $1)
+  AND
+  Entry.groupId IN (SELECT groupId FROM GroupMembership WHERE userId = $1)
 ORDER BY 
   Entry.updatedAt DESC
 LIMIT 5

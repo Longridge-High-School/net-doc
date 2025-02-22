@@ -1,5 +1,12 @@
 import {canCant} from 'cancant'
-import {getEntryAcl, getAssetAcl} from '@prisma/client/sql'
+import {
+  getAssetAcl,
+  getDocumentRBAC,
+  getEntryRBAC,
+  getProcessRBAC,
+  getPasswordRBAC
+} from '@prisma/client/sql'
+import {type TypedSql} from '@prisma/client/runtime/library'
 
 import {getPrisma} from './prisma.server'
 import {asyncMap, indexedBy} from '@arcath/utils'
@@ -8,6 +15,48 @@ type SessionUser = {
   id: string
   name: string
   role: string
+}
+
+const rbacQuery = async ({
+  targetId,
+  userId,
+  action,
+  query
+}: {
+  targetId: string
+  userId: string
+  action: 'read' | 'write' | 'delete'
+  query: (
+    targetId: string,
+    userId: string
+  ) => TypedSql<
+    [string, string],
+    {
+      readCount: bigint | null
+      writeCount: bigint | null
+      deleteCount: bigint | null
+      groupCount: bigint | null
+    }
+  >
+}) => {
+  const prisma = getPrisma()
+
+  const result = (await prisma.$queryRawTyped(query(targetId, userId)))[0]
+
+  if (result.groupCount === 0n) {
+    return false
+  }
+
+  switch (action) {
+    case 'read':
+      return result.readCount! > 0n
+    case 'write':
+      return result.writeCount! > 0n
+    case 'delete':
+      return result.deleteCount! > 0n
+    default:
+      return false
+  }
 }
 
 export const {can} = canCant<'guest' | 'reader' | 'writer' | 'admin'>({
@@ -102,55 +151,34 @@ export const {can} = canCant<'guest' | 'reader' | 'writer' | 'admin'>({
       {
         name: 'entry:read',
         when: async ({user, entryId}: {user: SessionUser; entryId: string}) => {
-          const prisma = getPrisma()
-
-          const aclEntries = await prisma.$queryRawTyped(
-            getEntryAcl(entryId, user.role, user.id)
-          )
-
-          const result = aclEntries.reduce((r, {read}) => {
-            if (r) return true
-
-            return read
-          }, false)
-
-          return result
+          return rbacQuery({
+            targetId: entryId,
+            userId: user.id,
+            action: 'read',
+            query: getEntryRBAC
+          })
         }
       },
       {
         name: 'entry:write',
         when: async ({user, entryId}: {user: SessionUser; entryId: string}) => {
-          const prisma = getPrisma()
-
-          const aclEntries = await prisma.$queryRawTyped(
-            getEntryAcl(entryId, user.role, user.id)
-          )
-
-          const result = aclEntries.reduce((r, {write}) => {
-            if (r) return true
-
-            return write
-          }, false)
-
-          return result
+          return rbacQuery({
+            targetId: entryId,
+            userId: user.id,
+            action: 'write',
+            query: getEntryRBAC
+          })
         }
       },
       {
         name: 'entry:delete',
         when: async ({user, entryId}: {user: SessionUser; entryId: string}) => {
-          const prisma = getPrisma()
-
-          const aclEntries = await prisma.$queryRawTyped(
-            getEntryAcl(entryId, user.role, user.id)
-          )
-
-          const result = aclEntries.reduce((r, {delete: del}) => {
-            if (r) return true
-
-            return del
-          }, false)
-
-          return result
+          return rbacQuery({
+            targetId: entryId,
+            userId: user.id,
+            action: 'delete',
+            query: getEntryRBAC
+          })
         }
       },
       {
@@ -182,26 +210,12 @@ export const {can} = canCant<'guest' | 'reader' | 'writer' | 'admin'>({
           user: SessionUser
           passwordId: string
         }) => {
-          const prisma = getPrisma()
-
-          const password = await prisma.password.findFirstOrThrow({
-            where: {id: passwordId},
-            include: {acl: {include: {entries: true}}}
+          return rbacQuery({
+            targetId: passwordId,
+            userId: user.id,
+            action: 'read',
+            query: getPasswordRBAC
           })
-
-          const result = password.acl.entries.reduce(
-            (r, {target, type, read}) => {
-              if (r) return true
-
-              if (type === 'user' && target !== user.id) return false
-              if (type === 'role' && target !== user.role) return false
-
-              return read
-            },
-            false
-          )
-
-          return result
         }
       },
       {
@@ -213,26 +227,12 @@ export const {can} = canCant<'guest' | 'reader' | 'writer' | 'admin'>({
           user: SessionUser
           passwordId: string
         }) => {
-          const prisma = getPrisma()
-
-          const password = await prisma.password.findFirstOrThrow({
-            where: {id: passwordId},
-            include: {acl: {include: {entries: true}}}
+          return rbacQuery({
+            targetId: passwordId,
+            userId: user.id,
+            action: 'write',
+            query: getPasswordRBAC
           })
-
-          const result = password.acl.entries.reduce(
-            (r, {target, type, write}) => {
-              if (r) return true
-
-              if (type === 'user' && target !== user.id) return false
-              if (type === 'role' && target !== user.role) return false
-
-              return write
-            },
-            false
-          )
-
-          return result
         }
       },
       {
@@ -244,26 +244,12 @@ export const {can} = canCant<'guest' | 'reader' | 'writer' | 'admin'>({
           user: SessionUser
           passwordId: string
         }) => {
-          const prisma = getPrisma()
-
-          const password = await prisma.password.findFirstOrThrow({
-            where: {id: passwordId},
-            include: {acl: {include: {entries: true}}}
+          return rbacQuery({
+            targetId: passwordId,
+            userId: user.id,
+            action: 'delete',
+            query: getPasswordRBAC
           })
-
-          const result = password.acl.entries.reduce(
-            (r, {target, type, delete: del}) => {
-              if (r) return true
-
-              if (type === 'user' && target !== user.id) return false
-              if (type === 'role' && target !== user.role) return false
-
-              return del
-            },
-            false
-          )
-
-          return result
         }
       },
       'document:list',
@@ -277,26 +263,12 @@ export const {can} = canCant<'guest' | 'reader' | 'writer' | 'admin'>({
           user: SessionUser
           documentId: string
         }) => {
-          const prisma = getPrisma()
-
-          const document = await prisma.document.findFirstOrThrow({
-            where: {id: documentId},
-            include: {acl: {include: {entries: true}}}
+          return rbacQuery({
+            targetId: documentId,
+            userId: user.id,
+            action: 'read',
+            query: getDocumentRBAC
           })
-
-          const result = document.acl.entries.reduce(
-            (r, {target, type, read}) => {
-              if (r) return true
-
-              if (type === 'user' && target !== user.id) return false
-              if (type === 'role' && target !== user.role) return false
-
-              return read
-            },
-            false
-          )
-
-          return result
         }
       },
       {
@@ -308,26 +280,12 @@ export const {can} = canCant<'guest' | 'reader' | 'writer' | 'admin'>({
           user: SessionUser
           documentId: string
         }) => {
-          const prisma = getPrisma()
-
-          const document = await prisma.document.findFirstOrThrow({
-            where: {id: documentId},
-            include: {acl: {include: {entries: true}}}
+          return rbacQuery({
+            targetId: documentId,
+            userId: user.id,
+            action: 'write',
+            query: getDocumentRBAC
           })
-
-          const result = document.acl.entries.reduce(
-            (r, {target, type, write}) => {
-              if (r) return true
-
-              if (type === 'user' && target !== user.id) return false
-              if (type === 'role' && target !== user.role) return false
-
-              return write
-            },
-            false
-          )
-
-          return result
         }
       },
       {
@@ -339,26 +297,12 @@ export const {can} = canCant<'guest' | 'reader' | 'writer' | 'admin'>({
           user: SessionUser
           documentId: string
         }) => {
-          const prisma = getPrisma()
-
-          const document = await prisma.document.findFirstOrThrow({
-            where: {id: documentId},
-            include: {acl: {include: {entries: true}}}
+          return rbacQuery({
+            targetId: documentId,
+            userId: user.id,
+            action: 'delete',
+            query: getDocumentRBAC
           })
-
-          const result = document.acl.entries.reduce(
-            (r, {target, type, delete: del}) => {
-              if (r) return true
-
-              if (type === 'user' && target !== user.id) return false
-              if (type === 'role' && target !== user.role) return false
-
-              return del
-            },
-            false
-          )
-
-          return result
         }
       },
       'process:list',
@@ -372,26 +316,12 @@ export const {can} = canCant<'guest' | 'reader' | 'writer' | 'admin'>({
           user: SessionUser
           processId: string
         }) => {
-          const prisma = getPrisma()
-
-          const process = await prisma.process.findFirstOrThrow({
-            where: {id: processId},
-            include: {acl: {include: {entries: true}}}
+          return rbacQuery({
+            targetId: processId,
+            userId: user.id,
+            action: 'read',
+            query: getProcessRBAC
           })
-
-          const result = process.acl.entries.reduce(
-            (r, {target, type, read}) => {
-              if (r) return true
-
-              if (type === 'user' && target !== user.id) return false
-              if (type === 'role' && target !== user.role) return false
-
-              return read
-            },
-            false
-          )
-
-          return result
         }
       },
       {
@@ -403,26 +333,12 @@ export const {can} = canCant<'guest' | 'reader' | 'writer' | 'admin'>({
           user: SessionUser
           processId: string
         }) => {
-          const prisma = getPrisma()
-
-          const process = await prisma.process.findFirstOrThrow({
-            where: {id: processId},
-            include: {acl: {include: {entries: true}}}
+          return rbacQuery({
+            targetId: processId,
+            userId: user.id,
+            action: 'write',
+            query: getProcessRBAC
           })
-
-          const result = process.acl.entries.reduce(
-            (r, {target, type, write}) => {
-              if (r) return true
-
-              if (type === 'user' && target !== user.id) return false
-              if (type === 'role' && target !== user.role) return false
-
-              return write
-            },
-            false
-          )
-
-          return result
         }
       },
       {
@@ -434,26 +350,12 @@ export const {can} = canCant<'guest' | 'reader' | 'writer' | 'admin'>({
           user: SessionUser
           processId: string
         }) => {
-          const prisma = getPrisma()
-
-          const process = await prisma.process.findFirstOrThrow({
-            where: {id: processId},
-            include: {acl: {include: {entries: true}}}
+          return rbacQuery({
+            targetId: processId,
+            userId: user.id,
+            action: 'delete',
+            query: getProcessRBAC
           })
-
-          const result = process.acl.entries.reduce(
-            (r, {target, type, delete: del}) => {
-              if (r) return true
-
-              if (type === 'user' && target !== user.id) return false
-              if (type === 'role' && target !== user.role) return false
-
-              return del
-            },
-            false
-          )
-
-          return result
         }
       }
     ]
