@@ -13,7 +13,7 @@ const loader: DashboardBoxFnHandlers<RecentChangesData>['loader'] = async (
   const prisma = getPrisma()
 
   const recentChanges = (await prisma.$queryRawTyped(
-    getRecentChanges(userRole, userId)
+    getRecentChanges(userId)
   )) as unknown as Array<{
     slug: string
     id: string

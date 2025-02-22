@@ -9,6 +9,9 @@ model Document {
   acl   ACL    @relation(fields: [aclId], references: [id])
   aclId String @default("")
 
+  group   Group  @relation(fields: [groupId], references: [id])
+  groupId String @default("")
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -35,6 +38,9 @@ model Process {
 
   acl   ACL    @relation(fields: [aclId], references: [id])
   aclId String @default("")
+
+  group   Group  @relation(fields: [groupId], references: [id])
+  groupId String @default("")
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

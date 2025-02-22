@@ -14,12 +14,10 @@ export const loader = async ({request}: LoaderFunctionArgs) => {
 
   const prisma = getPrisma()
 
-  const processes = await prisma.$queryRawTyped(
-    getProcesses(user.role, user.id)
-  )
+  const processes = await prisma.$queryRawTyped(getProcesses(user.id))
 
   const documents = await prisma.$queryRawTyped(
-    getProcessesFromDocuments(user.role, user.id)
+    getProcessesFromDocuments(user.id)
   )
 
   return {user, processes, documents}
